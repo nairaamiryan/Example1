@@ -1,0 +1,46 @@
+{
+    "patients": [
+        {
+            "id": 1,
+            "name": "Արամ Սարգսյան",
+            "age": 45,
+            "diagnosis": "Հիպերտոնիա",
+            "status": "active"
+        },
+        {
+            "id": 2,
+            "name": "Լուսինե Պետրոսյան",
+            "age": 32,
+            "diagnosis": "Դիաբետ",
+            "status": "stable"
+        },
+        {
+            "id": 3,
+            "name": "Գևորգ Ավագյան",
+            "age": 58,
+            "diagnosis": "Միգրեն",
+            "status": "pending"
+        }
+    ],
+    "doctors": [
+        {
+            "id": 1,
+            "name": "Դ.Կարապետյան",
+            "specialty": "Կարդիոլոգ",
+            "patients": 24
+        },
+        {
+            "id": 2,
+            "name": "Դ.Հարությունյան",
+            "specialty": "Էնդոկրինոլոգ",
+            "patients": 18
+        }
+    ],
+    "reports": [],
+    "aboutInfo": {
+        "title": "Մեր Մասին",
+        "description": "Մենք ժամանակակից բժշկական հաստատություն ենք",
+        "founded": 2010,
+        "staff": 150
+    }
+}
