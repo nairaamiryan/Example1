@@ -35,6 +35,36 @@
             "specialty": "Էնդոկրինոլոգ",
             "patients": 18
         }
+         {
+            "id": 3,
+            "name": "Ա.Հակոբյանան",
+            "specialty": "Սրտաբան",
+            "patients": 10
+        },
+         {
+            "id": 4,
+            "name": "Մ.Գաբրիելյան",
+            "specialty": "Նյարդաբան",
+            "patients": 7
+        },
+         {
+            "id": 5,
+            "name": "Գ.Պետրոսյան",
+            "specialty": "Մանկաբույժ",
+            "patients": 14
+        },
+         {
+            "id": 6,
+            "name": "Լ.Գրիգորյան",
+            "specialty": "Մաշկաբան",
+            "patients": 11
+        },
+         {
+            "id": 7,
+            "name": "Վ.Վարդանյան",
+            "specialty": "Օրթոպեդ",
+            "patients": 8
+        }
     ],
     "reports": [],
     "aboutInfo": {
