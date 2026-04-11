@@ -9,7 +9,8 @@ export function AlertCard({ title, message, type = 'info' }) {
   el.className = `alert-card alert-${type}`;
   /* src/App.css */
 
-.alert-card {
+const styles = {
+  .alert-card {
   padding: 14px 18px;
   border-radius: 8px;
   margin-bottom: 10px;
@@ -17,7 +18,7 @@ export function AlertCard({ title, message, type = 'info' }) {
 
 .alert-info    { background: var(--blue-light);  color: var(--blue); }
 .alert-warning { background: var(--amber-light); color: var(--amber); }
-.alert-danger  { background: var(--red-light);   color: var(--red); }
+.alert-danger  { background: var(--red-light);   color: var(--red); }}
 
   // HTML բովանդակությունը
   el.innerHTML = `
