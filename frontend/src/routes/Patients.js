@@ -103,6 +103,12 @@ const styles = {
     patientsList: {
         maxWidth: "800px",
     },
+    search: {
+    padding: "10px 15px",
+    borderRadius: "8px",
+    border: "1px solid #e5e7eb",
+    width: "250px",
+},
     right: {
     display: "flex",
     gap: "10px",
