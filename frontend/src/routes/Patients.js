@@ -33,23 +33,33 @@ const Patients = () => {
         <div>
             <Navbar />
 
-            <div style={styles.container}>
-                <div style={styles.header}>
-                    <div>
-                        <h1 style={styles.title}>{PATIENTS.TITLE}</h1>
-                        <p style={styles.subtitle}>
-                            {PATIENTS.TOTAL_PATIENTS(patients.length)}
-                        </p>
-                    </div>
-                    <button style={styles.addButton}>
-                        {PATIENTS.ADD_PATIENT}
-                    </button>
-                </div>
+            <div style={styles.header}>
+    <div>
+        <h1 style={styles.title}>{PATIENTS.TITLE}</h1>
+        <p style={styles.subtitle}>
+            {PATIENTS.TOTAL_PATIENTS(patients.length)}
+        </p>
+    </div>
 
-                <div style={styles.patientsList}>
-                    {patients.map((patient) => (
-                        <PatientCard key={patient.id} patient={patient} />
-                    ))}
+    <div style={styles.right}>
+        <input
+            type="text"
+            placeholder="Search patient..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={styles.search}
+        />
+
+        <button style={styles.addButton}>
+            {PATIENTS.ADD_PATIENT}
+        </button>
+                   {patients
+    .filter((patient) =>
+        patient.name.toLowerCase().includes(search.toLowerCase())
+    )
+    .map((patient) => (
+        <PatientCard key={patient.id} patient={patient} />
+))}
                 </div>
             </div>
         </div>
@@ -92,6 +102,11 @@ const styles = {
     patientsList: {
         maxWidth: "800px",
     },
+    right: {
+    display: "flex",
+    gap: "10px",
+    alignItems: "center",
+},
     loading: {
         textAlign: "center",
         padding: "60px 20px",
