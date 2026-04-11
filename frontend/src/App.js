@@ -4,6 +4,7 @@ import Home from "./routes/Home";
 import About from "./routes/About";
 import Patients from "./routes/Patients";
 import Reports from "./routes/Reports";
+import Notifications from "./routes/Notifications";
 import "./App.css";
 
 function App() {
