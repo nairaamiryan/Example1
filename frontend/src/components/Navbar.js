@@ -16,6 +16,9 @@ const Navbar = () => {
                 <Link to="/reports" style={styles.link}>
                     {NAVBAR.REPORTS}
                 </Link>
+                <Link to="/notifications" style={styles.link}>
+                    {NAVBAR.NOTIFICATIONS}
+                </Link>
                 <Link to="/about" style={styles.link}>
                     {NAVBAR.ABOUT}
                 </Link>

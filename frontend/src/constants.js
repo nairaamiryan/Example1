@@ -10,6 +10,7 @@ export const NAVBAR = {
     TITLE: "🏥 ԱռողջPlatform",
     HOME: "Գլխավոր",
     PATIENTS: "Հիվանդներ",
+    NOTIFICATIONS: "Ծանուցումներ",
     REPORTS: "Հաշվետվություններ",
     ABOUT: "Մեր Մասին",
 };
@@ -69,4 +70,8 @@ export const STATISTICS = {
         ICON: "🏥",
         COLOR: "#15803d",
     },
+};
+
+export const NOTIFICATIONS = {
+    TITLE: "Ծանուցումներ",
 };

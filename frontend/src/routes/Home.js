@@ -2,25 +2,7 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import StatCard from "../components/StatCard";
 import { STATISTICS } from "../constants";
-// src/routes/Home.js
 
-import { AlertCard } from '../components/AlertCard.js'; // ← import
-
-export async function renderHome() {
-
-  // գտնում ես container-ը HTML-ից
-  const container = document.getElementById('dashAlerts');
-
-  // ստեղծում ես component-ը
-  const card = AlertCard({
-    title: 'Զգուշացում',
-    message: 'P-0481 հիվ. կրիտիկական վիճակում է',
-    type: 'danger'
-  });
-
-  // ավելացնում ես էջի մեջ
-  container.appendChild(card);
-}
 const Home = () => {
     return (
         <div>

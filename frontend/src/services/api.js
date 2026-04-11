@@ -30,6 +30,11 @@ class API {
         await delay();
         return { success: true, data: mockData.aboutInfo };
     }
+
+    async getNotifications() {
+        await delay();
+        return { success: true, data: mockData.notifications };
+    }
 }
 
 export default new API();
