@@ -20,6 +20,7 @@ export const PATIENTS = {
     AGE: "Տարիք",
     TOTAL_PATIENTS: (totalNumber) => `Ընդամենը ${totalNumber} Հաշվատվություն`,
     ADD_PATIENT: "➕ Ավելացնել Հիվանդ",
+    SEARCH: "Որոնել հիվանդ...",
 };
 
 export const PATIENT = "hիվանդ";

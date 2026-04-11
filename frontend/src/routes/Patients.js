@@ -3,11 +3,11 @@ import Navbar from "../components/Navbar";
 import PatientCard from "../components/PatientCard";
 import api from "../services/api";
 import { LOADING, PATIENTS } from "../constants";
-const [search, setSearch] = useState("");
 
 const Patients = () => {
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         loadPatients();
@@ -33,34 +33,39 @@ const Patients = () => {
     return (
         <div>
             <Navbar />
+            <div style={styles.container}>
+                <div style={styles.header}>
+                    <div>
+                        <h1 style={styles.title}>{PATIENTS.TITLE}</h1>
+                        <p style={styles.subtitle}>
+                            {PATIENTS.TOTAL_PATIENTS(patients.length)}
+                        </p>
+                    </div>
 
-            <div style={styles.header}>
-    <div>
-        <h1 style={styles.title}>{PATIENTS.TITLE}</h1>
-        <p style={styles.subtitle}>
-            {PATIENTS.TOTAL_PATIENTS(patients.length)}
-        </p>
-    </div>
+                    <div style={styles.right}>
+                        <input
+                            type="text"
+                            placeholder={PATIENTS.SEARCH}
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            style={styles.search}
+                        />
 
-    <div style={styles.right}>
-        <input
-            type="text"
-            placeholder="Search patient..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={styles.search}
-        />
-
-        <button style={styles.addButton}>
-            {PATIENTS.ADD_PATIENT}
-        </button>
-                   {patients
-    .filter((patient) =>
-        patient.name.toLowerCase().includes(search.toLowerCase())
-    )
-    .map((patient) => (
-        <PatientCard key={patient.id} patient={patient} />
-))}
+                        <button style={styles.addButton}>
+                            {PATIENTS.ADD_PATIENT}
+                        </button>
+                    </div>
+                </div>
+                <div style={styles.patientsList}>
+                    {patients
+                        .filter((patient) =>
+                            patient.name
+                                .toLowerCase()
+                                .includes(search.toLowerCase()),
+                        )
+                        .map((patient) => (
+                            <PatientCard key={patient.id} patient={patient} />
+                        ))}
                 </div>
             </div>
         </div>
@@ -76,7 +81,7 @@ const styles = {
     header: {
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "flex-start",
+        alignItems: "center",
         marginBottom: "30px",
     },
     title: {
@@ -104,16 +109,16 @@ const styles = {
         maxWidth: "800px",
     },
     search: {
-    padding: "10px 15px",
-    borderRadius: "8px",
-    border: "1px solid #e5e7eb",
-    width: "250px",
-},
+        padding: "10px 15px",
+        borderRadius: "8px",
+        border: "1px solid #e5e7eb",
+        width: "250px",
+    },
     right: {
-    display: "flex",
-    gap: "10px",
-    alignItems: "center",
-},
+        display: "flex",
+        gap: "10px",
+        alignItems: "center",
+    },
     loading: {
         textAlign: "center",
         padding: "60px 20px",

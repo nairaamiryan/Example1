@@ -1,9 +1,9 @@
 import React from "react";
 import { PATIENTS, STATUS_COLORS } from "../constants";
 
-const PatientCard = ({ patient }) => {
+const PatientCard = ({ key, patient }) => {
     return (
-        <div style={styles.card}>
+        <div key={key} style={styles.card}>
             <div style={styles.avatar}>
                 {patient.name
                     .split(" ")
