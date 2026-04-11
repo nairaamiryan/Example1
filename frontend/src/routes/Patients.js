@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import PatientCard from "../components/PatientCard";
 import api from "../services/api";
 import { LOADING, PATIENTS } from "../constants";
+const [search, setSearch] = useState("");
 
 const Patients = () => {
     const [patients, setPatients] = useState([]);
