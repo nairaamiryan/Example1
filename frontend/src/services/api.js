@@ -45,6 +45,10 @@ class API {
             return { success: false };
         }
     }
+    async getChartData() {
+        await delay();
+        return { success: true, data: mockData.statistics };
+    }
 }
 
 export default new API();

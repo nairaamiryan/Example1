@@ -37,7 +37,7 @@
         },
         {
             "id": 3,
-            "name": "Ա.Հակոբյանան",
+            "name": "Ա.Հակոբյան",
             "specialty": "Սրտաբան",
             "patients": 10
         },
@@ -102,5 +102,108 @@
         "description": "Մենք ժամանակակից բժշկական հաստատություն ենք",
         "founded": 2010,
         "staff": 150
+    },
+    "statistics": {
+        "monthly": [
+            { "month": "Հուն", "appointments": 2, "patients": 3 },
+            { "month": "Փտր", "appointments": 1, "patients": 2 },
+            { "month": "Մրտ", "appointments": 2, "patients": 1 },
+            { "month": "Ապր", "appointments": 1, "patients": 2 },
+            { "month": "Մյս", "appointments": 23, "patients": 11 },
+            { "month": "Հնս", "appointments": 2, "patients": 12 },
+            { "month": "Հլս", "appointments": 1, "patients": 1 },
+            { "month": "Օգս", "appointments": 2, "patients": 1 },
+            { "month": "Սպտ", "appointments": 1, "patients": 10 },
+            { "month": "Հոկ", "appointments": 21, "patients": 15 },
+            { "month": "Նյմ", "appointments": 12, "patients": 8 },
+            { "month": "Դկտ", "appointments": 5, "patients": 1 }
+        ],
+        "byDepartment": [
+            { "department": "Կարդիոլոգիա", "appointments": 2, "patients": 3 },
+            {
+                "department": "Էնդոկրինոլոգիա",
+                "appointments": 1,
+                "patients": 2
+            },
+            {
+                "department": "Սրտաբանություն",
+                "appointments": 2,
+                "patients": 1
+            },
+            {
+                "department": "Նյարդաբանություն",
+                "appointments": 1,
+                "patients": 2
+            },
+            {
+                "department": "Մանկաբուժություն",
+                "appointments": 23,
+                "patients": 11
+            },
+            {
+                "department": "Մաշկաբանություն",
+                "appointments": 2,
+                "patients": 12
+            },
+            { "department": "Օրթոպեդիա", "appointments": 1, "patients": 1 }
+        ],
+        "topDoctors": [
+            { "name": "Դ.Կարապետյան", "patients": 24 },
+            { "name": "Դ.Հարությունյան", "patients": 18 },
+            { "name": "Գ.Պետրոսյան", "patients": 14 }
+        ],
+        "counts": {
+            "patients": 100,
+            "newPatients": 20,
+            "departments": 5,
+            "doctors": 50,
+            "appointments": 200
+        },
+        "newPatients": [
+            {
+                "id": 1,
+                "name": "Արամ Սարգսյան",
+                "age": 45,
+                "department": "Կարդիոլոգիա",
+                "dateRegistered": "2024-06-01T10:00:00Z"
+            },
+            {
+                "id": 2,
+                "name": "Լուսինե Պետրոսյան",
+                "age": 30,
+                "department": "Էնդոկրինոլոգիա",
+                "dateRegistered": "2024-06-02T14:00:00Z"
+            },
+            {
+                "id": 3,
+                "name": "Գևորգ Ավագյան",
+                "age": 50,
+                "department": "Սրտաբանություն",
+                "dateRegistered": "2024-06-03T09:00:00Z"
+            }
+        ],
+        "appointments": [
+            {
+                "id": 1,
+                "patientName": "Արամ Սարգսյան",
+                "doctorName": "Դ.Կարապետյան",
+                "department": "Կարդիոլոգիա",
+                "date": "2024-06-10T10:00:00Z"
+            },
+            {
+                "id": 2,
+                "patientName": "Լուսինե Պետրոսյան",
+                "doctorName": "Դ.Հարությունյան",
+                "department": "Էնդոկրինոլոգիա",
+                "date": "2024-06-11T14:00:00Z"
+            },
+            {
+                "id": 3,
+                "patientName": "Գևորգ Ավագյան",
+                "doctorName": "Ա.Հակոբյան",
+                "department": "Սրտաբանություն",
+                "date": "2024-06-12T09:00:00Z"
+            }
+        ]
     }
 }
