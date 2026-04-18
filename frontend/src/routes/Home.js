@@ -69,6 +69,27 @@ const Home = () => {
   const filteredAppointments = appointments.filter((a) =>
     filter.department === "all" ? true : a.department === filter.department
   );
+  const [chartData, setChartData] = useState({
+  monthly: [
+    { month: "Հուն", appointments: 0, patients: 0 },
+    { month: "Փտր", appointments: 0, patients: 0 },
+    { month: "Մրտ", appointments: 0, patients: 0 },
+    { month: "Ապր", appointments: 0, patients: 0 },
+    { month: "Մյս", appointments: 0, patients: 0 },
+    { month: "Հնս", appointments: 0, patients: 0 },
+    { month: "Հլս", appointments: 0, patients: 0 },
+    { month: "Օգս", appointments: 0, patients: 0 },
+    { month: "Սպտ", appointments: 0, patients: 0 },
+    { month: "Հոկ", appointments: 0, patients: 0 },
+    { month: "Նյմ", appointments: 0, patients: 0 },
+    { month: "Դկտ", appointments: 0, patients: 0 },
+  ],
+  byDepartment: DEPARTMENTS.map((d) => ({ name: d, value: 0 })),
+  topDoctors: [],
+});
+
+const [editingChart, setEditingChart] = useState(null);
+const [chartInputs, setChartInputs] = useState({});
 
   return (
     <div>
