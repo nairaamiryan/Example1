@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import StatCard from "../components/StatCard";
 import {
+  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+} from "recharts";
+import {
   STATISTICS,
   DEPARTMENTS,
   STATUS_OPTIONS,
