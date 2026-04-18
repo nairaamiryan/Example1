@@ -46,6 +46,5 @@ deletePatient: async (id) => {
     } catch {
         return { success: false };
     }
-},
-
+}
 export default new API();
