@@ -32,6 +32,18 @@ const Patients = () => {
     }
 
     return (
+        const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Delete this patient?");
+    if (!confirmDelete) return;
+
+    const response = await api.deletePatient(id);
+
+    if (response.success) {
+        setPatients((prev) =>
+            prev.filter((patient) => patient.id !== id)
+        );
+    }
+};
         <div>
             <Navbar />
             <div style={styles.container}>
@@ -88,7 +100,11 @@ const Patients = () => {
         : patient.status === statusFilter
 )
                         .map((patient) => (
-                            <PatientCard key={patient.id} patient={patient} />
+                           <PatientCard
+    key={patient.id}
+    patient={patient}
+    onDelete={handleDelete}
+/>
                         ))}
                 </div>
             </div>
