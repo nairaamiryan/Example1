@@ -40,12 +40,6 @@ export const PATIENTS = {
     SEARCH: "Որոնել հիվանդ...",
 };
 
-export const PATIENT = "hիվանդ";
-
-export const STATUS_COLORS = (status) => {
-    switch (status) {
-        case "active":
-            return "#15803d";
         case "stable":
             return "#0d7c6f";
         case "pending":
