@@ -1,9 +1,16 @@
 import React from "react";
 
-const StatCard = ({ icon, title, value, color }) => {
+const StatCard = ({ icon, title, value, color, count, subtitle, onCountChange }) => {
     return (
         <div style={{ ...styles.card, borderLeft: `4px solid ${color}` }}>
             <div style={styles.icon}>{icon}</div>
+     <input
+        type="number"
+        min="0"
+        value={count}
+        onChange={(e) => onCountChange(Number(e.target.value))}
+        style={styles.input(color)}
+      />
             <div style={styles.content}>
                 <div style={styles.title}>{title}</div>
                 <div style={{ ...styles.value, color }}>{value}</div>
