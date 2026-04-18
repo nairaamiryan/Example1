@@ -17,6 +17,11 @@ const PatientCard = ({ key, patient }) => {
                     {PATIENTS.AGE} {patient.age}
                 </div>
             </div>
+                    <div style={styles.actions}>
+    <button style={styles.btn}>View</button>
+    <button style={styles.btn}>Edit</button>
+    <button style={styles.delete}>Delete</button>
+</div>
             <div
                 style={{
                     ...styles.status,
@@ -72,6 +77,30 @@ const styles = {
         fontSize: "12px",
         color: "#9ca3af",
     },
+    actions: {
+    display: "flex",
+    gap: "6px",
+    marginRight: "10px",
+},
+
+btn: {
+    padding: "5px 10px",
+    border: "none",
+    borderRadius: "5px",
+    background: "#e5e7eb",
+    cursor: "pointer",
+    fontSize: "12px",
+},
+
+delete: {
+    padding: "5px 10px",
+    border: "none",
+    borderRadius: "5px",
+    background: "#ef4444",
+    color: "white",
+    cursor: "pointer",
+    fontSize: "12px",
+},
     status: {
         padding: "5px 12px",
         borderRadius: "6px",
