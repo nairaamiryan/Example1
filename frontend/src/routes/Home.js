@@ -87,7 +87,64 @@ const Home = () => {
   byDepartment: DEPARTMENTS.map((d) => ({ name: d, value: 0 })),
   topDoctors: [],
 });
+const handleChartEdit = (section) => {
+  setEditingChart(section);
+  if (section === "monthly") {
+    const inputs = {};
+    chartData.monthly.forEach((m) => {
+      inputs[m.month + "_appointments"] = m.appointments;
+      inputs[m.month + "_patients"] = m.patients;
+    });
+    setChartInputs(inputs);
+  } else if (section === "byDepartment") {
+    const inputs = {};
+    chartData.byDepartment.forEach((d) => {
+      inputs[d.name] = d.value;
+    });
+    setChartInputs(inputs);
+  } else if (section === "topDoctors") {
+    const inputs = {};
+    (chartData.topDoctors.length
+      ? chartData.topDoctors
+      : [{ name: "", count: 0 }, { name: "", count: 0 }, { name: "", count: 0 }]
+    ).forEach((d, i) => {
+      inputs[`doctor_${i}_name`] = d.name;
+      inputs[`doctor_${i}_count`] = d.count;
+    });
+    setChartInputs(inputs);
+  }
+};
 
+const handleChartSave = () => {
+  if (editingChart === "monthly") {
+    setChartData((prev) => ({
+      ...prev,
+      monthly: prev.monthly.map((m) => ({
+        ...m,
+        appointments: Number(chartInputs[m.month + "_appointments"] || 0),
+        patients: Number(chartInputs[m.month + "_patients"] || 0),
+      })),
+    }));
+  } else if (editingChart === "byDepartment") {
+    setChartData((prev) => ({
+      ...prev,
+      byDepartment: prev.byDepartment.map((d) => ({
+        ...d,
+        value: Number(chartInputs[d.name] || 0),
+      })),
+    }));
+  } else if (editingChart === "topDoctors") {
+    const doctors = [0, 1, 2]
+      .map((i) => ({
+        name: chartInputs[`doctor_${i}_name`] || "",
+        count: Number(chartInputs[`doctor_${i}_count`] || 0),
+      }))
+      .filter((d) => d.name);
+    setChartData((prev) => ({ ...prev, topDoctors: doctors }));
+  }
+  setEditingChart(null);
+  setChartInputs({});
+};
 const [editingChart, setEditingChart] = useState(null);
 const [chartInputs, setChartInputs] = useState({});
 
@@ -162,7 +219,160 @@ const [chartInputs, setChartInputs] = useState({});
 
         {/* Աղյուսակներ */}
         <div style={styles.tablesGrid}>
+{/* Գրաֆիկներ */}
+<div style={styles.chartsSection}>
+  <h3 style={styles.sectionTitle}>📈 Գրաֆիկներ</h3>
+  <div style={styles.chartsGrid}>
 
+    {/* LineChart — ամսական դինամիկա */}
+    <div style={styles.chartCard}>
+      <div style={styles.tableHeader}>
+        <h4 style={styles.chartTitle}>Ժամադրություններ / Հիվանդներ ըստ ամիսների</h4>
+        <button onClick={() => handleChartEdit("monthly")} style={styles.editBtn}>✏️ Խմբագրել</button>
+      </div>
+
+      {editingChart === "monthly" && (
+        <div style={styles.chartForm}>
+          <table style={styles.table}>
+            <thead>
+              <tr>
+                <th style={styles.th}>Ամիս</th>
+                <th style={styles.th}>Ժամադրություններ</th>
+                <th style={styles.th}>Հիվանդներ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {chartData.monthly.map((m) => (
+                <tr key={m.month}>
+                  <td style={styles.td}>{m.month}</td>
+                  <td style={styles.td}>
+                    <input
+                      type="number"
+                      min="0"
+                      value={chartInputs[m.month + "_appointments"] || 0}
+                      onChange={(e) => setChartInputs((p) => ({ ...p, [m.month + "_appointments"]: e.target.value }))}
+                      style={styles.smallInput}
+                    />
+                  </td>
+                  <td style={styles.td}>
+                    <input
+                      type="number"
+                      min="0"
+                      value={chartInputs[m.month + "_patients"] || 0}
+                      onChange={(e) => setChartInputs((p) => ({ ...p, [m.month + "_patients"]: e.target.value }))}
+                      style={styles.smallInput}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={handleChartSave} style={styles.submitBtn}>Պահպանել</button>
+        </div>
+      )}
+
+      <ResponsiveContainer width="100%" height={250}>
+        <LineChart data={chartData.monthly}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="appointments" stroke="#e67e22" name="Ժամադրություններ" strokeWidth={2} dot={{ r: 4 }} />
+          <Line type="monotone" dataKey="patients" stroke="#4a90d9" name="Հիվանդներ" strokeWidth={2} dot={{ r: 4 }} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+
+    {/* PieChart — ըստ բաժինների */}
+    <div style={styles.chartCard}>
+      <div style={styles.tableHeader}>
+        <h4 style={styles.chartTitle}>Հիվանդներ ըստ բաժինների</h4>
+        <button onClick={() => handleChartEdit("byDepartment")} style={styles.editBtn}>✏️ Խմբագրել</button>
+      </div>
+
+      {editingChart === "byDepartment" && (
+        <div style={styles.chartForm}>
+          {chartData.byDepartment.map((d) => (
+            <div key={d.name} style={styles.inlineInput}>
+              <label style={styles.inlineLabel}>{d.name}</label>
+              <input
+                type="number"
+                min="0"
+                value={chartInputs[d.name] || 0}
+                onChange={(e) => setChartInputs((p) => ({ ...p, [d.name]: e.target.value }))}
+                style={styles.smallInput}
+              />
+            </div>
+          ))}
+          <button onClick={handleChartSave} style={styles.submitBtn}>Պահպանել</button>
+        </div>
+      )}
+
+      <ResponsiveContainer width="100%" height={250}>
+        <PieChart>
+          <Pie
+            data={chartData.byDepartment}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={90}
+            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+          >
+            {chartData.byDepartment.map((_, i) => (
+              <Cell key={i} fill={["#4a90d9", "#27ae60", "#e67e22", "#8e44ad"][i % 4]} />
+            ))}
+          </Pie>
+          <Tooltip />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+
+    {/* BarChart — ամենաբանուկ բժիշկներ */}
+    <div style={{ ...styles.chartCard, gridColumn: "1 / -1" }}>
+      <div style={styles.tableHeader}>
+        <h4 style={styles.chartTitle}>Ամենաբանուկ բժիշկները</h4>
+        <button onClick={() => handleChartEdit("topDoctors")} style={styles.editBtn}>✏️ Խմբագրել</button>
+      </div>
+
+      {editingChart === "topDoctors" && (
+        <div style={styles.chartForm}>
+          {[0, 1, 2].map((i) => (
+            <div key={i} style={styles.inlineInput}>
+              <input
+                placeholder="Բժիշկի անուն"
+                value={chartInputs[`doctor_${i}_name`] || ""}
+                onChange={(e) => setChartInputs((p) => ({ ...p, [`doctor_${i}_name`]: e.target.value }))}
+                style={{ ...styles.smallInput, width: "200px" }}
+              />
+              <input
+                type="number"
+                min="0"
+                placeholder="Ժամ."
+                value={chartInputs[`doctor_${i}_count`] || 0}
+                onChange={(e) => setChartInputs((p) => ({ ...p, [`doctor_${i}_count`]: e.target.value }))}
+                style={styles.smallInput}
+              />
+            </div>
+          ))}
+          <button onClick={handleChartSave} style={styles.submitBtn}>Պահպանել</button>
+        </div>
+      )}
+
+      <ResponsiveContainer width="100%" height={250}>
+        <BarChart data={chartData.topDoctors}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="count" name="Ժամադրություններ" fill="#4a90d9" radius={[6, 6, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+
+  </div>
+</div>
           {/* Ժամադրություններ */}
           <div style={styles.tableCard}>
             <div style={styles.tableHeader}>
@@ -349,5 +559,14 @@ const styles = {
   deleteBtn: { background: "none", border: "none", cursor: "pointer", color: "#e74c3c", fontSize: "16px" },
   empty: { textAlign: "center", padding: "20px", color: "#999", fontSize: "14px" },
 };
-
+chartsSection: { marginTop: "40px" },
+sectionTitle: { fontSize: "18px", fontWeight: "600", color: "#1a2e4a", marginBottom: "20px" },
+chartsGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: "24px" },
+chartCard: { backgroundColor: "#fff", borderRadius: "12px", padding: "20px", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" },
+chartTitle: { fontSize: "14px", fontWeight: "600", color: "#1a2e4a", margin: 0 },
+chartForm: { backgroundColor: "#f8f9fa", padding: "16px", borderRadius: "10px", marginBottom: "16px", display: "flex", flexDirection: "column", gap: "10px" },
+editBtn: { padding: "5px 12px", backgroundColor: "#f0f0f0", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "13px" },
+smallInput: { padding: "5px 8px", borderRadius: "6px", border: "1px solid #ddd", fontSize: "13px", width: "80px" },
+inlineInput: { display: "flex", alignItems: "center", gap: "12px" },
+inlineLabel: { fontSize: "13px", color: "#555", width: "140px" },
 export default Home;
