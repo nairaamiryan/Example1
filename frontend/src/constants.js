@@ -1,20 +1,12 @@
-export const STATISTICS = {
-  TITLE: "Վիճակագրություն",
-  PATIENTS: { ICON: "👥", TITLE: "Հիվանդներ", COLOR: "#4a90d9" },
-  DOCTORS: { ICON: "👨‍⚕️", TITLE: "Բժիշկներ", COLOR: "#27ae60" },
-  APPOINTMENTS: { ICON: "📅", TITLE: "Ժամադրություններ", COLOR: "#e67e22" },
-  DEPARTMENT: { ICON: "🏥", TITLE: "Բաժիններ", COLOR: "#8e44ad" },
-};
-
-export const DEPARTMENTS = ["Կարդիոլոգիա", "Նյարդաբանություն", "Ակնաբուժություն", "Վիրաբուժություն"];
+export const DEPARTMENTS = [
+    "Կարդիոլոգիա",
+    "Նյարդաբանություն",
+    "Ակնաբուժություն",
+    "Վիրաբուժություն",
+];
 
 export const STATUS_OPTIONS = ["Հաստատված", "Սպասում", "Ավարտված"];
 
-export const STATUS_COLORS = {
-  Հաստատված: "#27ae60",
-  Սպասում: "#e67e22",
-  Ավարտված: "#4a90d9",
-};
 export const REPORTS = {
     TITLE: "Հաշվետվություններ",
     EMPTY_REPORTS: "Հաշվատվություններ չկան",
@@ -40,6 +32,10 @@ export const PATIENTS = {
     SEARCH: "Որոնել հիվանդ...",
 };
 
+export const STATUS_COLORS = (status) => {
+    switch (status.toLowerCase()) {
+        case "active":
+            return "#2563a8";
         case "stable":
             return "#0d7c6f";
         case "pending":

@@ -31,33 +31,38 @@ const Patients = () => {
         );
     }
 
+    const handleDelete = async (id) => {
+        const confirmDelete = window.confirm("Delete this patient?");
+        if (!confirmDelete) return;
+
+        const response = await api.deletePatient(id);
+
+        if (response.success) {
+            setPatients((prev) => prev.filter((patient) => patient.id !== id));
+        }
+    };
     return (
-        const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Delete this patient?");
-    if (!confirmDelete) return;
-
-    const response = await api.deletePatient(id);
-
-    if (response.success) {
-        setPatients((prev) =>
-            prev.filter((patient) => patient.id !== id)
-        );
-    }
-};
         <div>
             <Navbar />
             <div style={styles.container}>
-        <div style={styles.container}>
                 <div style={styles.header}>
-        <div style={styles.stats}>
-    <span>Total: {patients.length}</span>
-    <span>
-        Active: {patients.filter(p => p.status === "Active").length}
-    </span>
-    <span>
-        Pending: {patients.filter(p => p.status === "Pending").length}
-    </span>
-</div>
+                    <div style={styles.stats}>
+                        <span>Total: {patients.length}</span>
+                        <span>
+                            Active:{" "}
+                            {
+                                patients.filter((p) => p.status === "Active")
+                                    .length
+                            }
+                        </span>
+                        <span>
+                            Pending:{" "}
+                            {
+                                patients.filter((p) => p.status === "Pending")
+                                    .length
+                            }
+                        </span>
+                    </div>
                     <div>
                         <h1 style={styles.title}>{PATIENTS.TITLE}</h1>
                         <p style={styles.subtitle}>
@@ -73,16 +78,16 @@ const Patients = () => {
                             onChange={(e) => setSearch(e.target.value)}
                             style={styles.search}
                         />
-                            <select
-    value={statusFilter}
-    onChange={(e) => setStatusFilter(e.target.value)}
-    style={styles.select}
->
-    <option value="All">All</option>
-    <option value="Active">Active</option>
-    <option value="Stable">Stable</option>
-    <option value="Pending">Pending</option>
-</select>
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            style={styles.select}
+                        >
+                            <option value="All">All</option>
+                            <option value="Active">Active</option>
+                            <option value="Stable">Stable</option>
+                            <option value="Pending">Pending</option>
+                        </select>
 
                         <button style={styles.addButton}>
                             {PATIENTS.ADD_PATIENT}
@@ -91,20 +96,22 @@ const Patients = () => {
                 </div>
                 <div style={styles.patientsList}>
                     {patients
-                     .filter((patient) =>
-    patient.name.toLowerCase().includes(search.toLowerCase())
-)
-.filter((patient) =>
-    statusFilter === "All"
-        ? true
-        : patient.status === statusFilter
-)
+                        .filter((patient) =>
+                            patient.name
+                                .toLowerCase()
+                                .includes(search.toLowerCase()),
+                        )
+                        .filter((patient) =>
+                            statusFilter === "All"
+                                ? true
+                                : patient.status === statusFilter,
+                        )
                         .map((patient) => (
-                           <PatientCard
-    key={patient.id}
-    patient={patient}
-    onDelete={handleDelete}
-/>
+                            <PatientCard
+                                key={patient.id}
+                                patient={patient}
+                                onDelete={handleDelete}
+                            />
                         ))}
                 </div>
             </div>
@@ -119,18 +126,18 @@ const styles = {
         padding: "40px 20px",
     },
     stats: {
-    display: "flex",
-    gap: "20px",
-    marginBottom: "20px",
-    fontSize: "14px",
-    color: "#6b7280",
-},
+        display: "flex",
+        gap: "20px",
+        marginBottom: "20px",
+        fontSize: "14px",
+        color: "#6b7280",
+    },
 
-select: {
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid #e5e7eb",
-},
+    select: {
+        padding: "10px",
+        borderRadius: "8px",
+        border: "1px solid #e5e7eb",
+    },
     header: {
         display: "flex",
         justifyContent: "space-between",
