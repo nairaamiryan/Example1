@@ -36,5 +36,16 @@ class API {
         return { success: true, data: mockData.notifications };
     }
 }
+deletePatient: async (id) => {
+    try {
+        const res = await fetch(`/patients/${id}`, {
+            method: "DELETE",
+        });
+
+        return { success: true };
+    } catch {
+        return { success: false };
+    }
+},
 
 export default new API();
