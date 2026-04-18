@@ -1,7 +1,7 @@
 import React from "react";
 import { PATIENTS, STATUS_COLORS } from "../constants";
 
-const PatientCard = ({ key, patient }) => {
+const PatientCard = ({ key, patient,onDelete  }) => {
     return (
         <div key={key} style={styles.card}>
             <div style={styles.avatar}>
@@ -20,7 +20,12 @@ const PatientCard = ({ key, patient }) => {
                     <div style={styles.actions}>
     <button style={styles.btn}>View</button>
     <button style={styles.btn}>Edit</button>
-    <button style={styles.delete}>Delete</button>
+    <button
+    style={styles.delete}
+    onClick={() => onDelete(patient.id)}
+>
+    Delete
+</button>
 </div>
             <div
                 style={{
