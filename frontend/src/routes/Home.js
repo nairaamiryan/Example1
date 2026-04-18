@@ -111,73 +111,7 @@ const Home = () => {
         byDepartment: DEPARTMENTS.map((d) => ({ name: d, value: 0 })),
         topDoctors: [],
     });
-    const handleChartEdit = (section) => {
-        setEditingChart(section);
-        if (section === "monthly") {
-            const inputs = {};
-            chartData.monthly.forEach((m) => {
-                inputs[m.month + "_appointments"] = m.appointments;
-                inputs[m.month + "_patients"] = m.patients;
-            });
-            setChartInputs(inputs);
-        } else if (section === "byDepartment") {
-            const inputs = {};
-            chartData.byDepartment.forEach((d) => {
-                inputs[d.name] = d.value;
-            });
-            setChartInputs(inputs);
-        } else if (section === "topDoctors") {
-            const inputs = {};
-            (chartData.topDoctors.length
-                ? chartData.topDoctors
-                : [
-                      { name: "", count: 0 },
-                      { name: "", count: 0 },
-                      { name: "", count: 0 },
-                  ]
-            ).forEach((d, i) => {
-                inputs[`doctor_${i}_name`] = d.name;
-                inputs[`doctor_${i}_count`] = d.count;
-            });
-            setChartInputs(inputs);
-        }
-    };
-
-    const handleChartSave = () => {
-        if (editingChart === "monthly") {
-            setChartData((prev) => ({
-                ...prev,
-                monthly: prev.monthly.map((m) => ({
-                    ...m,
-                    appointments: Number(
-                        chartInputs[m.month + "_appointments"] || 0,
-                    ),
-                    patients: Number(chartInputs[m.month + "_patients"] || 0),
-                })),
-            }));
-        } else if (editingChart === "byDepartment") {
-            setChartData((prev) => ({
-                ...prev,
-                byDepartment: prev.byDepartment.map((d) => ({
-                    ...d,
-                    value: Number(chartInputs[d.name] || 0),
-                })),
-            }));
-        } else if (editingChart === "topDoctors") {
-            const doctors = [0, 1, 2]
-                .map((i) => ({
-                    name: chartInputs[`doctor_${i}_name`] || "",
-                    count: Number(chartInputs[`doctor_${i}_count`] || 0),
-                }))
-                .filter((d) => d.name);
-            setChartData((prev) => ({ ...prev, topDoctors: doctors }));
-        }
-        setEditingChart(null);
-        setChartInputs({});
-    };
-    const [editingChart, setEditingChart] = useState(null);
-    const [chartInputs, setChartInputs] = useState({});
-
+   
     return (
         <div>
             <Navbar />
@@ -270,15 +204,6 @@ const Home = () => {
                                         Ժամադրություններ / Հիվանդներ ըստ
                                         ամիսների
                                     </h4>
-                                    <button
-                                        onClick={() =>
-                                            handleChartEdit("monthly")
-                                        }
-                                        style={styles.editBtn}
-                                    >
-                                        ✏️ Խմբագրել
-                                    </button>
-                                </div>
 
                                 {editingChart === "monthly" && (
                                     <div style={styles.chartForm}>
@@ -364,12 +289,7 @@ const Home = () => {
                                                 ))}
                                             </tbody>
                                         </table>
-                                        <button
-                                            onClick={handleChartSave}
-                                            style={styles.submitBtn}
-                                        >
-                                            Պահպանել
-                                        </button>
+                                        
                                     </div>
                                 )}
 
@@ -406,14 +326,7 @@ const Home = () => {
                                     <h4 style={styles.chartTitle}>
                                         Հիվանդներ ըստ բաժինների
                                     </h4>
-                                    <button
-                                        onClick={() =>
-                                            handleChartEdit("byDepartment")
-                                        }
-                                        style={styles.editBtn}
-                                    >
-                                        ✏️ Խմբագրել
-                                    </button>
+                                   
                                 </div>
 
                                 {editingChart === "byDepartment" && (
@@ -445,12 +358,7 @@ const Home = () => {
                                                 />
                                             </div>
                                         ))}
-                                        <button
-                                            onClick={handleChartSave}
-                                            style={styles.submitBtn}
-                                        >
-                                            Պահպանել
-                                        </button>
+                                        
                                     </div>
                                 )}
 
@@ -499,14 +407,7 @@ const Home = () => {
                                     <h4 style={styles.chartTitle}>
                                         Ամենաբանուկ բժիշկները
                                     </h4>
-                                    <button
-                                        onClick={() =>
-                                            handleChartEdit("topDoctors")
-                                        }
-                                        style={styles.editBtn}
-                                    >
-                                        ✏️ Խմբագրել
-                                    </button>
+                                
                                 </div>
 
                                 {editingChart === "topDoctors" && (
@@ -555,12 +456,7 @@ const Home = () => {
                                                 />
                                             </div>
                                         ))}
-                                        <button
-                                            onClick={handleChartSave}
-                                            style={styles.submitBtn}
-                                        >
-                                            Պահպանել
-                                        </button>
+                                        
                                     </div>
                                 )}
 
@@ -587,12 +483,7 @@ const Home = () => {
                             <h3 style={styles.tableTitle}>
                                 📋 Վերջին ժամադրությունները
                             </h3>
-                            <button
-                                onClick={() => setShowApptForm((v) => !v)}
-                                style={styles.addBtn}
-                            >
-                                {showApptForm ? "✕ Փակել" : "+ Ավելացնել"}
-                            </button>
+                           
                         </div>
 
                         {showApptForm && (
@@ -644,12 +535,7 @@ const Home = () => {
                                         <option key={s}>{s}</option>
                                     ))}
                                 </select>
-                                <button
-                                    onClick={handleAddAppointment}
-                                    style={styles.submitBtn}
-                                >
-                                    Պահպանել
-                                </button>
+                               
                             </div>
                         )}
 
@@ -720,12 +606,7 @@ const Home = () => {
                             <h3 style={styles.tableTitle}>
                                 🆕 Նոր գրանցված հիվանդներ
                             </h3>
-                            <button
-                                onClick={() => setShowPatientForm((v) => !v)}
-                                style={styles.addBtn}
-                            >
-                                {showPatientForm ? "✕ Փակել" : "+ Ավելացնել"}
-                            </button>
+                           
                         </div>
 
                         {showPatientForm && (
@@ -778,12 +659,7 @@ const Home = () => {
                                     }
                                     style={styles.input}
                                 />
-                                <button
-                                    onClick={handleAddPatient}
-                                    style={styles.submitBtn}
-                                >
-                                    Պահպանել
-                                </button>
+                               
                             </div>
                         )}
 
