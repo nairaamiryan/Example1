@@ -80,32 +80,32 @@ const [newDoctor, setNewDoctor] = useState({
     + Ավելացնել բժիշկ
 </button>
         {showForm && (
-    <div style={styles.overlay}>
-        <div style={styles.modal}>
-            <h3 style={styles.modalTitle}>Ավելացնել բժիշկ</h3>
-            <input
-                style={styles.input}
-                placeholder="Անուն"
-                value={newDoctor.name}
-                onChange={(e) => setNewDoctor({ ...newDoctor, name: e.target.value })}
-            />
-            <input
-                style={styles.input}
+    <div style={styles.form}>
+        <input
+            placeholder="Անուն"
+            value={newDoctor.name}
+            onChange={(e) =>
+                setNewDoctor({ ...newDoctor, name: e.target.value })
+            }
+        />
+                <input
                 placeholder="Ազգանուն"
                 value={newDoctor.surname}
-                onChange={(e) => setNewDoctor({ ...newDoctor, surname: e.target.value })}
+                onChange={(e) =>
+                    setNewDoctor({...newDoctor, surname: e.target.value})
+                }
             />
-            <input
-                style={styles.input}
-                placeholder="Մասնագիտություն"
-                value={newDoctor.specialty}
-                onChange={(e) => setNewDoctor({ ...newDoctor, specialty: e.target.value })}
-            />
-            <div style={styles.modalBtns}>
-                <button style={styles.saveBtn} onClick={addDoctor}>Պահպանել</button>
-                <button style={styles.cancelBtn} onClick={() => setShowForm(false)}>Չեղարկել</button>
-            </div>
-        </div>
+
+        <input
+            placeholder="Մասնագիտություն"
+            value={newDoctor.specialty}
+            onChange={(e) =>
+                setNewDoctor({ ...newDoctor, specialty: e.target.value })
+            }
+        />
+
+        <button onClick={addDoctor}>Save</button>
+        <button onClick={() => setShowForm(false)}>Cancel</button>
     </div>
 )}
                 <div style={styles.doctorsGrid}>
@@ -169,53 +169,7 @@ form:{
     justifyContent: "center",
     zIndex: 1000,
 },
-modal: {
-    background: "white",
-    padding: "30px",
-    borderRadius: "14px",
-    width: "360px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-    boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
-},
-modalTitle: {
-    fontSize: "20px",
-    fontWeight: "600",
-    color: "#1a2e4a",
-    margin: 0,
-},
-input: {
-    padding: "10px 12px",
-    borderRadius: "8px",
-    border: "1px solid #d1d5db",
-    fontSize: "14px",
-    outline: "none",
-},
-modalBtns: {
-    display: "flex",
-    gap: "10px",
-    marginTop: "4px",
-},
-saveBtn: {
-    flex: 1,
-    background: "#2563eb",
-    color: "white",
-    border: "none",
-    padding: "10px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "600",
-},
-cancelBtn: {
-    flex: 1,
-    background: "#f3f4f6",
-    color: "#374151",
-    border: "none",
-    padding: "10px",
-    borderRadius: "8px",
-    cursor: "pointer",
-},
+
     infoIcon: {
         fontSize: "32px",
         marginBottom: "10px",
