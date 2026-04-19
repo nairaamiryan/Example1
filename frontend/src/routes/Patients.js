@@ -11,7 +11,6 @@ const Patients = () => {
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
     const [showForm, setShowForm] = useState(false);
-    const [newPatient, setNewPatient] = useState({ name: "", surname: "" });
 
     useEffect(() => {
         loadPatients();
@@ -25,6 +24,24 @@ const Patients = () => {
         setLoading(false);
     };
 
+    const addPatient = async (patientData) => {
+        const res = await api.addPatient(patientData);
+        if (res.success) {
+            setPatients([...patients, res.data]);
+            setShowForm(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        const confirmDelete = window.confirm("Delete this patient?");
+        if (!confirmDelete) return;
+
+        const response = await api.deletePatient(id);
+        if (response.success) {
+            setPatients((prev) => prev.filter((patient) => patient.id !== id));
+        }
+    };
+
     if (loading) {
         return (
             <div>
@@ -34,23 +51,6 @@ const Patients = () => {
         );
     }
 
-    const handleDelete = async (id) => {
-        const confirmDelete = window.confirm("Delete this patient?");
-        if (!confirmDelete) return;
-        const addPatient = async (patientData) => {
-    const res = await api.addPatient(patientData);
-    if (res.success) {
-        setPatients([...patients, res.data]);
-        setShowForm(false);
-    }
-};
-
-        const response = await api.deletePatient(id);
-
-        if (response.success) {
-            setPatients((prev) => prev.filter((patient) => patient.id !== id));
-        }
-    };
     return (
         <div>
             <Navbar />
@@ -60,17 +60,11 @@ const Patients = () => {
                         <span>Total: {patients.length}</span>
                         <span>
                             Active:{" "}
-                            {
-                                patients.filter((p) => p.status === "Active")
-                                    .length
-                            }
+                            {patients.filter((p) => p.status === "Active").length}
                         </span>
                         <span>
                             Pending:{" "}
-                            {
-                                patients.filter((p) => p.status === "Pending")
-                                    .length
-                            }
+                            {patients.filter((p) => p.status === "Pending").length}
                         </span>
                     </div>
                     <div>
@@ -99,40 +93,34 @@ const Patients = () => {
                             <option value="Pending">Pending</option>
                         </select>
 
-                        <button style={styles.addButton}>
+                        <button
+                            style={styles.addButton}
+                            onClick={() => setShowForm(true)}
+                        >
                             {PATIENTS.ADD_PATIENT}
                         </button>
-              {showForm && (
-    <div style={styles.form}>
-        <input
-            placeholder="Անուն"
-            value={newPatient.name}
-            onChange={(e) => setNewPatient({...newPatient, name: e.target.value})}
-            style={styles.filterInput}
-        />
-        <input
-            placeholder="Ազգանուն"
-            value={newPatient.surname}
-            onChange={(e) => setNewPatient({...newPatient, surname: e.target.value})}
-            style={styles.filterInput}
-        />
-        <button onClick={addPatient}>Պահպանել</button>
-        <button onClick={() => setShowForm(false)}>Չեղարկել</button>
-    </div>
-)}
                     </div>
                 </div>
+
+                {showForm && (
+                    <AddPatientModal
+                        isOpen={showForm}
+                        onClose={() => setShowForm(false)}
+                        onSubmit={addPatient}
+                    />
+                )}
+
                 <div style={styles.patientsList}>
                     {patients
                         .filter((patient) =>
                             patient.name
                                 .toLowerCase()
-                                .includes(search.toLowerCase()),
+                                .includes(search.toLowerCase())
                         )
                         .filter((patient) =>
                             statusFilter === "All"
                                 ? true
-                                : patient.status === statusFilter,
+                                : patient.status === statusFilter
                         )
                         .map((patient) => (
                             <PatientCard
@@ -160,7 +148,6 @@ const styles = {
         fontSize: "14px",
         color: "#6b7280",
     },
-
     select: {
         padding: "10px",
         borderRadius: "8px",
