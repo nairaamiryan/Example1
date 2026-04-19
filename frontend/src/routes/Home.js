@@ -2,42 +2,45 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import StatCard from "../components/StatCard";
 import {
-    LineChart,
-    Line,
-    BarChart,
-    Bar,
-    PieChart,
-    Pie,
-    Cell,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
+    LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
+    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
 import { STATISTICS, DEPARTMENTS, LOADING } from "../constants";
 import api from "../services/api";
 
 const PERIOD_LABELS = { today: "Այսօր", weekly: "Շաբաթ", monthly: "Ամիս" };
 
+const WEEKLY_DATA = [
+    { month: "Երկ", appointments: 8, patients: 5 },
+    { month: "Երք", appointments: 12, patients: 9 },
+    { month: "Չոր", appointments: 6, patients: 4 },
+    { month: "Հնգ", appointments: 15, patients: 11 },
+    { month: "Ուրբ", appointments: 10, patients: 7 },
+    { month: "Շաբ", appointments: 4, patients: 3 },
+    { month: "Կիր", appointments: 2, patients: 1 },
+];
+
+const TODAY_DATA = [
+    { month: "08:00", appointments: 2, patients: 1 },
+    { month: "10:00", appointments: 4, patients: 3 },
+    { month: "12:00", appointments: 6, patients: 5 },
+    { month: "14:00", appointments: 3, patients: 2 },
+    { month: "16:00", appointments: 5, patients: 4 },
+    { month: "18:00", appointments: 1, patients: 1 },
+];
+
 const Home = () => {
     const [chartData, setChartData] = useState({
-        monthly: [],
-        byDepartment: [],
-        topDoctors: [],
+        monthly: [], byDepartment: [], topDoctors: [],
     });
     const [filter, setFilter] = useState({ period: "monthly", department: "all" });
     const [loading, setLoading] = useState(true);
 
-    const formatDate = (timestamp) => {
-        const date = new Date(timestamp);
-        return date.toLocaleString();
-    };
+    const formatDate = (timestamp) => new Date(timestamp).toLocaleString();
 
     useEffect(() => {
         loadChartData();
-    }, []);
+    }, [filter.period, filter.department]);
 
     const loadChartData = async () => {
         setLoading(true);
@@ -48,24 +51,23 @@ const Home = () => {
         setLoading(false);
     };
 
-    const doctorsData = chartData.topDoctors.map((d) => ({
-        name: d.name,
-        count: d.patients,
-    }));
+    const getDisplayData = () => {
+        if (filter.period === "weekly") return WEEKLY_DATA;
+        if (filter.period === "today") return TODAY_DATA;
+        return chartData.monthly;
+    };
+
+    const doctorsData = chartData.topDoctors.map((d) => ({ name: d.name, count: d.patients }));
 
     const appointmentsData = chartData.appointments?.map((a) => ({
         id: a.id,
         patientName: a.patientName,
         doctorName: a.doctorName,
         date: formatDate(a.date),
-        department: a.department,
     }));
 
     const counts = chartData.counts || {};
-    const pieData = chartData.byDepartment.map((d) => ({
-        name: d.department,
-        value: d.patients,
-    }));
+    const pieData = chartData.byDepartment.map((d) => ({ name: d.department, value: d.patients }));
 
     return (
         <div>
@@ -82,33 +84,10 @@ const Home = () => {
                     </div>
 
                     <div style={styles.statsGrid}>
-                        <StatCard
-                            icon={STATISTICS.PATIENTS.ICON}
-                            title={STATISTICS.PATIENTS.TITLE}
-                            color={STATISTICS.PATIENTS.COLOR}
-                            value={counts?.patients}
-                            subtitle={`+${counts?.newPatients} այս ամիս`}
-                        />
-                        <StatCard
-                            icon={STATISTICS.DOCTORS.ICON}
-                            title={STATISTICS.DOCTORS.TITLE}
-                            color={STATISTICS.DOCTORS.COLOR}
-                            value={counts?.doctors}
-                        />
-                        <StatCard
-                            icon={STATISTICS.APPOINTMENTS.ICON}
-                            title={STATISTICS.APPOINTMENTS.TITLE}
-                            color={STATISTICS.APPOINTMENTS.COLOR}
-                            value={counts?.appointments}
-                            subtitle={PERIOD_LABELS[filter.period]}
-                        />
-                        <StatCard
-                            icon={STATISTICS.DEPARTMENT.ICON}
-                            title={STATISTICS.DEPARTMENT.TITLE}
-                            color={STATISTICS.DEPARTMENT.COLOR}
-                            value={counts?.departments}
-                            subtitle="ակտիվ"
-                        />
+                        <StatCard icon={STATISTICS.PATIENTS.ICON} title={STATISTICS.PATIENTS.TITLE} color={STATISTICS.PATIENTS.COLOR} value={counts?.patients} />
+                        <StatCard icon={STATISTICS.DOCTORS.ICON} title={STATISTICS.DOCTORS.TITLE} color={STATISTICS.DOCTORS.COLOR} value={counts?.doctors} />
+                        <StatCard icon={STATISTICS.APPOINTMENTS.ICON} title={STATISTICS.APPOINTMENTS.TITLE} color={STATISTICS.APPOINTMENTS.COLOR} value={counts?.appointments} subtitle={PERIOD_LABELS[filter.period]} />
+                        <StatCard icon={STATISTICS.DEPARTMENT.ICON} title={STATISTICS.DEPARTMENT.TITLE} color={STATISTICS.DEPARTMENT.COLOR} value={counts?.departments} subtitle="ակտիվ" />
                     </div>
 
                     <div style={styles.filtersRow}>
@@ -145,20 +124,21 @@ const Home = () => {
                                 <div style={styles.chartCard}>
                                     <div style={styles.tableHeader}>
                                         <h4 style={styles.chartTitle}>
-                                            Ժամադրություններ / Հիվանդներ ըստ ամիսների
+                                            Ժամադրություններ / Հիվանդներ —{" "}
+                                            {filter.period === "today" ? "օրվա ըստ ժամերի" : filter.period === "weekly" ? "շաբաթվա օրերով" : "ըստ ամիսների"}
                                         </h4>
-                                        <ResponsiveContainer width="100%" height={250}>
-                                            <LineChart data={chartData.monthly}>
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="month" />
-                                                <YAxis />
-                                                <Tooltip />
-                                                <Legend />
-                                                <Line type="monotone" dataKey="appointments" stroke="#e67e22" name="Ժամադրություններ" strokeWidth={2} dot={{ r: 4 }} />
-                                                <Line type="monotone" dataKey="patients" stroke="#4a90d9" name="Հիվանդներ" strokeWidth={2} dot={{ r: 4 }} />
-                                            </LineChart>
-                                        </ResponsiveContainer>
                                     </div>
+                                    <ResponsiveContainer width="100%" height={250}>
+                                        <LineChart data={getDisplayData()}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="month" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Line type="monotone" dataKey="appointments" stroke="#e67e22" name="Ժամադրություններ" strokeWidth={2} dot={{ r: 4 }} />
+                                            <Line type="monotone" dataKey="patients" stroke="#4a90d9" name="Հիվանդներ" strokeWidth={2} dot={{ r: 4 }} />
+                                        </LineChart>
+                                    </ResponsiveContainer>
 
                                     <div style={styles.chartCard}>
                                         <div style={styles.tableHeader}>
@@ -199,17 +179,13 @@ const Home = () => {
                                 </div>
                                 <table style={styles.table}>
                                     <thead>
-                                        <tr>
-                                            {["Հիվանդ", "Բժիշկ", "Ամսաթիվ"].map((h) => (
-                                                <th key={h} style={styles.th}>{h}</th>
-                                            ))}
-                                        </tr>
+                                        <tr>{["Հիվանդ", "Բժիշկ", "Ամսաթիվ"].map((h) => <th key={h} style={styles.th}>{h}</th>)}</tr>
                                     </thead>
                                     <tbody>
-                                        {appointmentsData?.length === 0 ? (
+                                        {!appointmentsData?.length ? (
                                             <tr><td colSpan={3} style={styles.empty}>Տվյալ չկա</td></tr>
                                         ) : (
-                                            appointmentsData?.map((a) => (
+                                            appointmentsData.map((a) => (
                                                 <tr key={a.id}>
                                                     <td style={styles.td}>{a.patientName}</td>
                                                     <td style={styles.td}>{a.doctorName}</td>
@@ -227,17 +203,13 @@ const Home = () => {
                                 </div>
                                 <table style={styles.table}>
                                     <thead>
-                                        <tr>
-                                            {["Անուն", "Տարիք", "Բաժին", "Ամսաթիվ"].map((h) => (
-                                                <th key={h} style={styles.th}>{h}</th>
-                                            ))}
-                                        </tr>
+                                        <tr>{["Անուն", "Տարիք", "Բաժին", "Ամսաթիվ"].map((h) => <th key={h} style={styles.th}>{h}</th>)}</tr>
                                     </thead>
                                     <tbody>
-                                        {chartData?.newPatients?.length === 0 ? (
+                                        {!chartData?.newPatients?.length ? (
                                             <tr><td colSpan={4} style={styles.empty}>Տվյալ չկա</td></tr>
                                         ) : (
-                                            chartData?.newPatients?.map((p) => (
+                                            chartData.newPatients.map((p) => (
                                                 <tr key={p.id}>
                                                     <td style={styles.td}>{p.name}</td>
                                                     <td style={styles.td}>{p.age}</td>
