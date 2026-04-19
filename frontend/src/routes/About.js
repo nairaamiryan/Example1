@@ -19,9 +19,7 @@ const [newDoctor, setNewDoctor] = useState({
     useEffect(() => {
         loadData();
     }, []);
-
-    const loadData = async () => {
-        const addDoctor = async () => {
+    const addDoctor = async () => {
     const res = await api.addDoctor(newDoctor);
 
     if (res.success) {
@@ -30,6 +28,8 @@ const [newDoctor, setNewDoctor] = useState({
         setNewDoctor({ name: "", specialty: "" });
     }
 };
+
+    const loadData = async () => {
         const [aboutRes, doctorsRes] = await Promise.all([
             api.getAboutInfo(),
             api.getDoctors(),
