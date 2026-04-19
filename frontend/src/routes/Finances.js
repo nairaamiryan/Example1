@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import api from "../services/api";
 import FinanceItem from "../components/FinanceItem";
+import InvoiceCreate from "../components/InvoiceCreate";
+import PaymentAccept from "../components/PaymentAccept";
+import InsuranceCheck from "../components/InsuranceCheck";
+import ExportReport from "../components/ExportReport";
 
 const Finances = () => {
     const [items, setItems] = useState([]);
@@ -11,6 +15,12 @@ const Finances = () => {
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({ title: "", description: "", amount: "", type: "income" });
     const [disabled, setDisabled] = useState(true);
+
+    // ⬇️ 4 նոր modal-ների state-եր
+    const [showInvoice, setShowInvoice] = useState(false);
+    const [showPayment, setShowPayment] = useState(false);
+    const [showInsurance, setShowInsurance] = useState(false);
+    const [showExport, setShowExport] = useState(false);
 
     useEffect(() => { loadFinances(); }, []);
 
@@ -66,6 +76,14 @@ const Finances = () => {
                     <button style={styles.addBtn} onClick={() => setShowModal(true)}>
                         + Ավելացնել գրառում
                     </button>
+                </div>
+
+                {/* ⬇️ 4 գործողությունների կոճակներ */}
+                <div style={styles.actions}>
+                    <button style={styles.actionBtn} onClick={() => setShowInvoice(true)}>🧾 Հաշիվ-ապրանքագիր ստեղծել</button>
+                    <button style={styles.actionBtn} onClick={() => setShowPayment(true)}>💳 Վճարում ընդունել</button>
+                    <button style={styles.actionBtn} onClick={() => setShowInsurance(true)}>🛡️ Ապահովագրություն ստուգել</button>
+                    <button style={styles.actionBtn} onClick={() => setShowExport(true)}>⬇ Հաշվետվություն արտահանել</button>
                 </div>
 
                 <div style={styles.controls}>
@@ -128,6 +146,31 @@ const Finances = () => {
                     </div>
                 )}
 
+                {/* ⬇️ 4 modal-ներ */}
+                {showInvoice && (
+                    <InvoiceCreate
+                        onClose={() => setShowInvoice(false)}
+                        onSave={(data) => console.log("Հաշիվ-ապրանքագիր՝", data)}
+                    />
+                )}
+                {showPayment && (
+                    <PaymentAccept
+                        onClose={() => setShowPayment(false)}
+                        onSave={(data) => console.log("Վճարում՝", data)}
+                    />
+                )}
+                {showInsurance && (
+                    <InsuranceCheck
+                        onClose={() => setShowInsurance(false)}
+                        onSave={(data) => console.log("Ապահովագրություն՝", data)}
+                    />
+                )}
+                {showExport && (
+                    <ExportReport
+                        onClose={() => setShowExport(false)}
+                    />
+                )}
+
                 <div style={styles.list}>
                     {filteredItems.length ? (
                         filteredItems.map((item) => (
@@ -148,6 +191,8 @@ const styles = {
     title: { fontSize: "32px", fontWeight: "600", color: "#1a2e4a", marginBottom: "5px" },
     subtitle: { fontSize: "14px", color: "#6b7280" },
     addBtn: { padding: "10px 18px", background: "#2563eb", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: "500" },
+    actions: { display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" },
+    actionBtn: { padding: "9px 16px", background: "#f0f4ff", color: "#2563eb", border: "1px solid #c7d7fd", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: "500" },
     controls: { display: "flex", gap: "12px", marginBottom: "24px" },
     search: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", width: "280px" },
     select: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", cursor: "pointer" },
