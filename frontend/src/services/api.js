@@ -45,6 +45,17 @@ class API {
             return { success: false };
         }
     }
+    async addDoctor(doctorData) {
+    await delay();
+    const newDoctor = {
+        id: mockData.doctors.length + 1,
+        name: `Dr. ${doctorData.name} ${doctorData.surname}`,
+        specialty: doctorData.specialty,
+        patients: 0,
+    }
+    mockData.doctors.push(newDoctor);
+    return { success: true, data: newDoctor };
+}
     async getChartData() {
         await delay();
         return { success: true, data: mockData.statistics };
