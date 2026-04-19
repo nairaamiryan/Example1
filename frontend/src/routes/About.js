@@ -3,35 +3,44 @@ import Navbar from "../components/Navbar";
 import DoctorCard from "../components/DoctorCard";
 import api from "../services/api";
 import { LOADING, ABOUT } from "../constants";
+import AddDoctorModal from "../components/AddDoctorModal";
 
 const About = () => {
     const [aboutInfo, setAboutInfo] = useState(null);
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
-    const [search, setSearch] = useState("");
+    const [searchDoctor, setSearchDoctor] = useState("");
 
-const [newDoctor, setNewDoctor] = useState({
-    name: "",
-    surname: "",
-    specialty: "",
-});
-
+    const [newDoctor, setNewDoctor] = useState({
+        name: "",
+        surname: "",
+        specialty: "",
+    });
+    const filteredDoctors = doctors.filter((doctor) => {
+        const fullName = `${doctor.name} ${doctor.surname}`.toLowerCase();
+        return fullName.includes(searchDoctor.toLowerCase());
+    });
     useEffect(() => {
         loadData();
     }, []);
-    const addDoctor = async () => {
-    const res = await api.addDoctor(newDoctor);
-    console.log(res);
-        
-    if (res.success) {
-        setDoctors([...doctors, res.data]);
-        setShowForm(false);
-        setNewDoctor({ name: "", surname: "", specialty: "" });
-    }
-};
-
+    const addDoctor = async (doctorData) => {
+        const res = await api.addDoctor(doctorData);
+        if (res.success) {
+            setDoctors([...doctors, res.data]);
+            setShowForm(false);
+        }
+    };
     const loadData = async () => {
+        const addDoctor = async () => {
+            const res = await api.addDoctor(newDoctor);
+
+            if (res.success) {
+                setDoctors([...doctors, res.data]);
+                setShowForm(false);
+                setNewDoctor({ name: "", specialty: "" });
+            }
+        };
         const [aboutRes, doctorsRes] = await Promise.all([
             api.getAboutInfo(),
             api.getDoctors(),
@@ -76,48 +85,24 @@ const [newDoctor, setNewDoctor] = useState({
 
                 <h2 style={styles.doctors}>{ABOUT.STAFF.LABEL}</h2>
                 <input
-    style={styles.searchInput}
-    placeholder="Փնտրել բժիշկ..."
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-/>
-                <button
-    style={styles.addBtn}
-    onClick={() => setShowForm(true)}
->
-    + Ավելացնել բժիշկ
-</button>
-        {showForm && (
-    <div style={styles.form}>
-        <input
-            placeholder="Անուն"
-            value={newDoctor.name}
-            onChange={(e) =>
-                setNewDoctor({ ...newDoctor, name: e.target.value })
-            }
-        />
-                <input
-                placeholder="Ազգանուն"
-                value={newDoctor.surname}
-                onChange={(e) =>
-                    setNewDoctor({...newDoctor, surname: e.target.value})
-                }
-            />
-
-        <input
-            placeholder="Մասնագիտություն"
-            value={newDoctor.specialty}
-            onChange={(e) =>
-                setNewDoctor({ ...newDoctor, specialty: e.target.value })
-            }
-        />
-
-        <button onClick={addDoctor}>Պահպանել</button>
-        <button onClick={() => setShowForm(false)}>Չեղարկել</button>
-    </div>
-)}
+                    type="text"
+                    placeholder="Որոնել բժիշկին..."
+                    value={searchDoctor}
+                    onChange={(e) => setSearchDoctor(e.target.value)}
+                    style={styles.filterInput}
+                />
+                <button style={styles.addBtn} onClick={() => setShowForm(true)}>
+                    + Ավելացնել բժիշկ
+                </button>
+                {showForm && (
+                    <AddDoctorModal
+                        isOpen={showForm}
+                        onClose={() => setShowForm(false)}
+                        onSubmit={addDoctor}
+                    />
+                )}
                 <div style={styles.doctorsGrid}>
-                    {doctors.map((doctor) => (
+                    {filteredDoctors.map((doctor) => (
                         <DoctorCard key={doctor.id} doctor={doctor} />
                     ))}
                 </div>
@@ -144,49 +129,46 @@ const styles = {
         marginBottom: "30px",
         lineHeight: "1.6",
     },
+    filterInput: {
+        marginBottom: "20px",
+        padding: "8px 12px",
+        width: "100%",
+        maxWidth: "400px",
+        borderRadius: "8px",
+        border: "1px solid #d1d5db",
+        marginRight: "20px",
+    },
     infoGrid: {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
         gap: "20px",
         marginBottom: "50px",
     },
-    searchInput: {
-    width: "100%",
-    padding: "10px 14px",
-    borderRadius: "8px",
-    border: "1px solid #d1d5db",
-    fontSize: "14px",
-    marginBottom: "20px",
-    boxSizing: "border-box",
-},
-   addBtn:{
-    marginBottom:"20px",
-    background:"#2563eb",
-    color:"white",
-    border:"1px solid #d1d5db",
-    padding:"10px 14px",
-    borderRadius:"8px",
-    cursor:"pointer"
-},
+    addBtn: {
+        marginBottom: "20px",
+        background: "#2563eb",
+        color: "white",
+        border: "none",
+        padding: "8px 14px",
+        borderRadius: "8px",
+        cursor: "pointer",
+    },
 
-form:{
-    background:"white",
-    padding:"20px",
-    borderRadius:"10px",
-    marginBottom:"20px",
-    display:"flex",
-    gap:"10px"
-},
-    overlay: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.4)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000,
-},
-
+    form: {
+        background: "white",
+        padding: "20px",
+        borderRadius: "10px",
+        marginBottom: "20px",
+        display: "flex",
+        gap: "10px",
+    },
+    infoCard: {
+        background: "white",
+        padding: "25px",
+        borderRadius: "12px",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        textAlign: "center",
+    },
     infoIcon: {
         fontSize: "32px",
         marginBottom: "10px",

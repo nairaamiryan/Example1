@@ -1,32 +1,29 @@
 import React from "react";
 import { PATIENTS, STATUS_COLORS } from "../constants";
 
-const PatientCard = ({ key, patient,onDelete  }) => {
+const PatientCard = ({ key, patient, onDelete }) => {
     return (
         <div key={key} style={styles.card}>
-            <div style={styles.avatar}>
-                {patient.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-            </div>
+            <div style={styles.avatar}>{patient.name[0]}</div>
             <div style={styles.info}>
-                <div style={styles.name}>{patient.name}</div>
+                <div style={styles.name}>
+                    {patient.name} {patient.surname}
+                </div>
                 <div style={styles.diagnosis}>{patient.diagnosis}</div>
                 <div style={styles.age}>
                     {PATIENTS.AGE} {patient.age}
                 </div>
             </div>
-                    <div style={styles.actions}>
-    <button style={styles.btn}>View</button>
-    <button style={styles.btn}>Edit</button>
-    <button
-    style={styles.delete}
-    onClick={() => onDelete(patient.id)}
->
-    Delete
-</button>
-</div>
+            <div style={styles.actions}>
+                <button style={styles.btn}>View</button>
+                <button style={styles.btn}>Edit</button>
+                <button
+                    style={styles.delete}
+                    onClick={() => onDelete(patient.id)}
+                >
+                    Delete
+                </button>
+            </div>
             <div
                 style={{
                     ...styles.status,
@@ -83,29 +80,29 @@ const styles = {
         color: "#9ca3af",
     },
     actions: {
-    display: "flex",
-    gap: "6px",
-    marginRight: "10px",
-},
+        display: "flex",
+        gap: "6px",
+        marginRight: "10px",
+    },
 
-btn: {
-    padding: "5px 10px",
-    border: "none",
-    borderRadius: "5px",
-    background: "#e5e7eb",
-    cursor: "pointer",
-    fontSize: "12px",
-},
+    btn: {
+        padding: "5px 10px",
+        border: "none",
+        borderRadius: "5px",
+        background: "#e5e7eb",
+        cursor: "pointer",
+        fontSize: "12px",
+    },
 
-delete: {
-    padding: "5px 10px",
-    border: "none",
-    borderRadius: "5px",
-    background: "#ef4444",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "12px",
-},
+    delete: {
+        padding: "5px 10px",
+        border: "none",
+        borderRadius: "5px",
+        background: "#ef4444",
+        color: "white",
+        cursor: "pointer",
+        fontSize: "12px",
+    },
     status: {
         padding: "5px 12px",
         borderRadius: "6px",

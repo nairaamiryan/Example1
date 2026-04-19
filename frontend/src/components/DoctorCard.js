@@ -3,11 +3,11 @@ import { PATIENT } from "../constants";
 
 const DoctorCard = ({ doctor }) => (
     <div style={styles.doctorCard}>
-        <div style={styles.doctorAvatar}>{doctor.name.split(".")[1][0]}</div>
-        <div style={styles.doctorName}>{doctor.name}</div>
-        <div style={styles.doctorSpecialty}>{doctor.specialty}</div>
+        <div style={styles.doctorAvatar}>{doctor?.name[0]}</div>
+        <div style={styles.doctorName}>{doctor?.name} {doctor?.surname}</div>
+        <div style={styles.doctorSpecialty}>{doctor?.specialty}</div>
         <div style={styles.doctorPatients}>
-            {doctor.patients} {PATIENT}
+            {doctor?.patients} {PATIENT}
         </div>
     </div>
 );

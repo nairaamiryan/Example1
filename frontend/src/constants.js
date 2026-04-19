@@ -83,3 +83,10 @@ export const STATISTICS = {
 export const NOTIFICATIONS = {
     TITLE: "Ծանուցումներ",
 };
+
+export const PROFESSIONS = {
+    cardiology: "Կարդիոլոգ",
+    neurology: "Նյարդաբան",
+    ophthalmology: "Ակնաբույժ",
+    surgery: "Վիրաբույժ",
+};

@@ -2,21 +2,24 @@
     "patients": [
         {
             "id": 1,
-            "name": "Արամ Սարգսյան",
+            "name": "Արամ",
+            "surname": "Սարգսյան",
             "age": 45,
             "diagnosis": "Հիպերտոնիա",
             "status": "active"
         },
         {
             "id": 2,
-            "name": "Լուսինե Պետրոսյան",
+            "name": "Լուսինե",
+            "surname": "Պետրոսյան",
             "age": 32,
             "diagnosis": "Դիաբետ",
             "status": "stable"
         },
         {
             "id": 3,
-            "name": "Գևորգ Ավագյան",
+            "name": "Գևորգ",
+            "surname": "Ավագյան",
             "age": 58,
             "diagnosis": "Միգրեն",
             "status": "pending"
@@ -25,43 +28,50 @@
     "doctors": [
         {
             "id": 1,
-            "name": "Դ.Կարապետյան",
+            "name": "Դավիթ",
+            "surname": "Կարապետյան",
             "specialty": "Կարդիոլոգ",
             "patients": 24
         },
         {
             "id": 2,
-            "name": "Դ.Հարությունյան",
+            "name": "Դիանա",
+            "surname": "Հարությունյան",
             "specialty": "Էնդոկրինոլոգ",
             "patients": 18
         },
         {
             "id": 3,
-            "name": "Ա.Հակոբյան",
+            "name": "Աննա",
+            "surname": "Հակոբյան",
             "specialty": "Սրտաբան",
             "patients": 10
         },
         {
             "id": 4,
-            "name": "Մ.Գաբրիելյան",
+            "name": "Մարինե",
+            "surname": "Գաբրիելյան",
             "specialty": "Նյարդաբան",
             "patients": 7
         },
         {
             "id": 5,
-            "name": "Գ.Պետրոսյան",
+            "name": "Գայանե",
+            "surname": "Հարությունյան",
             "specialty": "Մանկաբույժ",
             "patients": 14
         },
         {
             "id": 6,
-            "name": "Լ.Գրիգորյան",
+            "name": "Լուսինե",
+            "surname": "Մարտիրոսյան",
             "specialty": "Մաշկաբան",
             "patients": 11
         },
         {
             "id": 7,
-            "name": "Վ.Վարդանյան",
+            "name": "Վահե",
+            "surname": "Վարդանյան",
             "specialty": "Օրթոպեդ",
             "patients": 8
         }
