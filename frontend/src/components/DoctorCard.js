@@ -1,25 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import { PATIENT } from "../constants";
 
-const DoctorCard = ({ doctor }) => (
-    <div style={styles.doctorCard}>
-        <div style={styles.doctorAvatar}>{doctor?.name[0]}</div>
-        <div style={styles.doctorName}>{doctor?.name} {doctor?.surname}</div>
-        <div style={styles.doctorSpecialty}>{doctor?.specialty}</div>
-        <div style={styles.doctorPatients}>
-            {doctor?.patients} {PATIENT}
+const DoctorCard = ({ doctor, onDelete, onClick }) => {
+    const [hovered, setHovered] = useState(false);
+
+    return (
+        <div
+            style={{
+                ...styles.doctorCard,
+                transform: hovered ? "scale(1.03)" : "scale(1)",
+                boxShadow: hovered
+                    ? "0 8px 24px rgba(0,0,0,0.18)"
+                    : "0 2px 8px rgba(0,0,0,0.1)",
+                cursor: "pointer",
+            }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            onClick={() => onClick && onClick(doctor)}
+        >
+            <button
+                style={styles.deleteBtn}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete && onDelete(doctor.id);
+                }}
+            >
+                ✕
+            </button>
+            <div style={styles.doctorAvatar}>{doctor?.name[0]}</div>
+            <div style={styles.doctorName}>{doctor?.name} {doctor?.surname}</div>
+            <div style={styles.doctorSpecialty}>{doctor?.specialty}</div>
+            <div style={styles.doctorPatients}>
+                {doctor?.patients} {PATIENT}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 const styles = {
     doctorCard: {
         background: "white",
         padding: "25px",
         borderRadius: "12px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         textAlign: "center",
         transition: "transform 0.2s, box-shadow 0.2s",
+        position: "relative",
+    },
+    deleteBtn: {
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+        background: "transparent",
+        border: "none",
+        fontSize: "14px",
+        cursor: "pointer",
+        color: "#9ca3af",
+        padding: "2px 6px",
+        borderRadius: "6px",
     },
     doctorAvatar: {
         width: "60px",
