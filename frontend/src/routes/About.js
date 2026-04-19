@@ -11,19 +11,28 @@ const About = () => {
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [searchDoctor, setSearchDoctor] = useState("");
+    const [sortBy, setSortBy] = useState("name");
+    const [selectedDoctor, setSelectedDoctor] = useState(null);
+    const [editingFounded, setEditingFounded] = useState(false);
+    const [foundedValue, setFoundedValue] = useState("");
 
-    const [newDoctor, setNewDoctor] = useState({
-        name: "",
-        surname: "",
-        specialty: "",
-    });
-    const filteredDoctors = doctors.filter((doctor) => {
-        const fullName = `${doctor.name} ${doctor.surname}`.toLowerCase();
-        return fullName.includes(searchDoctor.toLowerCase());
-    });
     useEffect(() => {
         loadData();
     }, []);
+
+    const loadData = async () => {
+        const [aboutRes, doctorsRes] = await Promise.all([
+            api.getAboutInfo(),
+            api.getDoctors(),
+        ]);
+        if (aboutRes.success) {
+            setAboutInfo(aboutRes.data);
+            setFoundedValue(aboutRes.data.founded);
+        }
+        if (doctorsRes.success) setDoctors(doctorsRes.data);
+        setLoading(false);
+    };
+
     const addDoctor = async (doctorData) => {
         const res = await api.addDoctor(doctorData);
         if (res.success) {
@@ -31,25 +40,21 @@ const About = () => {
             setShowForm(false);
         }
     };
-    const loadData = async () => {
-        const addDoctor = async () => {
-            const res = await api.addDoctor(newDoctor);
 
-            if (res.success) {
-                setDoctors([...doctors, res.data]);
-                setShowForm(false);
-                setNewDoctor({ name: "", specialty: "" });
-            }
-        };
-        const [aboutRes, doctorsRes] = await Promise.all([
-            api.getAboutInfo(),
-            api.getDoctors(),
-        ]);
-
-        if (aboutRes.success) setAboutInfo(aboutRes.data);
-        if (doctorsRes.success) setDoctors(doctorsRes.data);
-        setLoading(false);
+    const deleteDoctor = (id) => {
+        setDoctors((prev) => prev.filter((d) => d.id !== id));
     };
+
+    const filteredDoctors = doctors
+        .filter((doctor) => {
+            const fullName = `${doctor.name} ${doctor.surname}`.toLowerCase();
+            return fullName.includes(searchDoctor.toLowerCase());
+        })
+        .sort((a, b) => {
+            if (sortBy === "name") return a.name.localeCompare(b.name);
+            if (sortBy === "patients") return (b.patients || 0) - (a.patients || 0);
+            return 0;
+        });
 
     if (loading) {
         return (
@@ -63,7 +68,6 @@ const About = () => {
     return (
         <div>
             <Navbar />
-
             <div style={styles.container}>
                 <h1 style={styles.title}>{aboutInfo.title}</h1>
                 <p style={styles.description}>{aboutInfo.description}</p>
@@ -71,29 +75,61 @@ const About = () => {
                 <div style={styles.infoGrid}>
                     <div style={styles.infoCard}>
                         <div style={styles.infoIcon}>{ABOUT.FOUNDED.ICON}</div>
-                        <div style={styles.infoLabel}>
-                            {ABOUT.FOUNDED.LABEL}
-                        </div>
-                        <div style={styles.infoValue}>{aboutInfo.founded}</div>
+                        <div style={styles.infoLabel}>{ABOUT.FOUNDED.LABEL}</div>
+                        {editingFounded ? (
+                            <div style={{ display: "flex", gap: "6px", justifyContent: "center", marginTop: "6px" }}>
+                                <input
+                                    style={styles.editInput}
+                                    value={foundedValue}
+                                    onChange={(e) => setFoundedValue(e.target.value)}
+                                />
+                                <button
+                                    style={styles.saveBtn}
+                                    onClick={() => {
+                                        setAboutInfo({ ...aboutInfo, founded: foundedValue });
+                                        setEditingFounded(false);
+                                    }}
+                                >
+                                    ✓
+                                </button>
+                            </div>
+                        ) : (
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                                <div style={styles.infoValue}>{aboutInfo.founded}</div>
+                                <button style={styles.editBtn} onClick={() => setEditingFounded(true)}>✏️</button>
+                            </div>
+                        )}
                     </div>
                     <div style={styles.infoCard}>
                         <div style={styles.infoIcon}>{ABOUT.STAFF.ICON}</div>
                         <div style={styles.infoLabel}>{ABOUT.STAFF.LABEL}</div>
-                        <div style={styles.infoValue}>{aboutInfo.staff}</div>
+                        <div style={styles.infoValue}>{doctors.length}</div>
                     </div>
                 </div>
 
                 <h2 style={styles.doctors}>{ABOUT.STAFF.LABEL}</h2>
-                <input
-                    type="text"
-                    placeholder="Որոնել բժիշկին..."
-                    value={searchDoctor}
-                    onChange={(e) => setSearchDoctor(e.target.value)}
-                    style={styles.filterInput}
-                />
-                <button style={styles.addBtn} onClick={() => setShowForm(true)}>
-                    + Ավելացնել բժիշկ
-                </button>
+
+                <div style={styles.controls}>
+                    <input
+                        type="text"
+                        placeholder="Որոնել բժիշկին..."
+                        value={searchDoctor}
+                        onChange={(e) => setSearchDoctor(e.target.value)}
+                        style={styles.filterInput}
+                    />
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        style={styles.select}
+                    >
+                        <option value="name">Ըստ անվան</option>
+                        <option value="patients">Ըստ հիվանդների</option>
+                    </select>
+                    <button style={styles.addBtn} onClick={() => setShowForm(true)}>
+                        + Ավելացնել բժիշկ
+                    </button>
+                </div>
+
                 {showForm && (
                     <AddDoctorModal
                         isOpen={showForm}
@@ -101,9 +137,30 @@ const About = () => {
                         onSubmit={addDoctor}
                     />
                 )}
+
+                {selectedDoctor && (
+                    <div style={styles.modalOverlay} onClick={() => setSelectedDoctor(null)}>
+                        <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                            <div style={styles.modalHeader}>
+                                <h2 style={styles.modalTitle}>Բժիշկի մանրամասներ</h2>
+                                <button style={styles.closeBtn} onClick={() => setSelectedDoctor(null)}>X</button>
+                            </div>
+                            <div style={styles.doctorAvatar}>{selectedDoctor.name[0]}</div>
+                            <div style={styles.detailRow}><b>Անուն։</b> {selectedDoctor.name} {selectedDoctor.surname}</div>
+                            <div style={styles.detailRow}><b>Մասնագիտություն։</b> {selectedDoctor.specialty}</div>
+                            <div style={styles.detailRow}><b>Հիվանդներ։</b> {selectedDoctor.patients}</div>
+                        </div>
+                    </div>
+                )}
+
                 <div style={styles.doctorsGrid}>
                     {filteredDoctors.map((doctor) => (
-                        <DoctorCard key={doctor.id} doctor={doctor} />
+                        <DoctorCard
+                            key={doctor.id}
+                            doctor={doctor}
+                            onDelete={deleteDoctor}
+                            onClick={setSelectedDoctor}
+                        />
                     ))}
                 </div>
             </div>
@@ -112,94 +169,31 @@ const About = () => {
 };
 
 const styles = {
-    container: {
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "40px 20px",
-    },
-    title: {
-        fontSize: "32px",
-        fontWeight: "600",
-        color: "#1a2e4a",
-        marginBottom: "15px",
-    },
-    description: {
-        fontSize: "16px",
-        color: "#6b7280",
-        marginBottom: "30px",
-        lineHeight: "1.6",
-    },
-    filterInput: {
-        marginBottom: "20px",
-        padding: "8px 12px",
-        width: "100%",
-        maxWidth: "400px",
-        borderRadius: "8px",
-        border: "1px solid #d1d5db",
-        marginRight: "20px",
-    },
-    infoGrid: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-        gap: "20px",
-        marginBottom: "50px",
-    },
-    addBtn: {
-        marginBottom: "20px",
-        background: "#2563eb",
-        color: "white",
-        border: "none",
-        padding: "8px 14px",
-        borderRadius: "8px",
-        cursor: "pointer",
-    },
-
-    form: {
-        background: "white",
-        padding: "20px",
-        borderRadius: "10px",
-        marginBottom: "20px",
-        display: "flex",
-        gap: "10px",
-    },
-    infoCard: {
-        background: "white",
-        padding: "25px",
-        borderRadius: "12px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        textAlign: "center",
-    },
-    infoIcon: {
-        fontSize: "32px",
-        marginBottom: "10px",
-    },
-    infoLabel: {
-        fontSize: "13px",
-        color: "#6b7280",
-        marginBottom: "8px",
-    },
-    infoValue: {
-        fontSize: "28px",
-        fontWeight: "600",
-        color: "#1a2e4a",
-    },
-    doctors: {
-        fontSize: "24px",
-        fontWeight: "600",
-        color: "#1a2e4a",
-        marginBottom: "25px",
-    },
-    doctorsGrid: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-        gap: "20px",
-    },
-    loading: {
-        textAlign: "center",
-        padding: "60px 20px",
-        fontSize: "16px",
-        color: "#6b7280",
-    },
+    container: { maxWidth: "1200px", margin: "0 auto", padding: "40px 20px" },
+    title: { fontSize: "32px", fontWeight: "600", color: "#1a2e4a", marginBottom: "15px" },
+    description: { fontSize: "16px", color: "#6b7280", marginBottom: "30px", lineHeight: "1.6" },
+    controls: { display: "flex", gap: "12px", alignItems: "center", marginBottom: "24px", flexWrap: "wrap" },
+    filterInput: { padding: "8px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", width: "220px" },
+    select: { padding: "8px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", cursor: "pointer" },
+    infoGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginBottom: "50px" },
+    addBtn: { marginBottom: "0", background: "#2563eb", color: "white", border: "none", padding: "8px 14px", borderRadius: "8px", cursor: "pointer" },
+    infoCard: { background: "white", padding: "25px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)", textAlign: "center" },
+    infoIcon: { fontSize: "32px", marginBottom: "10px" },
+    infoLabel: { fontSize: "13px", color: "#6b7280", marginBottom: "8px" },
+    infoValue: { fontSize: "28px", fontWeight: "600", color: "#1a2e4a" },
+    editBtn: { background: "transparent", border: "none", cursor: "pointer", fontSize: "16px" },
+    editInput: { width: "80px", padding: "4px 8px", borderRadius: "6px", border: "1px solid #d1d5db", fontSize: "16px", textAlign: "center" },
+    saveBtn: { padding: "4px 8px", background: "#2563eb", color: "white", border: "none", borderRadius: "6px", cursor: "pointer" },
+    doctors: { fontSize: "24px", fontWeight: "600", color: "#1a2e4a", marginBottom: "20px" },
+    doctorsGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px" },
+    loading: { textAlign: "center", padding: "60px 20px", fontSize: "16px", color: "#6b7280" },
+    modalOverlay: { position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 },
+    modalContent: { backgroundColor: "#fff", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "380px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "12px" },
+    modalHeader: { display: "flex", justifyContent: "space-between", alignItems: "center" },
+    modalTitle: { fontSize: "20px", fontWeight: "600", color: "#1a2e4a" },
+    closeBtn: { background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "#6b7280" },
+    doctorAvatar: { width: "70px", height: "70px", borderRadius: "50%", background: "linear-gradient(135deg, #66a8ea 0%, #1ba073 100%)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", fontWeight: "600", margin: "0 auto" },
+    detailRow: { fontSize: "15px", color: "#374151", padding: "6px 0", borderBottom: "1px solid #f3f4f6" },
 };
 
 export default About;
