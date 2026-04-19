@@ -2,21 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { NAVBAR } from "../constants";
 import api from "../services/api";
-
 const Navbar = () => {
     const [unreadCount, setUnreadCount] = useState(0);
-
     useEffect(() => {
         loadNotifications();
     }, []);
-
     const loadNotifications = async () => {
         const response = await api.getNotifications();
         if (response.success) {
             setUnreadCount(response.data.length);
         }
     };
-
     return (
         <nav style={styles.nav}>
             <div style={styles.logo}>{NAVBAR.TITLE}</div>
@@ -24,6 +20,8 @@ const Navbar = () => {
                 <Link to="/" style={styles.link}>{NAVBAR.HOME}</Link>
                 <Link to="/patients" style={styles.link}>{NAVBAR.PATIENTS}</Link>
                 <Link to="/reports" style={styles.link}>{NAVBAR.REPORTS}</Link>
+                <Link to="/notes" style={styles.link}>Նշումներ</Link>
+                <Link to="/finances" style={styles.link}>Ֆինանսներ</Link>
                 <Link to="/notifications" style={styles.link}>
                     <div style={styles.notifWrapper}>
                         {NAVBAR.NOTIFICATIONS}
@@ -37,7 +35,6 @@ const Navbar = () => {
         </nav>
     );
 };
-
 const styles = {
     nav: {
         display: "flex",
@@ -75,5 +72,4 @@ const styles = {
         justifyContent: "center",
     },
 };
-
 export default Navbar;
