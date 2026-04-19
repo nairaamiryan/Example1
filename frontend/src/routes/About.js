@@ -8,12 +8,27 @@ const About = () => {
     const [aboutInfo, setAboutInfo] = useState(null);
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showForm, setShowForm] = useState(false);
+
+const [newDoctor, setNewDoctor] = useState({
+    name: "",
+    specialty: "",
+});
 
     useEffect(() => {
         loadData();
     }, []);
 
     const loadData = async () => {
+        const addDoctor = async () => {
+    const res = await api.addDoctor(newDoctor);
+
+    if (res.success) {
+        setDoctors([...doctors, res.data]);
+        setShowForm(false);
+        setNewDoctor({ name: "", specialty: "" });
+    }
+};
         const [aboutRes, doctorsRes] = await Promise.all([
             api.getAboutInfo(),
             api.getDoctors(),
@@ -57,6 +72,34 @@ const About = () => {
                 </div>
 
                 <h2 style={styles.doctors}>{ABOUT.STAFF.LABEL}</h2>
+                <button
+    style={styles.addBtn}
+    onClick={() => setShowForm(true)}
+>
+    + Ավելացնել բժիշկ
+</button>
+        {showForm && (
+    <div style={styles.form}>
+        <input
+            placeholder="Անուն"
+            value={newDoctor.name}
+            onChange={(e) =>
+                setNewDoctor({ ...newDoctor, name: e.target.value })
+            }
+        />
+
+        <input
+            placeholder="Մասնագիտություն"
+            value={newDoctor.specialty}
+            onChange={(e) =>
+                setNewDoctor({ ...newDoctor, specialty: e.target.value })
+            }
+        />
+
+        <button onClick={addDoctor}>Save</button>
+        <button onClick={() => setShowForm(false)}>Cancel</button>
+    </div>
+)}
                 <div style={styles.doctorsGrid}>
                     {doctors.map((doctor) => (
                         <DoctorCard key={doctor.id} doctor={doctor} />
@@ -91,6 +134,24 @@ const styles = {
         gap: "20px",
         marginBottom: "50px",
     },
+    addBtn:{
+    marginBottom:"20px",
+    background:"#2563eb",
+    color:"white",
+    border:"none",
+    padding:"8px 14px",
+    borderRadius:"8px",
+    cursor:"pointer"
+},
+
+  form:{
+    background:"white",
+    padding:"20px",
+    borderRadius:"10px",
+    marginBottom:"20px",
+    display:"flex",
+    gap:"10px"
+},
     infoCard: {
         background: "white",
         padding: "25px",
