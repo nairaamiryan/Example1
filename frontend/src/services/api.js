@@ -62,6 +62,23 @@ class API {
             return { success: false };
         }
     }
+    async addPatient(patient) {
+    try {
+        const newPatient = { id: Date.now(), ...patient };
+        return { success: true, data: newPatient };
+    } catch {
+        return { success: false };
+    }
+}
+
+async addReport(report) {
+    try {
+        const newReport = { id: Date.now(), ...report };
+        return { success: true, data: newReport };
+    } catch {
+        return { success: false };
+    }
+}
 }
 
 export default new API();
