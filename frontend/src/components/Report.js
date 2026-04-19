@@ -11,6 +11,47 @@ const Report = ({ report, onDelete }) => {
     const [hovered, setHovered] = useState(false);
     const [showModal, setShowModal] = useState(false);
 
+    const handleDownloadPDF = () => {
+        const printWindow = window.open("", "_blank");
+        printWindow.document.write(`
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>${report.title}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 40px; color: #1a2e4a; }
+                    h1 { font-size: 22px; border-bottom: 2px solid #2563eb; padding-bottom: 10px; }
+                    .row { margin: 16px 0; font-size: 15px; }
+                    .label { font-weight: bold; color: #374151; }
+                    .value { margin-top: 4px; color: #6b7280; }
+                </style>
+            </head>
+            <body>
+                <h1>${report.title}</h1>
+                <div class="row">
+                    <div class="label">Վերնագիր։</div>
+                    <div class="value">${report.title}</div>
+                </div>
+                <div class="row">
+                    <div class="label">Նկարագրություն։</div>
+                    <div class="value">${report.description}</div>
+                </div>
+                ${report.date ? `
+                <div class="row">
+                    <div class="label">Ամսաթիվ։</div>
+                    <div class="value">${formatDate(report.date)}</div>
+                </div>` : ""}
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 300);
+    };
+
     return (
         <>
             <div
@@ -44,7 +85,13 @@ const Report = ({ report, onDelete }) => {
                     <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
                         <div style={styles.modalHeader}>
                             <h2 style={styles.modalTitle}>Հաշվետվության մանրամասներ</h2>
-                            <button style={styles.closeBtn} onClick={() => setShowModal(false)}>X</button>
+                            {/* ⬇️ Կոճակների խումբ */}
+                            <div style={styles.headerBtns}>
+                                <button style={styles.downloadBtn} onClick={handleDownloadPDF} title="Ներբեռնել PDF">
+                                    ⬇ PDF
+                                </button>
+                                <button style={styles.closeBtn} onClick={() => setShowModal(false)}>✕</button>
+                            </div>
                         </div>
                         <div style={styles.detailRow}><b>Վերնագիր։</b> {report.title}</div>
                         <div style={styles.detailRow}><b>Նկարագրություն։</b> {report.description}</div>
@@ -60,14 +107,9 @@ const Report = ({ report, onDelete }) => {
 
 const styles = {
     card: {
-        background: "white",
-        padding: "15px 20px",
-        borderRadius: "10px",
-        display: "flex",
-        alignItems: "center",
-        gap: "15px",
-        marginBottom: "12px",
-        transition: "transform 0.2s, box-shadow 0.2s",
+        background: "white", padding: "15px 20px", borderRadius: "10px",
+        display: "flex", alignItems: "center", gap: "15px",
+        marginBottom: "12px", transition: "transform 0.2s, box-shadow 0.2s",
     },
     content: { flex: 1 },
     title: { fontSize: "15px", fontWeight: "600", color: "#1a2e4a", marginBottom: "4px" },
@@ -90,6 +132,13 @@ const styles = {
     },
     modalHeader: { display: "flex", justifyContent: "space-between", alignItems: "center" },
     modalTitle: { fontSize: "20px", fontWeight: "600", color: "#1a2e4a" },
+    // ⬇️ Նոր styles
+    headerBtns: { display: "flex", alignItems: "center", gap: "8px" },
+    downloadBtn: {
+        background: "#2563eb", color: "white", border: "none",
+        borderRadius: "6px", padding: "6px 12px", cursor: "pointer",
+        fontSize: "13px", fontWeight: "500",
+    },
     closeBtn: { background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "#6b7280" },
     detailRow: { fontSize: "15px", color: "#374151", padding: "8px 0", borderBottom: "1px solid #f3f4f6" },
 };
