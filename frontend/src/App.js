@@ -6,6 +6,7 @@ import Patients from "./routes/Patients";
 import Reports from "./routes/Reports";
 import Notifications from "./routes/Notifications";
 import Finances from "./routes/Finances";
+import Notes from "./routes/Notes";
 import "./App.css";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/finances" element={<Finances />} />
+                    <Route path="/notes" element={<Notes />} />
                 </Routes>
             </div>
         </Router>
