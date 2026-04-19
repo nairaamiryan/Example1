@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import PatientCard from "../components/PatientCard";
 import api from "../services/api";
 import { LOADING, PATIENTS } from "../constants";
-
+import AddPatientModal from "../components/AddPatientModal";
 
 const Patients = () => {
     const [patients, setPatients] = useState([]);
