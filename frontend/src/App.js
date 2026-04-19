@@ -5,6 +5,7 @@ import About from "./routes/About";
 import Patients from "./routes/Patients";
 import Reports from "./routes/Reports";
 import Notifications from "./routes/Notifications";
+import Finances from "./routes/Finances";
 import "./App.css";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
                     <Route path="/patients" element={<Patients />} />
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/about" element={<About />} />
+                    <Route path="/finances" element={<Finances />} />
                 </Routes>
             </div>
         </Router>
