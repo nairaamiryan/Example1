@@ -102,9 +102,6 @@ const Patients = () => {
                         <button style={styles.addButton}>
                             {PATIENTS.ADD_PATIENT}
                         </button>
-                       <button style={styles.addButton} onClick={() => setShowForm(true)}>
-    {PATIENTS.ADD_PATIENT}
-</button>
               {showForm && (
     <div style={styles.form}>
         <input
@@ -122,7 +119,6 @@ const Patients = () => {
         <button onClick={addPatient}>Պահպանել</button>
         <button onClick={() => setShowForm(false)}>Չեղարկել</button>
     </div>
-)}
 )}
                     </div>
                 </div>
