@@ -9,6 +9,7 @@ const About = () => {
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
+    const [search, setSearch] = useState("");
 
 const [newDoctor, setNewDoctor] = useState({
     name: "",
@@ -74,6 +75,12 @@ const [newDoctor, setNewDoctor] = useState({
                 </div>
 
                 <h2 style={styles.doctors}>{ABOUT.STAFF.LABEL}</h2>
+                <input
+    style={styles.searchInput}
+    placeholder="Փնտրել բժիշկ..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+/>
                 <button
     style={styles.addBtn}
     onClick={() => setShowForm(true)}
@@ -143,6 +150,15 @@ const styles = {
         gap: "20px",
         marginBottom: "50px",
     },
+    searchInput: {
+    width: "100%",
+    padding: "10px 14px",
+    borderRadius: "8px",
+    border: "1px solid #d1d5db",
+    fontSize: "14px",
+    marginBottom: "20px",
+    boxSizing: "border-box",
+},
    addBtn:{
     marginBottom:"20px",
     background:"#2563eb",
