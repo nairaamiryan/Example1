@@ -63,7 +63,6 @@ class API {
             return { success: false };
         }
     }
-    // ⬇️ Նոր մեթոդներ
     async getNotes() {
         await delay();
         return { success: true, data: mockData.notes ?? [] };
@@ -72,6 +71,18 @@ class API {
         try {
             const newNote = { id: Date.now(), date: new Date().toISOString(), ...note };
             return { success: true, data: newNote };
+        } catch {
+            return { success: false };
+        }
+    }
+    async getFinances() {
+        await delay();
+        return { success: true, data: mockData.finances ?? [] };
+    }
+    async addFinance(item) {
+        try {
+            const newItem = { id: Date.now(), date: new Date().toISOString(), ...item };
+            return { success: true, data: newItem };
         } catch {
             return { success: false };
         }
