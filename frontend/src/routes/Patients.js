@@ -3,12 +3,14 @@ import Navbar from "../components/Navbar";
 import PatientCard from "../components/PatientCard";
 import api from "../services/api";
 import { LOADING, PATIENTS } from "../constants";
+import AddPatientModal from "../components/AddPatientModal";
 
 const Patients = () => {
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
+    const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
         loadPatients();
@@ -34,6 +36,13 @@ const Patients = () => {
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Delete this patient?");
         if (!confirmDelete) return;
+        const addPatient = async (patientData) => {
+    const res = await api.addPatient(patientData);
+    if (res.success) {
+        setPatients([...patients, res.data]);
+        setShowForm(false);
+    }
+};
 
         const response = await api.deletePatient(id);
 
@@ -92,6 +101,16 @@ const Patients = () => {
                         <button style={styles.addButton}>
                             {PATIENTS.ADD_PATIENT}
                         </button>
+                       <button style={styles.addButton} onClick={() => setShowForm(true)}>
+    {PATIENTS.ADD_PATIENT}
+</button>
+                {showForm && (
+    <AddPatientModal
+        isOpen={showForm}
+        onClose={() => setShowForm(false)}
+        onSubmit={addPatient}
+    />
+)}
                     </div>
                 </div>
                 <div style={styles.patientsList}>
