@@ -99,9 +99,9 @@ const Patients = () => {
                             style={styles.select}
                         >
                             <option value="All">All</option>
-                            <option value="Active">Active</option>
-                            <option value="Stable">Stable</option>
-                            <option value="Pending">Pending</option>
+                            <option value="active">Active</option>
+                            <option value="stable">Stable</option>
+                            <option value="pending">Pending</option>
                         </select>
 
                         <button
