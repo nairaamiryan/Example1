@@ -21,11 +21,12 @@ const [newDoctor, setNewDoctor] = useState({
     }, []);
     const addDoctor = async () => {
     const res = await api.addDoctor(newDoctor);
-
+    console.log(res);
+        
     if (res.success) {
         setDoctors([...doctors, res.data]);
         setShowForm(false);
-        setNewDoctor({ name: "", specialty: "" });
+        setNewDoctor({ name: "", surname: "", specialty: "" });
     }
 };
 
