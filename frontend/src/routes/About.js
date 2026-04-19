@@ -24,7 +24,7 @@ const [newDoctor, setNewDoctor] = useState({
     console.log(res);
         
     if (res.success) {
-        setDoctors([...doctors, res.data || res]);
+        setDoctors([...doctors, res.data]);
         setShowForm(false);
         setNewDoctor({ name: "", surname: "", specialty: "" });
     }
