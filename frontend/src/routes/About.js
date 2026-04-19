@@ -12,6 +12,7 @@ const About = () => {
 
 const [newDoctor, setNewDoctor] = useState({
     name: "",
+    surname: "",
     specialty: "",
 });
 
@@ -87,6 +88,13 @@ const [newDoctor, setNewDoctor] = useState({
                 setNewDoctor({ ...newDoctor, name: e.target.value })
             }
         />
+                <input
+                placeholder="Ազգանուն"
+                value={newDoctor.surname}
+                onChange={(e) =>
+                    setNewDoctor({...newDoctor, surname: e.target.value})
+                }
+            />
 
         <input
             placeholder="Մասնագիտություն"
@@ -144,13 +152,34 @@ const styles = {
     cursor:"pointer"
 },
 
-  form:{
-    background:"white",
-    padding:"20px",
-    borderRadius:"10px",
-    marginBottom:"20px",
+modalOverlay:{
+    position:"fixed",
+    top:0,
+    left:0,
+    right:0,
+    bottom:0,
+    background:"rgba(0,0,0,0.4)",
     display:"flex",
+    alignItems:"center",
+    justifyContent:"center",
+    zIndex:1000
+},
+
+modal:{
+    background:"white",
+    padding:"25px",
+    borderRadius:"12px",
+    width:"350px",
+    display:"flex",
+    flexDirection:"column",
     gap:"10px"
+},
+
+modalButtons:{
+    display:"flex",
+    justifyContent:"flex-end",
+    gap:"10px",
+    marginTop:"10px"
 },
     infoCard: {
         background: "white",
