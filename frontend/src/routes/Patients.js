@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import PatientCard from "../components/PatientCard";
 import api from "../services/api";
 import { LOADING, PATIENTS } from "../constants";
-import AddPatientModal from "../components/AddPatientModal";
+
 
 const Patients = () => {
     const [patients, setPatients] = useState([]);
@@ -11,6 +11,7 @@ const Patients = () => {
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
     const [showForm, setShowForm] = useState(false);
+    const [newPatient, setNewPatient] = useState({ name: "", surname: "" });
 
     useEffect(() => {
         loadPatients();
@@ -104,12 +105,24 @@ const Patients = () => {
                        <button style={styles.addButton} onClick={() => setShowForm(true)}>
     {PATIENTS.ADD_PATIENT}
 </button>
-                {showForm && (
-    <AddPatientModal
-        isOpen={showForm}
-        onClose={() => setShowForm(false)}
-        onSubmit={addPatient}
-    />
+              {showForm && (
+    <div style={styles.form}>
+        <input
+            placeholder="Անուն"
+            value={newPatient.name}
+            onChange={(e) => setNewPatient({...newPatient, name: e.target.value})}
+            style={styles.filterInput}
+        />
+        <input
+            placeholder="Ազգանուն"
+            value={newPatient.surname}
+            onChange={(e) => setNewPatient({...newPatient, surname: e.target.value})}
+            style={styles.filterInput}
+        />
+        <button onClick={addPatient}>Պահպանել</button>
+        <button onClick={() => setShowForm(false)}>Չեղարկել</button>
+    </div>
+)}
 )}
                     </div>
                 </div>
