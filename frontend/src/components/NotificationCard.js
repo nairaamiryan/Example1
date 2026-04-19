@@ -5,30 +5,32 @@ const formatTime = (timestamp) => {
     return date.toLocaleString();
 };
 
-const NotificationCard = ({ key, item }) => {
+const NotificationCard = ({ item, onDelete, onRead }) => {
     const getIcon = (type) => {
         switch (type) {
-            case "patient":
-                return "👤";
-            case "doctor":
-                return "🩺";
-            case "appointment":
-                return "📅";
-            case "system":
-                return "⚙️";
-            default:
-                return "🔔";
+            case "patient": return "👤";
+            case "doctor": return "🩺";
+            case "appointment": return "📅";
+            case "system": return "⚙️";
+            default: return "🔔";
         }
     };
 
     return (
-        <div key={key} style={styles.card}>
+        <div
+            style={{ ...styles.card, background: item.read ? "#f9fafb" : "white" }}
+            onClick={() => onRead(item.id)}
+        >
             <div style={styles.icon}>{getIcon(item.type)}</div>
-            <div>
+            <div style={styles.content}>
                 <div style={styles.cardTitle}>{item.title}</div>
                 <div style={styles.cardText}>{item.message}</div>
                 <div style={styles.time}>{formatTime(item.time)}</div>
             </div>
+            {!item.read && <div style={styles.unreadDot} />}
+            <button style={styles.deleteBtn} onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}>
+                ✕
+            </button>
         </div>
     );
 };
@@ -38,12 +40,17 @@ const styles = {
         display: "flex",
         gap: "15px",
         padding: "15px",
-        background: "white",
         borderRadius: "10px",
         boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+        alignItems: "center",
+        cursor: "pointer",
+        position: "relative",
     },
     icon: {
         fontSize: "22px",
+    },
+    content: {
+        flex: 1,
     },
     cardTitle: {
         fontWeight: "600",
@@ -57,6 +64,23 @@ const styles = {
         fontSize: "12px",
         color: "#9ca3af",
         marginTop: "5px",
+    },
+    unreadDot: {
+        width: "10px",
+        height: "10px",
+        borderRadius: "50%",
+        background: "#2563eb",
+        flexShrink: 0,
+    },
+    deleteBtn: {
+        background: "transparent",
+        border: "none",
+        fontSize: "16px",
+        cursor: "pointer",
+        color: "#9ca3af",
+        padding: "4px 8px",
+        borderRadius: "6px",
+        flexShrink: 0,
     },
 };
 
