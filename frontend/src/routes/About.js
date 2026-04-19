@@ -112,8 +112,8 @@ const [newDoctor, setNewDoctor] = useState({
             }
         />
 
-        <button onClick={addDoctor}>Save</button>
-        <button onClick={() => setShowForm(false)}>Cancel</button>
+        <button onClick={addDoctor}>Պահպանել</button>
+        <button onClick={() => setShowForm(false)}>Չեղարկել</button>
     </div>
 )}
                 <div style={styles.doctorsGrid}>
@@ -163,8 +163,8 @@ const styles = {
     marginBottom:"20px",
     background:"#2563eb",
     color:"white",
-    border:"none",
-    padding:"8px 14px",
+    border:"1px solid #d1d5db",
+    padding:"10px 14px",
     borderRadius:"8px",
     cursor:"pointer"
 },
