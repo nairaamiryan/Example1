@@ -35,11 +35,22 @@ const Patients = () => {
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Delete this patient?");
         if (!confirmDelete) return;
-
         const response = await api.deletePatient(id);
         if (response.success) {
             setPatients((prev) => prev.filter((patient) => patient.id !== id));
         }
+    };
+
+    const handleEdit = (id, updatedData) => {
+        setPatients((prev) =>
+            prev.map((p) => (p.id === id ? { ...p, ...updatedData } : p))
+        );
+    };
+
+    const handleStatusChange = (id, newStatus) => {
+        setPatients((prev) =>
+            prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p))
+        );
     };
 
     if (loading) {
@@ -127,6 +138,8 @@ const Patients = () => {
                                 key={patient.id}
                                 patient={patient}
                                 onDelete={handleDelete}
+                                onEdit={handleEdit}
+                                onStatusChange={handleStatusChange}
                             />
                         ))}
                 </div>
