@@ -142,7 +142,7 @@ const styles = {
         gap: "20px",
         marginBottom: "50px",
     },
-    addBtn:{
+   addBtn:{
     marginBottom:"20px",
     background:"#2563eb",
     color:"white",
@@ -152,42 +152,14 @@ const styles = {
     cursor:"pointer"
 },
 
-modalOverlay:{
-    position:"fixed",
-    top:0,
-    left:0,
-    right:0,
-    bottom:0,
-    background:"rgba(0,0,0,0.4)",
-    display:"flex",
-    alignItems:"center",
-    justifyContent:"center",
-    zIndex:1000
-},
-
-modal:{
+form:{
     background:"white",
-    padding:"25px",
-    borderRadius:"12px",
-    width:"350px",
+    padding:"20px",
+    borderRadius:"10px",
+    marginBottom:"20px",
     display:"flex",
-    flexDirection:"column",
     gap:"10px"
 },
-
-modalButtons:{
-    display:"flex",
-    justifyContent:"flex-end",
-    gap:"10px",
-    marginTop:"10px"
-},
-    infoCard: {
-        background: "white",
-        padding: "25px",
-        borderRadius: "12px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        textAlign: "center",
-    },
     infoIcon: {
         fontSize: "32px",
         marginBottom: "10px",
