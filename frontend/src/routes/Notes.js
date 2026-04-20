@@ -16,6 +16,7 @@ const Notes = () => {
     const [showPrescription, setShowPrescription] = useState(false);
     const [showLabTest, setShowLabTest] = useState(false);
     const [showDocument, setShowDocument] = useState(false);
+    const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
     useEffect(() => { loadNotes(); }, []);
 
@@ -27,6 +28,7 @@ const Notes = () => {
 
     const handleDelete = (id) => {
         setNotes((prev) => prev.filter((n) => n.id !== id));
+        setConfirmDeleteId(null);
     };
 
     const filteredNotes = notes
@@ -86,10 +88,23 @@ const Notes = () => {
                 {showLabTest && <LabTest onClose={() => setShowLabTest(false)} onSave={(data) => console.log("Անալիզ՝", data)} />}
                 {showDocument && <DocumentAttach onClose={() => setShowDocument(false)} onSave={(data) => console.log("Փաստաթուղթ՝", data)} />}
 
+                {confirmDeleteId && (
+                    <div style={styles.modalOverlay} onClick={() => setConfirmDeleteId(null)}>
+                        <div style={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
+                            <h3 style={styles.confirmTitle}>Ջնջե՞լ նշումը</h3>
+                            <p style={styles.confirmText}>Այս բժշկական նշումը կհեռացվի ցուցակից և հնարավոր չի լինի վերականգնել։ Շարունակե՞լ։</p>
+                            <div style={styles.confirmBtns}>
+                                <button style={styles.cancelBtn} onClick={() => setConfirmDeleteId(null)}>Չեղարկել</button>
+                                <button style={styles.deleteBtn} onClick={() => handleDelete(confirmDeleteId)}>Ջնջել</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div style={styles.notesList}>
                     {filteredNotes.length ? (
                         filteredNotes.map((note) => (
-                            <MedicalNote key={note.id} note={note} onDelete={handleDelete} />
+                            <MedicalNote key={note.id} note={note} onDelete={() => setConfirmDeleteId(note.id)} />
                         ))
                     ) : (
                         <p>Նշումներ չկան</p>
@@ -114,6 +129,13 @@ const styles = {
     select: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", cursor: "pointer" },
     notesList: { maxWidth: "800px" },
     loading: { textAlign: "center", padding: "60px 20px", fontSize: "16px", color: "#6b7280" },
+    modalOverlay: { position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 },
+    confirmModal: { backgroundColor: "#fff", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "360px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "16px" },
+    confirmTitle: { fontSize: "18px", fontWeight: "600", color: "#1a2e4a", margin: 0 },
+    confirmText: { fontSize: "14px", color: "#6b7280", margin: 0, lineHeight: "1.5" },
+    confirmBtns: { display: "flex", gap: "10px", justifyContent: "flex-end" },
+    cancelBtn: { padding: "8px 16px", background: "#f3f4f6", color: "#374151", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
+    deleteBtn: { padding: "8px 16px", background: "#ef4444", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
 };
 
 export default Notes;
