@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import api from "../services/api";
-import MedicalNote from "../components/MedicalNotes";
+import MedicalNote from "../components/MedicalNodes";
 import AddDiagnosis from "../components/AddDiagnosis";
 import Prescription from "../components/Prescription";
 import LabTest from "../components/LabTest";
@@ -15,8 +15,6 @@ const Notes = () => {
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({ title: "", description: "" });
     const [disabled, setDisabled] = useState(true);
-
-    // ⬇️ 4 նոր modal-ների state-եր
     const [showDiagnosis, setShowDiagnosis] = useState(false);
     const [showPrescription, setShowPrescription] = useState(false);
     const [showLabTest, setShowLabTest] = useState(false);
@@ -78,7 +76,6 @@ const Notes = () => {
                     </button>
                 </div>
 
-                {/* ⬇️ 4 գործողությունների կոճակներ */}
                 <div style={styles.actions}>
                     <button style={styles.actionBtn} onClick={() => setShowDiagnosis(true)}>🩺 Ախտորոշում ավելացնել</button>
                     <button style={styles.actionBtn} onClick={() => setShowPrescription(true)}>💊 Բաղադրատոմս դուրս գրել</button>
@@ -94,10 +91,13 @@ const Notes = () => {
                         onChange={(e) => setSearch(e.target.value)}
                         style={styles.search}
                     />
-                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={styles.select}>
-                        <option value="date">Ըստ ամսաթվի</option>
-                        <option value="name">Ըստ անվան</option>
-                    </select>
+                    <div style={styles.sortGroup}>
+                        <span style={styles.sortLabel}>Դասակարգել՝</span>
+                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={styles.select}>
+                            <option value="date">Ըստ ամսաթվի</option>
+                            <option value="name">Ըստ անվան</option>
+                        </select>
+                    </div>
                 </div>
 
                 {showModal && (
@@ -131,31 +131,10 @@ const Notes = () => {
                     </div>
                 )}
 
-                {/* ⬇️ 4 modal-ներ */}
-                {showDiagnosis && (
-                    <AddDiagnosis
-                        onClose={() => setShowDiagnosis(false)}
-                        onSave={(data) => console.log("Ախտորոշում՝", data)}
-                    />
-                )}
-                {showPrescription && (
-                    <Prescription
-                        onClose={() => setShowPrescription(false)}
-                        onSave={(data) => console.log("Բաղադրատոմս՝", data)}
-                    />
-                )}
-                {showLabTest && (
-                    <LabTest
-                        onClose={() => setShowLabTest(false)}
-                        onSave={(data) => console.log("Անալիզ՝", data)}
-                    />
-                )}
-                {showDocument && (
-                    <DocumentAttach
-                        onClose={() => setShowDocument(false)}
-                        onSave={(data) => console.log("Փաստաթուղթ՝", data)}
-                    />
-                )}
+                {showDiagnosis && <AddDiagnosis onClose={() => setShowDiagnosis(false)} onSave={(data) => console.log("Ախտորոշում՝", data)} />}
+                {showPrescription && <Prescription onClose={() => setShowPrescription(false)} onSave={(data) => console.log("Բաղադրատոմս՝", data)} />}
+                {showLabTest && <LabTest onClose={() => setShowLabTest(false)} onSave={(data) => console.log("Անալիզ՝", data)} />}
+                {showDocument && <DocumentAttach onClose={() => setShowDocument(false)} onSave={(data) => console.log("Փաստաթուղթ՝", data)} />}
 
                 <div style={styles.notesList}>
                     {filteredNotes.length ? (
@@ -177,11 +156,12 @@ const styles = {
     title: { fontSize: "32px", fontWeight: "600", color: "#1a2e4a", marginBottom: "5px" },
     subtitle: { fontSize: "14px", color: "#6b7280" },
     addBtn: { padding: "10px 18px", background: "#2563eb", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: "500" },
-    // ⬇️ Նոր styles
     actions: { display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" },
     actionBtn: { padding: "9px 16px", background: "#f0f4ff", color: "#2563eb", border: "1px solid #c7d7fd", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: "500" },
-    controls: { display: "flex", gap: "12px", marginBottom: "24px" },
+    controls: { display: "flex", gap: "12px", marginBottom: "24px", alignItems: "center" },
     search: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", width: "280px" },
+    sortGroup: { display: "flex", alignItems: "center", gap: "8px" },
+    sortLabel: { fontSize: "13px", color: "#6b7280", fontWeight: "500" },
     select: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", cursor: "pointer" },
     notesList: { maxWidth: "800px" },
     loading: { textAlign: "center", padding: "60px 20px", fontSize: "16px", color: "#6b7280" },
