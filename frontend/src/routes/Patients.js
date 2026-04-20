@@ -11,6 +11,7 @@ const Patients = () => {
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
     const [showForm, setShowForm] = useState(false);
+    const [deleteModal, setDeleteModal] = useState({ open: false, id: null, name: "" });
 
     useEffect(() => {
         loadPatients();
@@ -32,13 +33,16 @@ const Patients = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        const confirmDelete = window.confirm("Delete this patient?");
-        if (!confirmDelete) return;
-        const response = await api.deletePatient(id);
+    const handleDelete = (id, name) => {
+        setDeleteModal({ open: true, id, name });
+    };
+
+    const handleConfirmDelete = async () => {
+        const response = await api.deletePatient(deleteModal.id);
         if (response.success) {
-            setPatients((prev) => prev.filter((patient) => patient.id !== id));
+            setPatients((prev) => prev.filter((patient) => patient.id !== deleteModal.id));
         }
+        setDeleteModal({ open: false, id: null, name: "" });
     };
 
     const handleEdit = (id, updatedData) => {
@@ -68,13 +72,13 @@ const Patients = () => {
             <div style={styles.container}>
                 <div style={styles.header}>
                     <div style={styles.stats}>
-                        <span>Total: {patients.length}</span>
+                        <span>Ընդամենը՝ {patients.length}</span>
                         <span>
-                            Active:{" "}
+                            Ակտիվ՝{" "}
                             {patients.filter((p) => p.status === "Active").length}
                         </span>
                         <span>
-                            Pending:{" "}
+                            Սպասող՝{" "}
                             {patients.filter((p) => p.status === "Pending").length}
                         </span>
                     </div>
@@ -119,6 +123,34 @@ const Patients = () => {
                         onClose={() => setShowForm(false)}
                         onSubmit={addPatient}
                     />
+                )}
+
+                {deleteModal.open && (
+                    <div style={styles.overlay}>
+                        <div style={styles.modal}>
+                            <h2 style={styles.modalTitle}>Ջնջե՞լ հիվանդին</h2>
+                            <p style={styles.modalText}>
+                                Վստա՞հ եք, որ ցանկանում եք ջնջել{" "}
+                                <strong>{deleteModal.name}</strong>-ին։
+                                <br />
+                                Այս գործողությունը հետ չի կարող բերվել։
+                            </p>
+                            <div style={styles.modalButtons}>
+                                <button
+                                    style={styles.cancelButton}
+                                    onClick={() => setDeleteModal({ open: false, id: null, name: "" })}
+                                >
+                                    Չեղարկել
+                                </button>
+                                <button
+                                    style={styles.confirmButton}
+                                    onClick={handleConfirmDelete}
+                                >
+                                    Այո, ջնջել
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 )}
 
                 <div style={styles.patientsList}>
@@ -212,6 +244,60 @@ const styles = {
         padding: "60px 20px",
         fontSize: "16px",
         color: "#6b7280",
+    },
+    overlay: {
+        position: "fixed",
+        inset: 0,
+        backgroundColor: "rgba(0,0,0,0.45)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+    },
+    modal: {
+        background: "white",
+        borderRadius: "16px",
+        padding: "32px 28px",
+        maxWidth: "400px",
+        width: "90%",
+        boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+    },
+    modalTitle: {
+        fontSize: "20px",
+        fontWeight: "700",
+        color: "#1a2e4a",
+        marginBottom: "12px",
+    },
+    modalText: {
+        fontSize: "14px",
+        color: "#6b7280",
+        lineHeight: "1.6",
+        marginBottom: "28px",
+    },
+    modalButtons: {
+        display: "flex",
+        gap: "12px",
+        justifyContent: "flex-end",
+    },
+    cancelButton: {
+        padding: "10px 20px",
+        borderRadius: "8px",
+        border: "1px solid #e5e7eb",
+        background: "white",
+        color: "#374151",
+        fontSize: "14px",
+        fontWeight: "500",
+        cursor: "pointer",
+    },
+    confirmButton: {
+        padding: "10px 20px",
+        borderRadius: "8px",
+        border: "none",
+        background: "#ef4444",
+        color: "white",
+        fontSize: "14px",
+        fontWeight: "600",
+        cursor: "pointer",
     },
 };
 
