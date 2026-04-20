@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import api from "../services/api";
-import MedicalNote from "../components/MedicalNodes";
+import MedicalNote from "../components/MedicalNotes";
 import AddDiagnosis from "../components/AddDiagnosis";
 import Prescription from "../components/Prescription";
 import LabTest from "../components/LabTest";
