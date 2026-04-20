@@ -16,6 +16,7 @@ const Finances = () => {
     const [showPayment, setShowPayment] = useState(false);
     const [showInsurance, setShowInsurance] = useState(false);
     const [showExport, setShowExport] = useState(false);
+    const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
     useEffect(() => { loadFinances(); }, []);
 
@@ -27,6 +28,7 @@ const Finances = () => {
 
     const handleDelete = (id) => {
         setItems((prev) => prev.filter((i) => i.id !== id));
+        setConfirmDeleteId(null);
     };
 
     const filteredItems = items
@@ -86,10 +88,23 @@ const Finances = () => {
                 {showInsurance && <InsuranceCheck onClose={() => setShowInsurance(false)} onSave={(data) => console.log("Ապահովագրություն՝", data)} />}
                 {showExport && <ExportReport onClose={() => setShowExport(false)} />}
 
+                {confirmDeleteId && (
+                    <div style={styles.modalOverlay} onClick={() => setConfirmDeleteId(null)}>
+                        <div style={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
+                            <h3 style={styles.confirmTitle}>Ջնջե՞լ գրառումը</h3>
+                            <p style={styles.confirmText}>Այս ֆինանսական գրառումը կհեռացվի ցուցակից և հնարավոր չի լինի վերականգնել։ Շարունակե՞լ։</p>
+                            <div style={styles.confirmBtns}>
+                                <button style={styles.cancelBtn} onClick={() => setConfirmDeleteId(null)}>Չեղարկել</button>
+                                <button style={styles.deleteBtn} onClick={() => handleDelete(confirmDeleteId)}>Ջնջել</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div style={styles.list}>
                     {filteredItems.length ? (
                         filteredItems.map((item) => (
-                            <FinanceItem key={item.id} item={item} onDelete={handleDelete} />
+                            <FinanceItem key={item.id} item={item} onDelete={() => setConfirmDeleteId(item.id)} />
                         ))
                     ) : (
                         <p>Գրառումներ չկան</p>
@@ -114,6 +129,13 @@ const styles = {
     select: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", cursor: "pointer" },
     list: { maxWidth: "800px" },
     loading: { textAlign: "center", padding: "60px 20px", fontSize: "16px", color: "#6b7280" },
+    modalOverlay: { position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 },
+    confirmModal: { backgroundColor: "#fff", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "360px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "16px" },
+    confirmTitle: { fontSize: "18px", fontWeight: "600", color: "#1a2e4a", margin: 0 },
+    confirmText: { fontSize: "14px", color: "#6b7280", margin: 0, lineHeight: "1.5" },
+    confirmBtns: { display: "flex", gap: "10px", justifyContent: "flex-end" },
+    cancelBtn: { padding: "8px 16px", background: "#f3f4f6", color: "#374151", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
+    deleteBtn: { padding: "8px 16px", background: "#ef4444", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
 };
 
 export default Finances;
