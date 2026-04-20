@@ -29,6 +29,14 @@ const TODAY_DATA = [
     { month: "18:00", appointments: 1, patients: 1 },
 ];
 
+const ALL_TIME_DATA = [
+    { month: "2020", appointments: 45, patients: 30 },
+    { month: "2021", appointments: 78, patients: 55 },
+    { month: "2022", appointments: 120, patients: 89 },
+    { month: "2023", appointments: 165, patients: 110 },
+    { month: "2024", appointments: 200, patients: 143 },
+];
+
 const Home = () => {
     const [chartData, setChartData] = useState({
         monthly: [], byDepartment: [], topDoctors: [],
@@ -54,7 +62,7 @@ const Home = () => {
     const getDisplayData = () => {
         if (filter.period === "weekly") return WEEKLY_DATA;
         if (filter.period === "today") return TODAY_DATA;
-        if (filter.period === "all") return chartData.monthly;
+        if (filter.period === "all") return ALL_TIME_DATA;
         return chartData.monthly;
     };
 
