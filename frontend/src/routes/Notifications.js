@@ -8,10 +8,9 @@ const Notification = () => {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState("all");
+    const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
-    useEffect(() => {
-        loadNotifications();
-    }, []);
+    useEffect(() => { loadNotifications(); }, []);
 
     const loadNotifications = async () => {
         const response = await api.getNotifications();
@@ -28,6 +27,7 @@ const Notification = () => {
 
     const handleDelete = (id) => {
         setNotifications((prev) => prev.filter((item) => item.id !== id));
+        setConfirmDeleteId(null);
     };
 
     const handleRead = (id) => {
@@ -74,12 +74,25 @@ const Notification = () => {
                     ))}
                 </div>
 
+                {confirmDeleteId && (
+                    <div style={styles.modalOverlay} onClick={() => setConfirmDeleteId(null)}>
+                        <div style={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
+                            <h3 style={styles.confirmTitle}>Ջնջե՞լ ծանուցումը</h3>
+                            <p style={styles.confirmText}>Այս ծանուցումը կհեռացվի ցուցակից։ Շարունակե՞լ։</p>
+                            <div style={styles.confirmBtns}>
+                                <button style={styles.cancelBtn} onClick={() => setConfirmDeleteId(null)}>Չեղարկել</button>
+                                <button style={styles.deleteBtn} onClick={() => handleDelete(confirmDeleteId)}>Ջնջել</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div style={styles.list}>
                     {filtered.map((item) => (
                         <NotificationCard
                             key={item.id}
                             item={item}
-                            onDelete={handleDelete}
+                            onDelete={() => setConfirmDeleteId(item.id)}
                             onRead={handleRead}
                         />
                     ))}
@@ -90,62 +103,22 @@ const Notification = () => {
 };
 
 const styles = {
-    container: {
-        maxWidth: "900px",
-        margin: "0 auto",
-        padding: "40px 20px",
-    },
-    header: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "20px",
-    },
-    title: {
-        fontSize: "28px",
-        fontWeight: "600",
-    },
-    markAllBtn: {
-        padding: "8px 16px",
-        background: "#2563eb",
-        color: "white",
-        border: "none",
-        borderRadius: "8px",
-        cursor: "pointer",
-        fontSize: "14px",
-    },
-    filters: {
-        display: "flex",
-        gap: "10px",
-        marginBottom: "20px",
-    },
-    filterBtn: {
-        padding: "7px 16px",
-        borderRadius: "8px",
-        border: "1px solid #d1d5db",
-        background: "white",
-        cursor: "pointer",
-        fontSize: "14px",
-        color: "#6b7280",
-    },
-    filterBtnActive: {
-        padding: "7px 16px",
-        borderRadius: "8px",
-        border: "1px solid #2563eb",
-        background: "#2563eb",
-        cursor: "pointer",
-        fontSize: "14px",
-        color: "white",
-    },
-    list: {
-        display: "flex",
-        flexDirection: "column",
-        gap: "15px",
-    },
-    loading: {
-        textAlign: "center",
-        padding: "60px",
-    },
+    container: { maxWidth: "900px", margin: "0 auto", padding: "40px 20px" },
+    header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" },
+    title: { fontSize: "28px", fontWeight: "600" },
+    markAllBtn: { padding: "8px 16px", background: "#2563eb", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px" },
+    filters: { display: "flex", gap: "10px", marginBottom: "20px" },
+    filterBtn: { padding: "7px 16px", borderRadius: "8px", border: "1px solid #d1d5db", background: "white", cursor: "pointer", fontSize: "14px", color: "#6b7280" },
+    filterBtnActive: { padding: "7px 16px", borderRadius: "8px", border: "1px solid #2563eb", background: "#2563eb", cursor: "pointer", fontSize: "14px", color: "white" },
+    list: { display: "flex", flexDirection: "column", gap: "15px" },
+    loading: { textAlign: "center", padding: "60px" },
+    modalOverlay: { position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 },
+    confirmModal: { backgroundColor: "#fff", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "360px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "16px" },
+    confirmTitle: { fontSize: "18px", fontWeight: "600", color: "#1a2e4a", margin: 0 },
+    confirmText: { fontSize: "14px", color: "#6b7280", margin: 0, lineHeight: "1.5" },
+    confirmBtns: { display: "flex", gap: "10px", justifyContent: "flex-end" },
+    cancelBtn: { padding: "8px 16px", background: "#f3f4f6", color: "#374151", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
+    deleteBtn: { padding: "8px 16px", background: "#ef4444", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
 };
 
 export default Notification;
