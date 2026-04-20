@@ -13,8 +13,7 @@ const About = () => {
     const [searchDoctor, setSearchDoctor] = useState("");
     const [sortBy, setSortBy] = useState("name");
     const [selectedDoctor, setSelectedDoctor] = useState(null);
-    const [editingFounded, setEditingFounded] = useState(false);
-    const [foundedValue, setFoundedValue] = useState("");
+    const [confirmDeleteId, setConfirmDeleteId] = useState(null); // ⬅️ Նոր
 
     useEffect(() => {
         loadData();
@@ -25,10 +24,7 @@ const About = () => {
             api.getAboutInfo(),
             api.getDoctors(),
         ]);
-        if (aboutRes.success) {
-            setAboutInfo(aboutRes.data);
-            setFoundedValue(aboutRes.data.founded);
-        }
+        if (aboutRes.success) setAboutInfo(aboutRes.data);
         if (doctorsRes.success) setDoctors(doctorsRes.data);
         setLoading(false);
     };
@@ -43,6 +39,7 @@ const About = () => {
 
     const deleteDoctor = (id) => {
         setDoctors((prev) => prev.filter((d) => d.id !== id));
+        setConfirmDeleteId(null);
     };
 
     const filteredDoctors = doctors
@@ -73,32 +70,11 @@ const About = () => {
                 <p style={styles.description}>{aboutInfo.description}</p>
 
                 <div style={styles.infoGrid}>
+                    {/* ⬅️ Հեռացված է խմբագրելու կոճակը */}
                     <div style={styles.infoCard}>
                         <div style={styles.infoIcon}>{ABOUT.FOUNDED.ICON}</div>
                         <div style={styles.infoLabel}>{ABOUT.FOUNDED.LABEL}</div>
-                        {editingFounded ? (
-                            <div style={{ display: "flex", gap: "6px", justifyContent: "center", marginTop: "6px" }}>
-                                <input
-                                    style={styles.editInput}
-                                    value={foundedValue}
-                                    onChange={(e) => setFoundedValue(e.target.value)}
-                                />
-                                <button
-                                    style={styles.saveBtn}
-                                    onClick={() => {
-                                        setAboutInfo({ ...aboutInfo, founded: foundedValue });
-                                        setEditingFounded(false);
-                                    }}
-                                >
-                                    ✓
-                                </button>
-                            </div>
-                        ) : (
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
-                                <div style={styles.infoValue}>{aboutInfo.founded}</div>
-                                <button style={styles.editBtn} onClick={() => setEditingFounded(true)}>✏️</button>
-                            </div>
-                        )}
+                        <div style={styles.infoValue}>{aboutInfo.founded}</div>
                     </div>
                     <div style={styles.infoCard}>
                         <div style={styles.infoIcon}>{ABOUT.STAFF.ICON}</div>
@@ -117,14 +93,14 @@ const About = () => {
                         onChange={(e) => setSearchDoctor(e.target.value)}
                         style={styles.filterInput}
                     />
-                    <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        style={styles.select}
-                    >
-                        <option value="name">Ըստ անվան</option>
-                        <option value="patients">Ըստ հիվանդների</option>
-                    </select>
+                    {/* ⬅️ Ավելացված է Դասակարգել label */}
+                    <div style={styles.sortGroup}>
+                        <span style={styles.sortLabel}>Դասակարգել՝</span>
+                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={styles.select}>
+                            <option value="name">Ըստ անվան</option>
+                            <option value="patients">Ըստ հիվանդների</option>
+                        </select>
+                    </div>
                     <button style={styles.addBtn} onClick={() => setShowForm(true)}>
                         + Ավելացնել բժիշկ
                     </button>
@@ -143,7 +119,7 @@ const About = () => {
                         <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                             <div style={styles.modalHeader}>
                                 <h2 style={styles.modalTitle}>Բժիշկի մանրամասներ</h2>
-                                <button style={styles.closeBtn} onClick={() => setSelectedDoctor(null)}>X</button>
+                                <button style={styles.closeBtn} onClick={() => setSelectedDoctor(null)}>✕</button>
                             </div>
                             <div style={styles.doctorAvatar}>{selectedDoctor.name[0]}</div>
                             <div style={styles.detailRow}><b>Անուն։</b> {selectedDoctor.name} {selectedDoctor.surname}</div>
@@ -153,12 +129,26 @@ const About = () => {
                     </div>
                 )}
 
+                {/* ⬅️ Ջնջման հաստատման modal */}
+                {confirmDeleteId && (
+                    <div style={styles.modalOverlay} onClick={() => setConfirmDeleteId(null)}>
+                        <div style={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
+                            <h3 style={styles.confirmTitle}>Ջնջե՞լ բժիշկին</h3>
+                            <p style={styles.confirmText}>Համոզված եք, որ ուզում եք ջնջել այս բժիշկին։ Այս գործողությունը հետ չի կարող կատարվել։</p>
+                            <div style={styles.confirmBtns}>
+                                <button style={styles.cancelBtn} onClick={() => setConfirmDeleteId(null)}>Չեղարկել</button>
+                                <button style={styles.deleteBtn} onClick={() => deleteDoctor(confirmDeleteId)}>Ջնջել</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div style={styles.doctorsGrid}>
                     {filteredDoctors.map((doctor) => (
                         <DoctorCard
                             key={doctor.id}
                             doctor={doctor}
-                            onDelete={deleteDoctor}
+                            onDelete={() => setConfirmDeleteId(doctor.id)} // ⬅️ Փոփոխված
                             onClick={setSelectedDoctor}
                         />
                     ))}
@@ -174,16 +164,15 @@ const styles = {
     description: { fontSize: "16px", color: "#6b7280", marginBottom: "30px", lineHeight: "1.6" },
     controls: { display: "flex", gap: "12px", alignItems: "center", marginBottom: "24px", flexWrap: "wrap" },
     filterInput: { padding: "8px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", width: "220px" },
+    sortGroup: { display: "flex", alignItems: "center", gap: "8px" },
+    sortLabel: { fontSize: "13px", color: "#6b7280", fontWeight: "500" },
     select: { padding: "8px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", cursor: "pointer" },
     infoGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginBottom: "50px" },
-    addBtn: { marginBottom: "0", background: "#2563eb", color: "white", border: "none", padding: "8px 14px", borderRadius: "8px", cursor: "pointer" },
+    addBtn: { background: "#2563eb", color: "white", border: "none", padding: "8px 14px", borderRadius: "8px", cursor: "pointer" },
     infoCard: { background: "white", padding: "25px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)", textAlign: "center" },
     infoIcon: { fontSize: "32px", marginBottom: "10px" },
     infoLabel: { fontSize: "13px", color: "#6b7280", marginBottom: "8px" },
     infoValue: { fontSize: "28px", fontWeight: "600", color: "#1a2e4a" },
-    editBtn: { background: "transparent", border: "none", cursor: "pointer", fontSize: "16px" },
-    editInput: { width: "80px", padding: "4px 8px", borderRadius: "6px", border: "1px solid #d1d5db", fontSize: "16px", textAlign: "center" },
-    saveBtn: { padding: "4px 8px", background: "#2563eb", color: "white", border: "none", borderRadius: "6px", cursor: "pointer" },
     doctors: { fontSize: "24px", fontWeight: "600", color: "#1a2e4a", marginBottom: "20px" },
     doctorsGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px" },
     loading: { textAlign: "center", padding: "60px 20px", fontSize: "16px", color: "#6b7280" },
@@ -194,6 +183,13 @@ const styles = {
     closeBtn: { background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "#6b7280" },
     doctorAvatar: { width: "70px", height: "70px", borderRadius: "50%", background: "linear-gradient(135deg, #66a8ea 0%, #1ba073 100%)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", fontWeight: "600", margin: "0 auto" },
     detailRow: { fontSize: "15px", color: "#374151", padding: "6px 0", borderBottom: "1px solid #f3f4f6" },
+    // ⬅️ Նոր confirm modal styles
+    confirmModal: { backgroundColor: "#fff", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "360px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "16px" },
+    confirmTitle: { fontSize: "18px", fontWeight: "600", color: "#1a2e4a", margin: 0 },
+    confirmText: { fontSize: "14px", color: "#6b7280", margin: 0, lineHeight: "1.5" },
+    confirmBtns: { display: "flex", gap: "10px", justifyContent: "flex-end" },
+    cancelBtn: { padding: "8px 16px", background: "#f3f4f6", color: "#374151", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
+    deleteBtn: { padding: "8px 16px", background: "#ef4444", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
 };
 
 export default About;
