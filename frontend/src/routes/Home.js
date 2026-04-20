@@ -8,7 +8,7 @@ import {
 import { STATISTICS, DEPARTMENTS, LOADING } from "../constants";
 import api from "../services/api";
 
-const PERIOD_LABELS = { today: "Այսօր", weekly: "Շաբաթ", monthly: "Ամիս" };
+const PERIOD_LABELS = { today: "Այսօր", weekly: "Շաբաթ", monthly: "Ամիս", all: "Ամբողջ ժամանակ" };
 
 const WEEKLY_DATA = [
     { month: "Երկ", appointments: 8, patients: 5 },
@@ -54,6 +54,7 @@ const Home = () => {
     const getDisplayData = () => {
         if (filter.period === "weekly") return WEEKLY_DATA;
         if (filter.period === "today") return TODAY_DATA;
+        if (filter.period === "all") return chartData.monthly;
         return chartData.monthly;
     };
 
@@ -125,7 +126,13 @@ const Home = () => {
                                     <div style={styles.tableHeader}>
                                         <h4 style={styles.chartTitle}>
                                             Ժամադրություններ / Հիվանդներ —{" "}
-                                            {filter.period === "today" ? "օրվա ըստ ժամերի" : filter.period === "weekly" ? "շաբաթվա օրերով" : "ըստ ամիսների"}
+                                            {filter.period === "today"
+                                                ? "օրվա ըստ ժամերի"
+                                                : filter.period === "weekly"
+                                                ? "շաբաթվա օրերով"
+                                                : filter.period === "all"
+                                                ? "ամբողջ ժամանակ"
+                                                : "ըստ ամիսների"}
                                         </h4>
                                     </div>
                                     <ResponsiveContainer width="100%" height={250}>
