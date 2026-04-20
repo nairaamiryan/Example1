@@ -47,7 +47,7 @@ const PatientCard = ({ patient, onDelete, onEdit, onStatusChange }) => {
                 <div style={styles.actions}>
                     <button style={styles.btn} onClick={() => setShowView(true)}>View</button>
                     <button style={styles.btn} onClick={() => setShowEdit(true)}>Edit</button>
-                    <button style={styles.delete} onClick={() => onDelete(patient.id)}>Delete</button>
+                    <button style={styles.delete} onClick={() => onDelete(patient.id, `${patient.name} ${patient.surname}`)}>Delete</button>
                 </div>
                 <div
                     style={{ ...styles.status, background: STATUS_COLORS(patient.status), cursor: "pointer" }}
