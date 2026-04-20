@@ -123,29 +123,6 @@ const Reports = () => {
         showToast(`Հաշվետվությունը ուղարկվեց ${recipient}-ին`);
     };
 
-    const getTopDiagnoses = () => {
-        const wordCount = {};
-        const stopWords = new Set([
-            "և", "է", "ու", "կամ", "որ", "ըստ", "հետ", "մեջ", "ամփոփ",
-            "ամսական", "հաշվետվություն", "բժշկական", "հիվանդների",
-            "հիվանդ", "նոր", "ծրագիր", "արդյունքները", "արդյունք",
-            "ուսումնասիրություն", "ուսումնասիրությ", "կլինիկական"
-        ]);
-        reports.filter(r => !r.archived).forEach(r => {
-            const words = (r.title + " " + (r.description || "")).split(/\s+/);
-            words.forEach(w => {
-                const clean = w.replace(/[։,.?!«»()]/g, "").toLowerCase();
-                if (clean.length > 4 && !stopWords.has(clean)) {
-                    wordCount[clean] = (wordCount[clean] || 0) + 1;
-                }
-            });
-        });
-        return Object.entries(wordCount)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 5);
-    };
-
-    const topDiagnoses = getTopDiagnoses();
     const archivedCount = reports.filter(r => r.archived).length;
     const unreadCount = reports.filter(r => !r.read && !r.archived).length;
 
@@ -213,28 +190,6 @@ const Reports = () => {
                         <div style={styles.statLabel}>Արխիվ</div>
                     </div>
                 </div>
-
-                {/* TOP DIAGNOSES */}
-                {topDiagnoses.length > 0 && (
-                    <div style={styles.diagPanel}>
-                        <div style={styles.diagTitle}>📊 Ամենաշատ հիշատակված</div>
-                        <div style={styles.diagList}>
-                            {topDiagnoses.map(([word, count], i) => (
-                                <div key={word} style={styles.diagItem}>
-                                    <span style={styles.diagRank}>#{i + 1}</span>
-                                    <span style={styles.diagWord}>{word}</span>
-                                    <div style={styles.diagBarWrap}>
-                                        <div style={{
-                                            ...styles.diagBar,
-                                            width: `${(count / topDiagnoses[0][1]) * 100}%`,
-                                        }} />
-                                    </div>
-                                    <span style={styles.diagCount}>{count}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
 
                 <div style={styles.controls}>
                     <input
@@ -345,16 +300,6 @@ const styles = {
     statCard: { background: "white", borderRadius: "10px", padding: "14px 20px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", flex: 1, textAlign: "center" },
     statNum: { fontSize: "24px", fontWeight: "700", color: "#2563eb" },
     statLabel: { fontSize: "12px", color: "#9ca3af", marginTop: "2px" },
-
-    diagPanel: { background: "white", borderRadius: "12px", padding: "16px 20px", marginBottom: "20px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" },
-    diagTitle: { fontSize: "14px", fontWeight: "600", color: "#1a2e4a", marginBottom: "12px" },
-    diagList: { display: "flex", flexDirection: "column", gap: "8px" },
-    diagItem: { display: "flex", alignItems: "center", gap: "10px" },
-    diagRank: { fontSize: "11px", color: "#9ca3af", width: "20px" },
-    diagWord: { fontSize: "13px", color: "#374151", width: "160px", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" },
-    diagBarWrap: { flex: 1, background: "#f3f4f6", borderRadius: "4px", height: "6px" },
-    diagBar: { background: "#2563eb", borderRadius: "4px", height: "6px", transition: "width 0.4s" },
-    diagCount: { fontSize: "12px", color: "#6b7280", width: "20px", textAlign: "right" },
 
     controls: { display: "flex", gap: "12px", marginBottom: "24px", alignItems: "center" },
     search: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", width: "280px" },
