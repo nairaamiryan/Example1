@@ -77,10 +77,13 @@ const Reports = () => {
                         onChange={(e) => setSearch(e.target.value)}
                         style={styles.search}
                     />
-                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={styles.select}>
-                        <option value="date">Ըստ ամսաթվի</option>
-                        <option value="name">Ըստ անվան</option>
-                    </select>
+                    <div style={styles.sortGroup}>
+                        <span style={styles.sortLabel}>Դասակարգել՝</span>
+                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={styles.select}>
+                            <option value="date">Ըստ ամսաթվի</option>
+                            <option value="name">Ըստ անվան</option>
+                        </select>
+                    </div>
                 </div>
 
                 {showModal && (
@@ -88,7 +91,7 @@ const Reports = () => {
                         <div style={styles.modalContent}>
                             <div style={styles.modalHeader}>
                                 <h2 style={styles.modalTitle}>Նոր հաշվետվություն</h2>
-                                <button style={styles.closeBtn} onClick={() => setShowModal(false)}>X</button>
+                                <button style={styles.closeBtn} onClick={() => setShowModal(false)}>✕</button>
                             </div>
                             <input
                                 style={styles.input}
@@ -134,8 +137,10 @@ const styles = {
     title: { fontSize: "32px", fontWeight: "600", color: "#1a2e4a", marginBottom: "5px" },
     subtitle: { fontSize: "14px", color: "#6b7280" },
     addBtn: { padding: "10px 18px", background: "#2563eb", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: "500" },
-    controls: { display: "flex", gap: "12px", marginBottom: "24px" },
+    controls: { display: "flex", gap: "12px", marginBottom: "24px", alignItems: "center" },
     search: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", width: "280px" },
+    sortGroup: { display: "flex", alignItems: "center", gap: "8px" },
+    sortLabel: { fontSize: "13px", color: "#6b7280", fontWeight: "500" },
     select: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", cursor: "pointer" },
     reportsList: { maxWidth: "800px" },
     loading: { textAlign: "center", padding: "60px 20px", fontSize: "16px", color: "#6b7280" },
