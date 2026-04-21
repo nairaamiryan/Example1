@@ -26,6 +26,18 @@ const Notes = () => {
         setLoading(false);
     };
 
+    const handleSave = (data) => {
+        const newNote = {
+            id: Date.now(),
+            ...data,
+        };
+        setNotes((prev) => [newNote, ...prev]);
+        setShowDiagnosis(false);
+        setShowPrescription(false);
+        setShowLabTest(false);
+        setShowDocument(false);
+    };
+
     const handleDelete = (id) => {
         setNotes((prev) => prev.filter((n) => n.id !== id));
         setConfirmDeleteId(null);
@@ -83,10 +95,30 @@ const Notes = () => {
                     </div>
                 </div>
 
-                {showDiagnosis && <AddDiagnosis onClose={() => setShowDiagnosis(false)} onSave={(data) => console.log("Ախտորոշում՝", data)} />}
-                {showPrescription && <Prescription onClose={() => setShowPrescription(false)} onSave={(data) => console.log("Բաղադրատոմս՝", data)} />}
-                {showLabTest && <LabTest onClose={() => setShowLabTest(false)} onSave={(data) => console.log("Անալիզ՝", data)} />}
-                {showDocument && <DocumentAttach onClose={() => setShowDocument(false)} onSave={(data) => console.log("Փաստաթուղթ՝", data)} />}
+                {showDiagnosis && (
+                    <AddDiagnosis
+                        onClose={() => setShowDiagnosis(false)}
+                        onSave={handleSave}
+                    />
+                )}
+                {showPrescription && (
+                    <Prescription
+                        onClose={() => setShowPrescription(false)}
+                        onSave={handleSave}
+                    />
+                )}
+                {showLabTest && (
+                    <LabTest
+                        onClose={() => setShowLabTest(false)}
+                        onSave={handleSave}
+                    />
+                )}
+                {showDocument && (
+                    <DocumentAttach
+                        onClose={() => setShowDocument(false)}
+                        onSave={handleSave}
+                    />
+                )}
 
                 {confirmDeleteId && (
                     <div style={styles.modalOverlay} onClick={() => setConfirmDeleteId(null)}>
@@ -104,7 +136,11 @@ const Notes = () => {
                 <div style={styles.notesList}>
                     {filteredNotes.length ? (
                         filteredNotes.map((note) => (
-                            <MedicalNote key={note.id} note={note} onDelete={() => setConfirmDeleteId(note.id)} />
+                            <MedicalNote
+                                key={note.id}
+                                note={note}
+                                onDelete={() => setConfirmDeleteId(note.id)}
+                            />
                         ))
                     ) : (
                         <p>Նշումներ չկան</p>
