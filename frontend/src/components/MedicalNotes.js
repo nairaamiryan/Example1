@@ -43,7 +43,7 @@ const MedicalNote = ({ note, onDelete }) => {
                         <div style={styles.description}>{note.description}</div>
                     )}
                     {note.fileName && (
-                        
+                        <a
                             href={note.fileUrl}
                             target="_blank"
                             rel="noreferrer"
