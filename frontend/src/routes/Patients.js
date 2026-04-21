@@ -9,7 +9,7 @@ const Patients = () => {
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
-    const [statusFilter, setStatusFilter] = useState("All");
+    const [statusFilter, setStatusFilter] = useState("Բոլորը");
     const [showForm, setShowForm] = useState(false);
     const [deleteModal, setDeleteModal] = useState({ open: false, id: null, name: "" });
 
@@ -57,6 +57,13 @@ const Patients = () => {
         );
     };
 
+    const STATUS_MAP = {
+        "Բոլորը": null,
+        "Ակտիվ": "active",
+        "Կայուն": "stable",
+        "Սպասող": "pending",
+    };
+
     if (loading) {
         return (
             <div>
@@ -73,20 +80,12 @@ const Patients = () => {
                 <div style={styles.header}>
                     <div style={styles.stats}>
                         <span>Ընդամենը՝ {patients.length}</span>
-                        <span>
-                            Ակտիվ՝{" "}
-                            {patients.filter((p) => p.status === "Active").length}
-                        </span>
-                        <span>
-                            Սպասող՝{" "}
-                            {patients.filter((p) => p.status === "Pending").length}
-                        </span>
+                        <span>Ակտիվ՝ {patients.filter((p) => p.status === "active").length}</span>
+                        <span>Սպասող՝ {patients.filter((p) => p.status === "pending").length}</span>
                     </div>
                     <div>
                         <h1 style={styles.title}>{PATIENTS.TITLE}</h1>
-                        <p style={styles.subtitle}>
-                            {PATIENTS.TOTAL_PATIENTS(patients.length)}
-                        </p>
+                        <p style={styles.subtitle}>{PATIENTS.TOTAL_PATIENTS(patients.length)}</p>
                     </div>
 
                     <div style={styles.right}>
@@ -102,16 +101,13 @@ const Patients = () => {
                             onChange={(e) => setStatusFilter(e.target.value)}
                             style={styles.select}
                         >
-                            <option value="All">All</option>
-                            <option value="active">Active</option>
-                            <option value="stable">Stable</option>
-                            <option value="pending">Pending</option>
+                            <option value="Բոլորը">Բոլորը</option>
+                            <option value="Ակտիվ">Ակտիվ</option>
+                            <option value="Կայուն">Կայուն</option>
+                            <option value="Սպասող">Սպասող</option>
                         </select>
 
-                        <button
-                            style={styles.addButton}
-                            onClick={() => setShowForm(true)}
-                        >
+                        <button style={styles.addButton} onClick={() => setShowForm(true)}>
                             {PATIENTS.ADD_PATIENT}
                         </button>
                     </div>
@@ -142,10 +138,7 @@ const Patients = () => {
                                 >
                                     Չեղարկել
                                 </button>
-                                <button
-                                    style={styles.confirmButton}
-                                    onClick={handleConfirmDelete}
-                                >
+                                <button style={styles.confirmButton} onClick={handleConfirmDelete}>
                                     Այո, ջնջել
                                 </button>
                             </div>
@@ -156,15 +149,12 @@ const Patients = () => {
                 <div style={styles.patientsList}>
                     {patients
                         .filter((patient) =>
-                            patient.name
-                                .toLowerCase()
-                                .includes(search.toLowerCase())
+                            patient.name.toLowerCase().includes(search.toLowerCase())
                         )
-                        .filter((patient) =>
-                            statusFilter === "All"
-                                ? true
-                                : patient.status === statusFilter
-                        )
+                        .filter((patient) => {
+                            const filterVal = STATUS_MAP[statusFilter];
+                            return filterVal === null ? true : patient.status === filterVal;
+                        })
                         .map((patient) => (
                             <PatientCard
                                 key={patient.id}
@@ -181,124 +171,24 @@ const Patients = () => {
 };
 
 const styles = {
-    container: {
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "40px 20px",
-    },
-    stats: {
-        display: "flex",
-        gap: "20px",
-        marginBottom: "20px",
-        fontSize: "14px",
-        color: "#6b7280",
-    },
-    select: {
-        padding: "10px",
-        borderRadius: "8px",
-        border: "1px solid #e5e7eb",
-    },
-    header: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "30px",
-    },
-    title: {
-        fontSize: "32px",
-        fontWeight: "600",
-        color: "#1a2e4a",
-        marginBottom: "5px",
-    },
-    subtitle: {
-        fontSize: "14px",
-        color: "#6b7280",
-    },
-    addButton: {
-        padding: "12px 24px",
-        background: "#2563a8",
-        color: "white",
-        border: "none",
-        borderRadius: "8px",
-        fontSize: "14px",
-        fontWeight: "500",
-        cursor: "pointer",
-        transition: "background 0.2s",
-    },
-    patientsList: {
-        maxWidth: "800px",
-    },
-    search: {
-        padding: "10px 15px",
-        borderRadius: "8px",
-        border: "1px solid #e5e7eb",
-        width: "250px",
-    },
-    right: {
-        display: "flex",
-        gap: "10px",
-        alignItems: "center",
-    },
-    loading: {
-        textAlign: "center",
-        padding: "60px 20px",
-        fontSize: "16px",
-        color: "#6b7280",
-    },
-    overlay: {
-        position: "fixed",
-        inset: 0,
-        backgroundColor: "rgba(0,0,0,0.45)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1000,
-    },
-    modal: {
-        background: "white",
-        borderRadius: "16px",
-        padding: "32px 28px",
-        maxWidth: "400px",
-        width: "90%",
-        boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
-    },
-    modalTitle: {
-        fontSize: "20px",
-        fontWeight: "700",
-        color: "#1a2e4a",
-        marginBottom: "12px",
-    },
-    modalText: {
-        fontSize: "14px",
-        color: "#6b7280",
-        lineHeight: "1.6",
-        marginBottom: "28px",
-    },
-    modalButtons: {
-        display: "flex",
-        gap: "12px",
-        justifyContent: "flex-end",
-    },
-    cancelButton: {
-        padding: "10px 20px",
-        borderRadius: "8px",
-        border: "1px solid #e5e7eb",
-        background: "white",
-        color: "#374151",
-        fontSize: "14px",
-        fontWeight: "500",
-        cursor: "pointer",
-    },
-    confirmButton: {
-        padding: "10px 20px",
-        borderRadius: "8px",
-        border: "none",
-        background: "#ef4444",
-        color: "white",
-        fontSize: "14px",
-        fontWeight: "600",
-        cursor: "pointer",
-    },
+    container: { maxWidth: "1200px", margin: "0 auto", padding: "40px 20px" },
+    stats: { display: "flex", gap: "20px", marginBottom: "20px", fontSize: "14px", color: "#6b7280" },
+    select: { padding: "10px", borderRadius: "8px", border: "1px solid #e5e7eb" },
+    header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" },
+    title: { fontSize: "32px", fontWeight: "600", color: "#1a2e4a", marginBottom: "5px" },
+    subtitle: { fontSize: "14px", color: "#6b7280" },
+    addButton: { padding: "12px 24px", background: "#2563a8", color: "white", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: "500", cursor: "pointer" },
+    patientsList: { maxWidth: "800px" },
+    search: { padding: "10px 15px", borderRadius: "8px", border: "1px solid #e5e7eb", width: "250px" },
+    right: { display: "flex", gap: "10px", alignItems: "center" },
+    loading: { textAlign: "center", padding: "60px 20px", fontSize: "16px", color: "#6b7280" },
+    overlay: { position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 },
+    modal: { background: "white", borderRadius: "16px", padding: "32px 28px", maxWidth: "400px", width: "90%", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" },
+    modalTitle: { fontSize: "20px", fontWeight: "700", color: "#1a2e4a", marginBottom: "12px" },
+    modalText: { fontSize: "14px", color: "#6b7280", lineHeight: "1.6", marginBottom: "28px" },
+    modalButtons: { display: "flex", gap: "12px", justifyContent: "flex-end" },
+    cancelButton: { padding: "10px 20px", borderRadius: "8px", border: "1px solid #e5e7eb", background: "white", color: "#374151", fontSize: "14px", fontWeight: "500", cursor: "pointer" },
+    confirmButton: { padding: "10px 20px", borderRadius: "8px", border: "none", background: "#ef4444", color: "white", fontSize: "14px", fontWeight: "600", cursor: "pointer" },
 };
 
 export default Patients;
