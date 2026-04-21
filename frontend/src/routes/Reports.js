@@ -10,7 +10,7 @@ const Reports = () => {
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("date");
     const [showModal, setShowModal] = useState(false);
-    const [formData, setFormData] = useState({ title: "", description: "" });
+    const [formData, setFormData] = useState({ title: "", description: "", date: "" });
     const [disabled, setDisabled] = useState(true);
     const [confirmDeleteId, setConfirmDeleteId] = useState(null);
     const [showArchived, setShowArchived] = useState(false);
@@ -19,7 +19,7 @@ const Reports = () => {
     useEffect(() => { loadReports(); }, []);
 
     useEffect(() => {
-        setDisabled(!formData.title || !formData.description);
+        setDisabled(!formData.title || !formData.description || !formData.date);
     }, [formData]);
 
     const showToast = (message, type = "success") => {
@@ -47,10 +47,11 @@ const Reports = () => {
         if (res.success) {
             setReports([...reports, {
                 ...res.data,
+                date: formData.date,
                 pinned: false, archived: false, locked: false, read: false, accessLog: [],
             }]);
             setShowModal(false);
-            setFormData({ title: "", description: "" });
+            setFormData({ title: "", description: "", date: "" });
             showToast("Հաշվետվությունը հաջողությամբ ավելացվեց");
         }
     };
@@ -236,6 +237,12 @@ const Reports = () => {
                                 placeholder="Նկարագրություն"
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            />
+                            <input
+                                style={styles.input}
+                                type="date"
+                                value={formData.date}
+                                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                             />
                             <button
                                 style={disabled ? styles.submitBtnDisabled : styles.submitBtn}
