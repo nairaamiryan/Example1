@@ -137,19 +137,21 @@ const Home = () => {
                                 </div>
                                 <ResponsiveContainer width="100%" height={250}>
                                     <PieChart>
-                                        <Pie
-                                            data={pieData}
-                                            dataKey="value"
-                                            nameKey="name"
-                                            cx="50%"
-                                            cy="50%"
-                                            outerRadius={90}
-                                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                                        >
-                                            {pieData.map((_, i) => (
-                                                <Cell key={i} fill={["#4a90d9", "#27ae60", "#e67e22", "#8e44ad"][i % 4]} />
-                                            ))}
-                                        </Pie>
+                                       <Pie
+    data={pieData}
+    dataKey="value"
+    nameKey="name"
+    cx="50%"
+    cy="50%"
+    outerRadius={75}
+    label={({ name, percent }) => percent > 0.05 ? `${name} ${(percent * 100).toFixed(0)}%` : ""}
+    labelLine={true}
+    fontSize={11}
+>
+    {pieData.map((_, i) => (
+        <Cell key={i} fill={["#4a90d9", "#27ae60", "#e67e22", "#8e44ad"][i % 4]} />
+    ))}
+</Pie>
                                         <Tooltip />
                                     </PieChart>
                                 </ResponsiveContainer>
