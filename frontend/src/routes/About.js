@@ -5,6 +5,32 @@ import api from "../services/api";
 import { LOADING, ABOUT } from "../constants";
 import AddDoctorModal from "../components/AddDoctorModal";
 
+const InfoCard = ({ icon, label, value }) => {
+    const [hovered, setHovered] = useState(false);
+    return (
+        <div
+            style={{
+                background: "white",
+                padding: "25px",
+                borderRadius: "12px",
+                boxShadow: hovered
+                    ? "0 8px 24px rgba(37,99,235,0.18)"
+                    : "0 2px 8px rgba(0,0,0,0.1)",
+                textAlign: "center",
+                transform: hovered ? "translateY(-4px)" : "translateY(0)",
+                transition: "transform 0.2s, box-shadow 0.2s",
+                cursor: "default",
+            }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
+            <div style={{ fontSize: "32px", marginBottom: "10px" }}>{icon}</div>
+            <div style={{ fontSize: "13px", color: "#6b7280", marginBottom: "8px" }}>{label}</div>
+            <div style={{ fontSize: "28px", fontWeight: "600", color: "#1a2e4a" }}>{value}</div>
+        </div>
+    );
+};
+
 const About = () => {
     const [aboutInfo, setAboutInfo] = useState(null);
     const [doctors, setDoctors] = useState([]);
@@ -13,7 +39,7 @@ const About = () => {
     const [searchDoctor, setSearchDoctor] = useState("");
     const [sortBy, setSortBy] = useState("name");
     const [selectedDoctor, setSelectedDoctor] = useState(null);
-    const [confirmDeleteId, setConfirmDeleteId] = useState(null); // ⬅️ Նոր
+    const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -70,17 +96,16 @@ const About = () => {
                 <p style={styles.description}>{aboutInfo.description}</p>
 
                 <div style={styles.infoGrid}>
-                    {/* ⬅️ Հեռացված է խմբագրելու կոճակը */}
-                    <div style={styles.infoCard}>
-                        <div style={styles.infoIcon}>{ABOUT.FOUNDED.ICON}</div>
-                        <div style={styles.infoLabel}>{ABOUT.FOUNDED.LABEL}</div>
-                        <div style={styles.infoValue}>{aboutInfo.founded}</div>
-                    </div>
-                    <div style={styles.infoCard}>
-                        <div style={styles.infoIcon}>{ABOUT.STAFF.ICON}</div>
-                        <div style={styles.infoLabel}>{ABOUT.STAFF.LABEL}</div>
-                        <div style={styles.infoValue}>{doctors.length}</div>
-                    </div>
+                    <InfoCard
+                        icon={ABOUT.FOUNDED.ICON}
+                        label={ABOUT.FOUNDED.LABEL}
+                        value={aboutInfo.founded}
+                    />
+                    <InfoCard
+                        icon={ABOUT.STAFF.ICON}
+                        label={ABOUT.STAFF.LABEL}
+                        value={doctors.length}
+                    />
                 </div>
 
                 <h2 style={styles.doctors}>{ABOUT.STAFF.LABEL}</h2>
@@ -93,10 +118,13 @@ const About = () => {
                         onChange={(e) => setSearchDoctor(e.target.value)}
                         style={styles.filterInput}
                     />
-                    {/* ⬅️ Ավելացված է Դասակարգել label */}
                     <div style={styles.sortGroup}>
                         <span style={styles.sortLabel}>Դասակարգել՝</span>
-                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={styles.select}>
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            style={styles.select}
+                        >
                             <option value="name">Ըստ անվան</option>
                             <option value="patients">Ըստ հիվանդների</option>
                         </select>
@@ -129,7 +157,6 @@ const About = () => {
                     </div>
                 )}
 
-                {/* ⬅️ Ջնջման հաստատման modal */}
                 {confirmDeleteId && (
                     <div style={styles.modalOverlay} onClick={() => setConfirmDeleteId(null)}>
                         <div style={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
@@ -148,7 +175,7 @@ const About = () => {
                         <DoctorCard
                             key={doctor.id}
                             doctor={doctor}
-                            onDelete={() => setConfirmDeleteId(doctor.id)} // ⬅️ Փոփոխված
+                            onDelete={() => setConfirmDeleteId(doctor.id)}
                             onClick={setSelectedDoctor}
                         />
                     ))}
@@ -168,11 +195,7 @@ const styles = {
     sortLabel: { fontSize: "13px", color: "#6b7280", fontWeight: "500" },
     select: { padding: "8px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", cursor: "pointer" },
     infoGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginBottom: "50px" },
-    addBtn: { background: "#2563eb", color: "white", border: "none", padding: "8px 14px", borderRadius: "8px", cursor: "pointer" },
-    infoCard: { background: "white", padding: "25px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)", textAlign: "center" },
-    infoIcon: { fontSize: "32px", marginBottom: "10px" },
-    infoLabel: { fontSize: "13px", color: "#6b7280", marginBottom: "8px" },
-    infoValue: { fontSize: "28px", fontWeight: "600", color: "#1a2e4a" },
+    addBtn: { background: "#2563eb", color: "white", border: "none", padding: "8px 14px", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: "500" },
     doctors: { fontSize: "24px", fontWeight: "600", color: "#1a2e4a", marginBottom: "20px" },
     doctorsGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px" },
     loading: { textAlign: "center", padding: "60px 20px", fontSize: "16px", color: "#6b7280" },
@@ -183,7 +206,6 @@ const styles = {
     closeBtn: { background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "#6b7280" },
     doctorAvatar: { width: "70px", height: "70px", borderRadius: "50%", background: "linear-gradient(135deg, #66a8ea 0%, #1ba073 100%)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", fontWeight: "600", margin: "0 auto" },
     detailRow: { fontSize: "15px", color: "#374151", padding: "6px 0", borderBottom: "1px solid #f3f4f6" },
-    // ⬅️ Նոր confirm modal styles
     confirmModal: { backgroundColor: "#fff", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "360px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "16px" },
     confirmTitle: { fontSize: "18px", fontWeight: "600", color: "#1a2e4a", margin: 0 },
     confirmText: { fontSize: "14px", color: "#6b7280", margin: 0, lineHeight: "1.5" },
