@@ -9,6 +9,13 @@ const InvoiceCreate = ({ onSave, onClose }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handlePatientName = (e) => {
+        const value = e.target.value;
+        if (/^[a-zA-Zաբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ\u0531-\u0587\s]*$/i.test(value)) {
+            setFormData({ ...formData, patientName: value });
+        }
+    };
+
     const disabled = !formData.patientName || !formData.service || !formData.amount || !formData.date;
 
     const handleSave = () => {
@@ -35,7 +42,7 @@ const InvoiceCreate = ({ onSave, onClose }) => {
                     name="patientName"
                     placeholder="Հիվանդի անուն"
                     value={formData.patientName}
-                    onChange={handleChange}
+                    onChange={handlePatientName}
                 />
                 <input
                     style={styles.input}
