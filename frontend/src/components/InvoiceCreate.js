@@ -4,6 +4,7 @@ const InvoiceCreate = ({ onSave, onClose }) => {
     const [formData, setFormData] = useState({
         patientName: "", service: "", amount: "", date: ""
     });
+    const [nameError, setNameError] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -13,6 +14,9 @@ const InvoiceCreate = ({ onSave, onClose }) => {
         const value = e.target.value;
         if (/^[a-zA-Zաբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ\u0531-\u0587\s]*$/i.test(value)) {
             setFormData({ ...formData, patientName: value });
+            setNameError(false);
+        } else {
+            setNameError(true);
         }
     };
 
@@ -36,14 +40,19 @@ const InvoiceCreate = ({ onSave, onClose }) => {
                     <h2 style={styles.modalTitle}>🧾 Հաշիվ-ապրանքագիր ստեղծել</h2>
                     <button style={styles.closeBtn} onClick={onClose}>✕</button>
                 </div>
-                <input
-                    style={styles.input}
-                    type="text"
-                    name="patientName"
-                    placeholder="Հիվանդի անուն"
-                    value={formData.patientName}
-                    onChange={handlePatientName}
-                />
+                <div>
+                    <input
+                        style={{ ...styles.input, borderColor: nameError ? "#ef4444" : "#d1d5db" }}
+                        type="text"
+                        name="patientName"
+                        placeholder="Հիվանդի անուն"
+                        value={formData.patientName}
+                        onChange={handlePatientName}
+                    />
+                    {nameError && (
+                        <p style={styles.errorText}>⚠ Անունը կարող է պարունակել միայն տառեր</p>
+                    )}
+                </div>
                 <input
                     style={styles.input}
                     type="text"
@@ -89,6 +98,7 @@ const styles = {
     modalTitle: { fontSize: "18px", fontWeight: "600", color: "#1a2e4a" },
     closeBtn: { background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "#6b7280" },
     input: { width: "90%", padding: "10px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", outline: "none" },
+    errorText: { margin: "4px 0 0 2px", fontSize: "12px", color: "#ef4444" },
     footer: { display: "flex", gap: "8px", justifyContent: "flex-end" },
     cancelBtn: { padding: "9px 16px", background: "#f3f4f6", color: "#374151", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
     saveBtn: { padding: "9px 18px", background: "#2563eb", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "600" },
