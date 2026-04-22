@@ -11,10 +11,17 @@ const InsuranceCheck = ({ onSave, onClose }) => {
         setResult(null);
     };
 
+    const handlePatientName = (e) => {
+        const value = e.target.value;
+        if (/^[a-zA-Zաբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ\u0531-\u0587\s]*$/i.test(value)) {
+            setFormData({ ...formData, patientName: value });
+            setResult(null);
+        }
+    };
+
     const canCheck = formData.patientName && formData.insuranceNumber && formData.date;
 
     const handleCheck = () => {
-        // Mock ստուգում
         setResult({ valid: true, coverage: "80%", expiry: "2025-12-31" });
     };
 
@@ -42,7 +49,7 @@ const InsuranceCheck = ({ onSave, onClose }) => {
                     name="patientName"
                     placeholder="Հիվանդի անուն"
                     value={formData.patientName}
-                    onChange={handleChange}
+                    onChange={handlePatientName}
                 />
                 <input
                     style={styles.input}
