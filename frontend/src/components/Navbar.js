@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { NAVBAR } from "../constants";
 import api from "../services/api";
 
+const FICTIVE_UNREAD_COUNT = 3;
+
 const Navbar = () => {
     const [unreadCount, setUnreadCount] = useState(0);
 
@@ -13,15 +15,20 @@ const Navbar = () => {
 
     useEffect(() => {
         const loadInitial = async () => {
+            const stored = localStorage.getItem("unreadCount");
+            if (stored !== null) {
+                setUnreadCount(parseInt(stored));
+                return;
+            }
             const response = await api.getNotifications();
             if (response.success) {
-                const unread = response.data.filter(n => !n.read).length;
-                localStorage.setItem("unreadCount", unread);
-                setUnreadCount(unread);
+                const apiUnread = response.data.length;
+                const total = apiUnread + FICTIVE_UNREAD_COUNT;
+                localStorage.setItem("unreadCount", total);
+                setUnreadCount(total);
             }
         };
         loadInitial();
-
         window.addEventListener("notificationsUpdated", refreshCount);
         return () => window.removeEventListener("notificationsUpdated", refreshCount);
     }, []);
