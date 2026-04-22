@@ -4,6 +4,30 @@ import api from "../services/api";
 import Report from "../components/Report";
 import { REPORTS, LOADING } from "../constants";
 
+const StatCard = ({ value, label, color }) => {
+    const [hovered, setHovered] = useState(false);
+    return (
+        <div
+            style={{
+                background: "white",
+                borderRadius: "10px",
+                padding: "14px 20px",
+                flex: 1,
+                textAlign: "center",
+                cursor: "default",
+                boxShadow: hovered ? "0 8px 24px rgba(37,99,235,0.15)" : "0 2px 8px rgba(0,0,0,0.06)",
+                transform: hovered ? "translateY(-4px)" : "translateY(0)",
+                transition: "transform 0.2s, box-shadow 0.2s",
+            }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
+            <div style={{ fontSize: "24px", fontWeight: "700", color: color || "#2563eb" }}>{value}</div>
+            <div style={{ fontSize: "12px", color: "#9ca3af", marginTop: "2px" }}>{label}</div>
+        </div>
+    );
+};
+
 const Reports = () => {
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -174,22 +198,10 @@ const Reports = () => {
 
                 {/* STATS ROW */}
                 <div style={styles.statsRow}>
-                    <div style={styles.statCard}>
-                        <div style={styles.statNum}>{reports.filter(r => !r.archived).length}</div>
-                        <div style={styles.statLabel}>Ակտիվ</div>
-                    </div>
-                    <div style={styles.statCard}>
-                        <div style={{ ...styles.statNum, color: "#f59e0b" }}>{unreadCount}</div>
-                        <div style={styles.statLabel}>Չընթերցված</div>
-                    </div>
-                    <div style={styles.statCard}>
-                        <div style={{ ...styles.statNum, color: "#8b5cf6" }}>{reports.filter(r => r.pinned).length}</div>
-                        <div style={styles.statLabel}>Ամրացված</div>
-                    </div>
-                    <div style={styles.statCard}>
-                        <div style={{ ...styles.statNum, color: "#6b7280" }}>{archivedCount}</div>
-                        <div style={styles.statLabel}>Արխիվ</div>
-                    </div>
+                    <StatCard value={reports.filter(r => !r.archived).length} label="Ակտիվ" color="#2563eb" />
+                    <StatCard value={unreadCount} label="Չընթերցված" color="#f59e0b" />
+                    <StatCard value={reports.filter(r => r.pinned).length} label="Ամրացված" color="#8b5cf6" />
+                    <StatCard value={archivedCount} label="Արխիվ" color="#6b7280" />
                 </div>
 
                 <div style={styles.controls}>
@@ -302,22 +314,15 @@ const styles = {
     title: { fontSize: "32px", fontWeight: "600", color: "#1a2e4a", marginBottom: "5px" },
     subtitle: { fontSize: "14px", color: "#6b7280" },
     addBtn: { padding: "10px 18px", background: "#2563eb", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: "500" },
-
     statsRow: { display: "flex", gap: "12px", marginBottom: "20px" },
-    statCard: { background: "white", borderRadius: "10px", padding: "14px 20px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", flex: 1, textAlign: "center" },
-    statNum: { fontSize: "24px", fontWeight: "700", color: "#2563eb" },
-    statLabel: { fontSize: "12px", color: "#9ca3af", marginTop: "2px" },
-
     controls: { display: "flex", gap: "12px", marginBottom: "24px", alignItems: "center" },
     search: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", width: "280px" },
     sortGroup: { display: "flex", alignItems: "center", gap: "8px" },
     sortLabel: { fontSize: "13px", color: "#6b7280", fontWeight: "500" },
     select: { padding: "9px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", cursor: "pointer" },
     archiveToggle: { padding: "9px 14px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "13px", cursor: "pointer", fontWeight: "500" },
-
     reportsList: { maxWidth: "800px" },
     loading: { textAlign: "center", padding: "60px 20px", fontSize: "16px", color: "#6b7280" },
-
     modalOverlay: { position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 },
     modalContent: { backgroundColor: "#fff", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "420px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "12px" },
     modalHeader: { display: "flex", justifyContent: "space-between", alignItems: "center" },
@@ -327,14 +332,12 @@ const styles = {
     textarea: { width: "90%", padding: "10px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", outline: "none", minHeight: "100px", resize: "vertical" },
     submitBtn: { marginTop: "6px", padding: "10px", backgroundColor: "#2563eb", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
     submitBtnDisabled: { marginTop: "6px", padding: "10px", backgroundColor: "#ccc", color: "#fff", border: "none", borderRadius: "8px", cursor: "not-allowed", fontWeight: "500" },
-
     confirmModal: { backgroundColor: "#fff", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "360px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "16px" },
     confirmTitle: { fontSize: "18px", fontWeight: "600", color: "#1a2e4a", margin: 0 },
     confirmText: { fontSize: "14px", color: "#6b7280", margin: 0, lineHeight: "1.5" },
     confirmBtns: { display: "flex", gap: "10px", justifyContent: "flex-end" },
     cancelBtn: { padding: "8px 16px", background: "#f3f4f6", color: "#374151", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
     deleteBtn: { padding: "8px 16px", background: "#ef4444", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
-
     toast: { position: "fixed", top: "20px", right: "20px", color: "white", padding: "12px 20px", borderRadius: "10px", fontSize: "14px", fontWeight: "500", zIndex: 2000, boxShadow: "0 4px 12px rgba(0,0,0,0.2)" },
 };
 
