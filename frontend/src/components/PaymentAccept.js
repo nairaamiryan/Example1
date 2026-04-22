@@ -4,6 +4,7 @@ const PaymentAccept = ({ onSave, onClose }) => {
     const [formData, setFormData] = useState({
         patientName: "", amount: "", method: "cash", notes: "", date: ""
     });
+    const [nameError, setNameError] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -13,6 +14,9 @@ const PaymentAccept = ({ onSave, onClose }) => {
         const value = e.target.value;
         if (/^[a-zA-Zաբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ\u0531-\u0587\s]*$/i.test(value)) {
             setFormData({ ...formData, patientName: value });
+            setNameError(false);
+        } else {
+            setNameError(true);
         }
     };
 
@@ -38,14 +42,19 @@ const PaymentAccept = ({ onSave, onClose }) => {
                     <h2 style={styles.modalTitle}>💳 Վճարում ընդունել</h2>
                     <button style={styles.closeBtn} onClick={onClose}>✕</button>
                 </div>
-                <input
-                    style={styles.input}
-                    type="text"
-                    name="patientName"
-                    placeholder="Հիվանդի անուն"
-                    value={formData.patientName}
-                    onChange={handlePatientName}
-                />
+                <div>
+                    <input
+                        style={{ ...styles.input, borderColor: nameError ? "#ef4444" : "#d1d5db" }}
+                        type="text"
+                        name="patientName"
+                        placeholder="Հիվանդի անուն"
+                        value={formData.patientName}
+                        onChange={handlePatientName}
+                    />
+                    {nameError && (
+                        <p style={styles.errorText}>⚠ Անունը կարող է պարունակել միայն տառեր</p>
+                    )}
+                </div>
                 <input
                     style={styles.input}
                     type="number"
@@ -97,6 +106,7 @@ const styles = {
     input: { width: "90%", padding: "10px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", outline: "none" },
     select: { padding: "10px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", cursor: "pointer" },
     textarea: { width: "90%", padding: "10px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", outline: "none", minHeight: "80px", resize: "vertical" },
+    errorText: { margin: "4px 0 0 2px", fontSize: "12px", color: "#ef4444" },
     footer: { display: "flex", gap: "8px", justifyContent: "flex-end" },
     cancelBtn: { padding: "9px 16px", background: "#f3f4f6", color: "#374151", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
     saveBtn: { padding: "9px 18px", background: "#16a34a", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "600" },
