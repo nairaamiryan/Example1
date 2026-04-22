@@ -31,6 +31,13 @@ const NotificationCard = ({ item, onDelete, onRead }) => {
             <button style={styles.deleteBtn} onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}>
                 ✕
             </button>
+                <button
+    style={styles.emailBtn}
+    onClick={(e) => { e.stopPropagation(); onEmail && onEmail(); }}
+    title="Նամակ ուղարկել"
+>
+    📧
+</button>
         </div>
     );
 };
@@ -71,6 +78,10 @@ const styles = {
         borderRadius: "50%",
         background: "#2563eb",
         flexShrink: 0,
+    },
+    emailBtn: {
+    background: "transparent", border: "none", fontSize: "16px",
+    cursor: "pointer", color: "#6b7280", padding: "4px 6px", borderRadius: "6px",
     },
     deleteBtn: {
         background: "transparent",
