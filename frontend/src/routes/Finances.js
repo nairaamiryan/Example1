@@ -26,6 +26,13 @@ const Finances = () => {
         setLoading(false);
     };
 
+    const handleSave = (data) => {
+        setItems((prev) => [{ id: Date.now(), ...data }, ...prev]);
+        setShowInvoice(false);
+        setShowPayment(false);
+        setShowInsurance(false);
+    };
+
     const handleDelete = (id) => {
         setItems((prev) => prev.filter((i) => i.id !== id));
         setConfirmDeleteId(null);
@@ -83,10 +90,30 @@ const Finances = () => {
                     </div>
                 </div>
 
-                {showInvoice && <InvoiceCreate onClose={() => setShowInvoice(false)} onSave={(data) => console.log("Հաշիվ-ապրանքագիր՝", data)} />}
-                {showPayment && <PaymentAccept onClose={() => setShowPayment(false)} onSave={(data) => console.log("Վճարում՝", data)} />}
-                {showInsurance && <InsuranceCheck onClose={() => setShowInsurance(false)} onSave={(data) => console.log("Ապահովագրություն՝", data)} />}
-                {showExport && <ExportReport onClose={() => setShowExport(false)} />}
+                {showInvoice && (
+                    <InvoiceCreate
+                        onClose={() => setShowInvoice(false)}
+                        onSave={handleSave}
+                    />
+                )}
+                {showPayment && (
+                    <PaymentAccept
+                        onClose={() => setShowPayment(false)}
+                        onSave={handleSave}
+                    />
+                )}
+                {showInsurance && (
+                    <InsuranceCheck
+                        onClose={() => setShowInsurance(false)}
+                        onSave={handleSave}
+                    />
+                )}
+                {showExport && (
+                    <ExportReport
+                        onClose={() => setShowExport(false)}
+                        items={items}
+                    />
+                )}
 
                 {confirmDeleteId && (
                     <div style={styles.modalOverlay} onClick={() => setConfirmDeleteId(null)}>
@@ -104,7 +131,11 @@ const Finances = () => {
                 <div style={styles.list}>
                     {filteredItems.length ? (
                         filteredItems.map((item) => (
-                            <FinanceItem key={item.id} item={item} onDelete={() => setConfirmDeleteId(item.id)} />
+                            <FinanceItem
+                                key={item.id}
+                                item={item}
+                                onDelete={() => setConfirmDeleteId(item.id)}
+                            />
                         ))
                     ) : (
                         <p>Գրառումներ չկան</p>
