@@ -8,7 +8,6 @@
         "dev": "nodemon src/server.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "type": "module",
     "keywords": [],
     "author": "",
     "license": "ISC",
@@ -21,6 +20,10 @@
         "sequelize": "^6.37.8"
     },
     "devDependencies": {
-        "nodemon": "^2.0.22"
+        "nodemon": "^2.0.22",
+        "sequelize-cli": "^6.6.5"
+    },
+    "sequelize": {
+        "config": "config/config.js"
     }
 }

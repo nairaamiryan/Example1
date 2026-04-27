@@ -1,9 +1,10 @@
 import db from "../models/index.js";
 
+const Doctor = db.Doctor;
+
 export const getDoctors = async (req, res) => {
     try {
-        const doctors = await db.Doctor.findAll();
-        console.log("Fetched doctors:", doctors);
+        const doctors = await Doctor.findAll();
         res.json(doctors);
     } catch (error) {
         console.error("Error fetching doctors:", error);
@@ -13,7 +14,7 @@ export const getDoctors = async (req, res) => {
 export const createDoctor = async (req, res) => {
     const { name, surname, age, email, specialty } = req.body;
 
-    const doctor = await db.Doctor.create({
+    const doctor = await Doctor.create({
         name,
         surname,
         age,
