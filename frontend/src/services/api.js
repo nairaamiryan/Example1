@@ -2,19 +2,34 @@ import mockData from "./mockBackend.json";
 const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 class API {
     async getPatients() {
-        await delay();
-        return { success: true, data: mockData.patients };
+        const response = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/patients`,
+        );
+        if (!response.ok) {
+            return { success: false, error: "Failed to fetch patients" };
+        }
+        const data = await response.json();
+        return { success: true, data };
     }
     async getPatient(id) {
-        await delay();
-        const patient = mockData.patients.find((p) => p.id === parseInt(id));
-        return patient
-            ? { success: true, data: patient }
-            : { success: false, error: "Patient not found" };
+        const response = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/patients/${id}`,
+        );
+        if (!response.ok) {
+            return { success: false, error: "Failed to fetch patient" };
+        }
+        const data = await response.json();
+        return { success: true, data };
     }
     async getDoctors() {
-        await delay();
-        return { success: true, data: mockData.doctors };
+        const response = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/doctors`,
+        );
+        if (!response.ok) {
+            return { success: false, error: "Failed to fetch doctors" };
+        }
+        const data = await response.json();
+        return { success: true, data };
     }
     async getReports() {
         await delay();
