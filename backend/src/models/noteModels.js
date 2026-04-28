@@ -11,9 +11,13 @@ export default (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            content: {
+            description: {
                 type: DataTypes.TEXT,
                 allowNull: true,
+            },
+            type: {
+                type: DataTypes.ENUM("diagnosis", "prescription", "labtest", "document"),
+                allowNull: false,
             },
             date: {
                 type: DataTypes.DATEONLY,
