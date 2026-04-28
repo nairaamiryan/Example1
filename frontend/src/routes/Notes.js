@@ -26,12 +26,11 @@ const Notes = () => {
         setLoading(false);
     };
 
-    const handleSave = (data) => {
-        const newNote = {
-            id: Date.now(),
-            ...data,
-        };
-        setNotes((prev) => [newNote, ...prev]);
+    const handleSave = async (data) => {
+        const res = await api.addNote(data);
+        if (res.success) {
+            setNotes((prev) => [res.data, ...prev]);
+        }
         setShowDiagnosis(false);
         setShowPrescription(false);
         setShowLabTest(false);
