@@ -15,8 +15,8 @@ export const getNotes = async (req, res) => {
 
 export const addNote = async (req, res) => {
     try {
-        const { title, content, date } = req.body;
-        const note = await Note.create({ title, content, date });
+        const { title, description, type, date } = req.body;
+        const note = await Note.create({ title, description, type, date });
         res.json({ success: true, data: note });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
