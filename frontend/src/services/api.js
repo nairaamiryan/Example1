@@ -89,6 +89,33 @@ class API {
         return { success: true, data: data.data };
     }
 
+    async getFinances() {
+        const response = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/finances`,
+        );
+        if (!response.ok) {
+            return { success: false, error: "Failed to fetch finances" };
+        }
+        const data = await response.json();
+        return { success: true, data };
+    }
+
+    async addFinance(item) {
+        const response = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/finances`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(item),
+            },
+        );
+        if (!response.ok) {
+            return { success: false, error: "Failed to add finance" };
+        }
+        const data = await response.json();
+        return { success: true, data: data.data };
+    }
+
     async getAboutInfo() {
         await delay();
         return { success: true, data: mockData.aboutInfo };
@@ -125,20 +152,6 @@ class API {
         try {
             const newPatient = { id: Date.now(), ...patient };
             return { success: true, data: newPatient };
-        } catch {
-            return { success: false };
-        }
-    }
-
-    async getFinances() {
-        await delay();
-        return { success: true, data: mockData.finances ?? [] };
-    }
-
-    async addFinance(item) {
-        try {
-            const newItem = { id: Date.now(), date: new Date().toISOString(), ...item };
-            return { success: true, data: newItem };
         } catch {
             return { success: false };
         }
