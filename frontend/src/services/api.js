@@ -1,5 +1,6 @@
 import mockData from "./mockBackend.json";
 const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
+
 class API {
     async getPatients() {
         const response = await fetch(
@@ -11,6 +12,7 @@ class API {
         const data = await response.json();
         return { success: true, data };
     }
+
     async getPatient(id) {
         const response = await fetch(
             `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/patients/${id}`,
@@ -21,6 +23,7 @@ class API {
         const data = await response.json();
         return { success: true, data };
     }
+
     async getDoctors() {
         const response = await fetch(
             `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/doctors`,
@@ -31,18 +34,44 @@ class API {
         const data = await response.json();
         return { success: true, data };
     }
+
     async getReports() {
-        await delay();
-        return { success: true, data: mockData.reports };
+        const response = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/reports`,
+        );
+        if (!response.ok) {
+            return { success: false, error: "Failed to fetch reports" };
+        }
+        const data = await response.json();
+        return { success: true, data };
     }
+
+    async addReport(report) {
+        const response = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/reports`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(report),
+            },
+        );
+        if (!response.ok) {
+            return { success: false, error: "Failed to add report" };
+        }
+        const data = await response.json();
+        return { success: true, data: data.data };
+    }
+
     async getAboutInfo() {
         await delay();
         return { success: true, data: mockData.aboutInfo };
     }
+
     async getNotifications() {
         await delay();
         return { success: true, data: mockData.notifications };
     }
+
     async deletePatient(id) {
         try {
             return { success: true };
@@ -50,10 +79,12 @@ class API {
             return { success: false };
         }
     }
+
     async getChartData() {
         await delay();
         return { success: true, data: mockData.statistics };
     }
+
     async addDoctor(doctor) {
         try {
             const newDoctor = { id: Date.now(), ...doctor };
@@ -62,6 +93,7 @@ class API {
             return { success: false };
         }
     }
+
     async addPatient(patient) {
         try {
             const newPatient = { id: Date.now(), ...patient };
@@ -70,18 +102,12 @@ class API {
             return { success: false };
         }
     }
-    async addReport(report) {
-        try {
-            const newReport = { id: Date.now(), ...report };
-            return { success: true, data: newReport };
-        } catch {
-            return { success: false };
-        }
-    }
+
     async getNotes() {
         await delay();
         return { success: true, data: mockData.notes ?? [] };
     }
+
     async addNote(note) {
         try {
             const newNote = { id: Date.now(), date: new Date().toISOString(), ...note };
@@ -90,10 +116,12 @@ class API {
             return { success: false };
         }
     }
+
     async getFinances() {
         await delay();
         return { success: true, data: mockData.finances ?? [] };
     }
+
     async addFinance(item) {
         try {
             const newItem = { id: Date.now(), date: new Date().toISOString(), ...item };
@@ -103,4 +131,5 @@ class API {
         }
     }
 }
+
 export default new API();
