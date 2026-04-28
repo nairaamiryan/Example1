@@ -62,6 +62,33 @@ class API {
         return { success: true, data: data.data };
     }
 
+    async getNotes() {
+        const response = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/notes`,
+        );
+        if (!response.ok) {
+            return { success: false, error: "Failed to fetch notes" };
+        }
+        const data = await response.json();
+        return { success: true, data };
+    }
+
+    async addNote(note) {
+        const response = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}/api/notes`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(note),
+            },
+        );
+        if (!response.ok) {
+            return { success: false, error: "Failed to add note" };
+        }
+        const data = await response.json();
+        return { success: true, data: data.data };
+    }
+
     async getAboutInfo() {
         await delay();
         return { success: true, data: mockData.aboutInfo };
@@ -98,20 +125,6 @@ class API {
         try {
             const newPatient = { id: Date.now(), ...patient };
             return { success: true, data: newPatient };
-        } catch {
-            return { success: false };
-        }
-    }
-
-    async getNotes() {
-        await delay();
-        return { success: true, data: mockData.notes ?? [] };
-    }
-
-    async addNote(note) {
-        try {
-            const newNote = { id: Date.now(), date: new Date().toISOString(), ...note };
-            return { success: true, data: newNote };
         } catch {
             return { success: false };
         }
