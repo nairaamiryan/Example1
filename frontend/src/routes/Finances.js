@@ -26,8 +26,11 @@ const Finances = () => {
         setLoading(false);
     };
 
-    const handleSave = (data) => {
-        setItems((prev) => [{ id: Date.now(), ...data }, ...prev]);
+    const handleSave = async (data) => {
+        const res = await api.addFinance(data);
+        if (res.success) {
+            setItems((prev) => [res.data, ...prev]);
+        }
         setShowInvoice(false);
         setShowPayment(false);
         setShowInsurance(false);
