@@ -7,9 +7,9 @@ export const getFinances = async (req, res) => {
         const finances = await Finance.findAll({
             order: [["date", "DESC"]],
         });
-        res.json({ success: true, data: finances });
+        res.json(finances);
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
