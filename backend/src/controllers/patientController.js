@@ -1,8 +1,7 @@
-import db from "../models/index.js";
-
+const db = require("../models/index");
 const Patient = db.Patient;
 
-export const getPatients = async (req, res) => {
+const getPatients = async (req, res) => {
     try {
         const patients = await Patient.findAll();
         res.json(patients);
@@ -11,9 +10,9 @@ export const getPatients = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
-export const createPatient = async (req, res) => {
-    const { name, surname, age, diagnosis, status, email } = req.body;
 
+const createPatient = async (req, res) => {
+    const { name, surname, age, diagnosis, status, email } = req.body;
     const patient = await Patient.create({
         name,
         surname,
@@ -22,6 +21,7 @@ export const createPatient = async (req, res) => {
         status,
         email,
     });
-
     res.status(201).json(patient);
 };
+
+module.exports = { getPatients, createPatient };
