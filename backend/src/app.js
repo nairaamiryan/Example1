@@ -1,10 +1,10 @@
-import express from "express";
-import cors from "cors";
-import patientRoutes from "./routes/patientRoutes.js";
-import doctorRoutes from "./routes/doctorRoutes.js";
-import reportRoutes from "./routes/reportRoutes.js";
-import noteRoutes from "./routes/noteRoutes.js";
-import financeRoutes from "./routes/financeRoutes.js";
+const express = require("express");
+const cors = require("cors");
+const patientRoutes = require("./routes/patientRoutes");
+const doctorRoutes = require("./routes/doctorRoutes");
+const reportRoutes = require("./routes/reportRoutes");
+const noteRoutes = require("./routes/noteRoutes");
+const financeRoutes = require("./routes/financeRoutes");
 
 const app = express();
 
@@ -17,4 +17,4 @@ app.use("/api/reports", reportRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/finances", financeRoutes);
 
-export default app;
+module.exports = app;
