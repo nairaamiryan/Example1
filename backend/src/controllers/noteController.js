@@ -1,19 +1,18 @@
-import db from "../models/index.js";
-
+const db = require("../models/index");
 const Note = db.Note;
 
-export const getNotes = async (req, res) => {
+const getNotes = async (req, res) => {
     try {
         const notes = await Note.findAll({
             order: [["date", "DESC"]],
         });
         res.json(notes);
     } catch (error) {
-        res.status(500).json({message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
-export const addNote = async (req, res) => {
+const addNote = async (req, res) => {
     try {
         const { title, description, type, date } = req.body;
         const note = await Note.create({ title, description, type, date });
@@ -22,3 +21,5 @@ export const addNote = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+module.exports = { getNotes, addNote };
