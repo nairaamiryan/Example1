@@ -1,9 +1,9 @@
-import express from "express";
-import { getReports, addReport } from "../controllers/reportController.js";
+const express = require("express");
+const { getReports, addReport } = require("../controllers/reportController");
 
 const router = express.Router();
 
 router.get("/", getReports);
 router.post("/", addReport);
 
-export default router;
+module.exports = router;
