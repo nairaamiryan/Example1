@@ -1,9 +1,9 @@
-import express from "express";
-import { getNotes, addNote } from "../controllers/noteController.js";
+const express = require("express");
+const { getNotes, addNote } = require("../controllers/noteController");
 
 const router = express.Router();
 
 router.get("/", getNotes);
 router.post("/", addNote);
 
-export default router;
+module.exports = router;
