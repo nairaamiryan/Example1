@@ -1,8 +1,7 @@
-import db from "../models/index.js";
-
+const db = require("../models/index");
 const Finance = db.Finance;
 
-export const getFinances = async (req, res) => {
+const getFinances = async (req, res) => {
     try {
         const finances = await Finance.findAll({
             order: [["date", "DESC"]],
@@ -13,7 +12,7 @@ export const getFinances = async (req, res) => {
     }
 };
 
-export const addFinance = async (req, res) => {
+const addFinance = async (req, res) => {
     try {
         const { title, description, amount, type, date } = req.body;
         const finance = await Finance.create({ title, description, amount, type, date });
@@ -22,3 +21,5 @@ export const addFinance = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+module.exports = { getFinances, addFinance };
