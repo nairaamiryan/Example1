@@ -1,14 +1,12 @@
-import fs from "fs";
+const fs = require("fs");
+const path = require("path");
+const { Sequelize, DataTypes } = require("sequelize");
+const process = require("process");
+const configFile = require("../config/config.js");
 
-import path from "path";
+const __filename = __filename;
+const __dirname = __dirname;
 
-import { fileURLToPath } from "url";
-
-import { Sequelize, DataTypes } from "sequelize";
-import process from "process";
-import configFile from "../config/config.js";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const files = fs
     .readdirSync(__dirname)
     .filter(
@@ -25,12 +23,11 @@ const sequelize = config.use_env_variable
 const db = {};
 
 for (const file of files) {
-    const modelModule = await import(`./${file}`);
-    const model = modelModule.default(sequelize, DataTypes);
+    const model = require(path.join(__dirname, file))(sequelize, DataTypes);
     db[model.name] = model;
 }
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-export default db;
+module.exports = db;
