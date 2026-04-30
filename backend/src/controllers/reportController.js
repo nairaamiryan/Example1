@@ -1,8 +1,7 @@
-import db from "../models/index.js";
-
+const db = require("../models/index");
 const Report = db.Report;
 
-export const getReports = async (req, res) => {
+const getReports = async (req, res) => {
     try {
         const reports = await Report.findAll({
             order: [["date", "DESC"]],
@@ -13,7 +12,7 @@ export const getReports = async (req, res) => {
     }
 };
 
-export const addReport = async (req, res) => {
+const addReport = async (req, res) => {
     try {
         const { title, description, date } = req.body;
         const report = await Report.create({ title, description, date });
@@ -22,3 +21,5 @@ export const addReport = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+module.exports = { getReports, addReport };
