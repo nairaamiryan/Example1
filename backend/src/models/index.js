@@ -4,9 +4,6 @@ const { Sequelize, DataTypes } = require("sequelize");
 const process = require("process");
 const configFile = require("../config/config.js");
 
-const __filename = __filename;
-const __dirname = __dirname;
-
 const files = fs
     .readdirSync(__dirname)
     .filter(
