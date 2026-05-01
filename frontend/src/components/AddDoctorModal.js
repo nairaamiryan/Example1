@@ -14,6 +14,7 @@ const PROFESSIONS = [
 ];
 
 const onlyLettersRegex = /^[a-zA-Zաբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ\u0531-\u0587\s]*$/i;
+const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
 
 const AddDoctorModal = ({ isOpen, onClose, onSubmit }) => {
     if (!isOpen) return null;
@@ -23,12 +24,17 @@ const AddDoctorModal = ({ isOpen, onClose, onSubmit }) => {
     });
     const [nameError, setNameError] = useState(false);
     const [surnameError, setSurnameError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [ageError, setAgeError] = useState(false);
     const [disabled, setDisabled] = useState(true);
 
     useEffect(() => {
         const { name, surname, specialty, age, email } = formData;
-        setDisabled(!name || !surname || !specialty || !age || !email || nameError || surnameError);
-    }, [formData, nameError, surnameError]);
+        setDisabled(
+            !name || !surname || !specialty || !age || !email ||
+            nameError || surnameError || emailError || ageError
+        );
+    }, [formData, nameError, surnameError, emailError, ageError]);
 
     const handleName = (e) => {
         const value = e.target.value;
@@ -50,11 +56,39 @@ const AddDoctorModal = ({ isOpen, onClose, onSubmit }) => {
         }
     };
 
+    const handleAge = (e) => {
+        const value = parseInt(e.target.value);
+        if (isNaN(value) || value < 1) {
+            setAgeError(true);
+            setFormData({ ...formData, age: "" });
+        } else if (value > 64) {
+            setAgeError(true);
+            setFormData({ ...formData, age: 64 });
+        } else {
+            setAgeError(false);
+            setFormData({ ...formData, age: value });
+        }
+    };
+
+    const handleEmail = (e) => {
+        const value = e.target.value;
+        setFormData({ ...formData, email: value });
+        if (value === "") {
+            setEmailError(false);
+        } else if (!emailRegex.test(value)) {
+            setEmailError(true);
+        } else {
+            setEmailError(false);
+        }
+    };
+
     const handleSubmit = () => {
         onSubmit(formData);
         setFormData({ name: "", surname: "", specialty: "", age: "", email: "", patients: 0 });
         setNameError(false);
         setSurnameError(false);
+        setEmailError(false);
+        setAgeError(false);
     };
 
     return (
@@ -91,21 +125,33 @@ const AddDoctorModal = ({ isOpen, onClose, onSubmit }) => {
                     )}
                 </div>
 
-                <input
-                    style={styles.input}
-                    type="number"
-                    placeholder="Տարիք"
-                    value={formData.age}
-                    onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                />
+                <div>
+                    <input
+                        style={{ ...styles.input, borderColor: ageError ? "#ef4444" : "#d1d5db" }}
+                        type="number"
+                        placeholder="Տարիք (1-64)"
+                        min={1}
+                        max={64}
+                        value={formData.age}
+                        onChange={handleAge}
+                    />
+                    {ageError && (
+                        <p style={styles.errorText}>⚠ Տարիքը պետք է լինի 1-ից 64 միջակայքում</p>
+                    )}
+                </div>
 
-                <input
-                    style={styles.input}
-                    type="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
+                <div>
+                    <input
+                        style={{ ...styles.input, borderColor: emailError ? "#ef4444" : "#d1d5db" }}
+                        type="text"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleEmail}
+                    />
+                    {emailError && (
+                        <p style={styles.errorText}>⚠ Մուտքագրեք վավեր էլ. հասցե</p>
+                    )}
+                </div>
 
                 <select
                     style={styles.select}
