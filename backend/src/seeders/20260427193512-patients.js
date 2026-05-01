@@ -11,6 +11,8 @@ module.exports = {
                 diagnosis: "Հիպերտոնիա",
                 status: "active",
                 email: "aram.sargsyan@example.com",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 name: "Լուսինե",
@@ -19,6 +21,8 @@ module.exports = {
                 diagnosis: "Դիաբետ",
                 status: "stable",
                 email: "lusine.petrosyan@example.com",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 name: "Գևորգ",
@@ -27,6 +31,8 @@ module.exports = {
                 diagnosis: "Միգրեն",
                 status: "pending",
                 email: "gevorg.avagyan@example.com",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
         ]);
     },

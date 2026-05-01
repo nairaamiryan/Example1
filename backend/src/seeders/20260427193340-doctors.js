@@ -11,6 +11,8 @@ module.exports = {
                 email: "davit.karapetyan@example.com",
                 specialty: "Կարդիոլոգ",
                 patients: 24,
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
 
             {
@@ -20,6 +22,8 @@ module.exports = {
                 email: "diana.harutyunyan@example.com",
                 specialty: "Էնդոկրինոլոգ",
                 patients: 18,
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
 
             {
@@ -29,6 +33,8 @@ module.exports = {
                 email: "anna.hakobyan@example.com",
                 specialty: "Սրտաբան",
                 patients: 10,
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 name: "Մարինե",
@@ -37,6 +43,8 @@ module.exports = {
                 email: "marine.gabrielyan@example.com",
                 specialty: "Նյարդաբան",
                 patients: 7,
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 name: "Գայանե",
@@ -45,6 +53,8 @@ module.exports = {
                 email: "gayane.harutyunyan@example.com",
                 specialty: "Մանկաբույժ",
                 patients: 14,
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 name: "Լուսինե",
@@ -53,6 +63,8 @@ module.exports = {
                 email: "lusine.martirosyan@example.com",
                 specialty: "Մաշկաբան",
                 patients: 11,
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 name: "Վահե",
@@ -61,6 +73,8 @@ module.exports = {
                 email: "vahe.vardanyan@example.com",
                 specialty: "Օրթոպեդ",
                 patients: 8,
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
         ]);
     },
