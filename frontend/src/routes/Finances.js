@@ -36,9 +36,19 @@ const Finances = () => {
         setShowInsurance(false);
     };
 
-    const handleDelete = (id) => {
-        setItems((prev) => prev.filter((i) => i.id !== id));
+    const handleDelete = async (id) => {
+        const response = await api.deleteFinance(id);
+        if (response.success) {
+            setItems((prev) => prev.filter((i) => i.id !== id));
+        }
         setConfirmDeleteId(null);
+    };
+
+    const handleEditFinance = async (id, updatedData) => {
+        const response = await api.updateFinance(id, updatedData);
+        if (response.success) {
+            setItems((prev) => prev.map((i) => i.id === id ? { ...i, ...updatedData } : i));
+        }
     };
 
     const filteredItems = items
@@ -138,6 +148,7 @@ const Finances = () => {
                                 key={item.id}
                                 item={item}
                                 onDelete={() => setConfirmDeleteId(item.id)}
+                                onEdit={handleEditFinance}
                             />
                         ))
                     ) : (
