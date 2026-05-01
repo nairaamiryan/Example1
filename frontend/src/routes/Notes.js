@@ -37,9 +37,19 @@ const Notes = () => {
         setShowDocument(false);
     };
 
-    const handleDelete = (id) => {
-        setNotes((prev) => prev.filter((n) => n.id !== id));
+    const handleDelete = async (id) => {
+        const response = await api.deleteNote(id);
+        if (response.success) {
+            setNotes((prev) => prev.filter((n) => n.id !== id));
+        }
         setConfirmDeleteId(null);
+    };
+
+    const handleEditNote = async (id, updatedData) => {
+        const response = await api.updateNote(id, updatedData);
+        if (response.success) {
+            setNotes((prev) => prev.map((n) => n.id === id ? { ...n, ...updatedData } : n));
+        }
     };
 
     const filteredNotes = notes
@@ -139,6 +149,7 @@ const Notes = () => {
                                 key={note.id}
                                 note={note}
                                 onDelete={() => setConfirmDeleteId(note.id)}
+                                onEdit={handleEditNote}
                             />
                         ))
                     ) : (
