@@ -60,7 +60,9 @@ const MedicalNote = ({ note, onDelete, onEdit }) => {
                             target="_blank"
                             rel="noreferrer"
                             style={styles.fileLink}
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                            }}
                         >
                             📄 {note.fileName}
                         </a>
