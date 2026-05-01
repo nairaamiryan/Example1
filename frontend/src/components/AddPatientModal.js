@@ -32,6 +32,7 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
         surname: "",
         age: "",
         diagnosis: "",
+        email: "",
         customDiagnosis: "",
         status: "",
     });
@@ -39,17 +40,18 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
     const [nameError, setNameError] = useState("");
     const [surnameError, setSurnameError] = useState("");
     const [ageError, setAgeError] = useState("");
+    const [emailError, setEmailError] = useState("");
     const [disabled, setDisabled] = useState(true);
 
     const onlyLetters = (value) => /^[\u0531-\u058Fa-zA-Z\s]*$/.test(value);
 
     useEffect(() => {
-        const { name, surname, status, diagnosis, customDiagnosis, age } = formData;
+        const { name, surname, status, diagnosis, customDiagnosis, age, email } = formData;
         const diagnosisValid = diagnosis === "Այլ" ? customDiagnosis.trim() !== "" : diagnosis !== "";
         setDisabled(
-            !name || !surname || !status || !diagnosisValid || !age || ageError || nameError || surnameError
+            !name || !surname || !status || !diagnosisValid || !age  || !email || ageError || nameError || surnameError || emailError
         );
-    }, [formData, ageError, nameError, surnameError]);
+    }, [formData, ageError, nameError, surnameError, emailError]);
 
     const handleNameChange = (e) => {
         const val = e.target.value;
@@ -85,6 +87,18 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
         }
     };
 
+    const handleEmailChange = (e) => {
+        const val = e.target.value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(val)) {
+            setEmailError("Սխալ էլ. հասցե");
+        } else {
+            setEmailError("");
+        }
+
+        setFormData({ ...formData, email: val });
+    };
+
     const handleSubmit = () => {
         const finalDiagnosis =
             formData.diagnosis === "Այլ" ? formData.customDiagnosis : formData.diagnosis;
@@ -117,7 +131,15 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
                     onChange={handleSurnameChange}
                 />
                 {surnameError && <span style={styles.error}>{surnameError}</span>}
-
+                
+                <input
+                    style={styles.input}
+                    type="email"
+                    placeholder="էլ. հասցե"
+                    value={formData.email}
+                    onChange={handleEmailChange}
+                />
+                {emailError && <span style={styles.error}>{emailError}</span>}
                 <input
                     style={styles.input}
                     type="number"
