@@ -63,8 +63,20 @@ const About = () => {
         }
     };
 
-    const deleteDoctor = (id) => {
-        setDoctors((prev) => prev.filter((d) => d.id !== id));
+    const editDoctor = async (id, updatedData) => {
+        const response = await api.updateDoctor(id, updatedData);
+        if (response.success) {
+            setDoctors((prev) =>
+                prev.map((d) => (d.id === id ? { ...d, ...updatedData } : d))
+            );
+        }
+    };
+
+    const deleteDoctor = async (id) => {
+        const response = await api.deleteDoctor(id);
+        if (response.success) {
+            setDoctors((prev) => prev.filter((d) => d.id !== id));
+        }
         setConfirmDeleteId(null);
     };
 
@@ -176,6 +188,7 @@ const About = () => {
                             key={doctor.id}
                             doctor={doctor}
                             onDelete={() => setConfirmDeleteId(doctor.id)}
+                            onEdit={editDoctor}
                             onClick={setSelectedDoctor}
                         />
                     ))}
