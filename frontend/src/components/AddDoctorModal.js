@@ -1,49 +1,16 @@
 import React, { useState, useEffect } from "react";
 
 const PROFESSIONS = [
-    "Կարդիոլոգ",
-    "Նյարդաբան",
-    "Ակնաբույժ",
-    "Վիրաբույժ",
-    "Մաշկաբան",
-    "Ուռուցքաբան",
-    "Էնդոկրինոլոգ",
-    "Գաստրոէնտերոլոգ",
-    "Ռևմատոլոգ",
-    "Պուլմոնոլոգ",
-    "Նեֆրոլոգ",
-    "Հեմատոլոգ",
-    "Ինֆեկցիոնիստ",
-    "Իմունոլոգ",
-    "Ալերգոլոգ",
-    "Ռադիոլոգ",
-    "Անեսթեզիոլոգ",
-    "Ռեանիմատոլոգ",
-    "Մանկաբույժ",
-    "Մանկական վիրաբույժ",
-    "Ծննդաբան-գինեկոլոգ",
-    "Ուրոլոգ",
-    "Անդրոլոգ",
-    "Պրոկտոլոգ",
-    "Վասկուլյար վիրաբույժ",
-    "Թորակալ վիրաբույժ",
-    "Նեյրովիրաբույժ",
-    "Ականջ-կոկորդ-քթաբույժ",
-    "Ստոմատոլոգ",
-    "Ատամնաբույժ",
-    "Ուղղափայտաբույժ",
-    "Ֆիզիոթերապևտ",
-    "Ռեֆլեքսոթերապևտ",
-    "Սպորտային բժիշկ",
-    "Ախտաբան",
-    "Ֆարմակոլոգ",
-    "Հոգեբույժ",
-    "Հոգեթերապևտ",
-    "Նարկոլոգ",
-    "Գերիատր",
-    "Ընտանեկան բժիշկ",
-    "Շտապ օգնության բժիշկ",
-    "Դատաբժշկական փորձագետ",
+    "Կարդիոլոգ", "Նյարդաբան", "Ակնաբույժ", "Վիրաբույժ", "Մաշկաբան",
+    "Ուռուցքաբան", "Էնդոկրինոլոգ", "Գաստրոէնտերոլոգ", "Ռևմատոլոգ",
+    "Պուլմոնոլոգ", "Նեֆրոլոգ", "Հեմատոլոգ", "Ինֆեկցիոնիստ", "Իմունոլոգ",
+    "Ալերգոլոգ", "Ռադիոլոգ", "Անեսթեզիոլոգ", "Ռեանիմատոլոգ", "Մանկաբույժ",
+    "Մանկական վիրաբույժ", "Ծննդաբան-գինեկոլոգ", "Ուրոլոգ", "Անդրոլոգ",
+    "Պրոկտոլոգ", "Վասկուլյար վիրաբույժ", "Թորակալ վիրաբույժ", "Նեյրովիրաբույժ",
+    "Ականջ-կոկորդ-քթաբույժ", "Ստոմատոլոգ", "Ատամնաբույժ", "Ուղղափայտաբույժ",
+    "Ֆիզիոթերապևտ", "Ռեֆլեքսոթերապևտ", "Սպորտային բժիշկ", "Ախտաբան",
+    "Ֆարմակոլոգ", "Հոգեբույժ", "Հոգեթերապևտ", "Նարկոլոգ", "Գերիատր",
+    "Ընտանեկան բժիշկ", "Շտապ օգնության բժիշկ", "Դատաբժշկական փորձագետ",
 ];
 
 const onlyLettersRegex = /^[a-zA-Zաբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ\u0531-\u0587\s]*$/i;
@@ -52,15 +19,15 @@ const AddDoctorModal = ({ isOpen, onClose, onSubmit }) => {
     if (!isOpen) return null;
 
     const [formData, setFormData] = useState({
-        name: "", surname: "", specialty: "", patients: 0,
+        name: "", surname: "", specialty: "", age: "", email: "", patients: 0,
     });
     const [nameError, setNameError] = useState(false);
     const [surnameError, setSurnameError] = useState(false);
     const [disabled, setDisabled] = useState(true);
 
     useEffect(() => {
-        const { name, surname, specialty } = formData;
-        setDisabled(!name || !surname || !specialty || nameError || surnameError);
+        const { name, surname, specialty, age, email } = formData;
+        setDisabled(!name || !surname || !specialty || !age || !email || nameError || surnameError);
     }, [formData, nameError, surnameError]);
 
     const handleName = (e) => {
@@ -85,7 +52,7 @@ const AddDoctorModal = ({ isOpen, onClose, onSubmit }) => {
 
     const handleSubmit = () => {
         onSubmit(formData);
-        setFormData({ name: "", surname: "", specialty: "", patients: 0 });
+        setFormData({ name: "", surname: "", specialty: "", age: "", email: "", patients: 0 });
         setNameError(false);
         setSurnameError(false);
     };
@@ -123,6 +90,22 @@ const AddDoctorModal = ({ isOpen, onClose, onSubmit }) => {
                         <p style={styles.errorText}>⚠ Ազգանունը կարող է պարունակել միայն տառեր</p>
                     )}
                 </div>
+
+                <input
+                    style={styles.input}
+                    type="number"
+                    placeholder="Տարիք"
+                    value={formData.age}
+                    onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                />
+
+                <input
+                    style={styles.input}
+                    type="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
 
                 <select
                     style={styles.select}
