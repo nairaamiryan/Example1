@@ -58,7 +58,6 @@ const PatientCard = ({ patient, onDelete, onEdit, onStatusChange }) => {
     const handleEditSubmit = () => {
         if (nameError || surnameError || ageError) return;
         onEdit && onEdit(patient.id, formData);
-        onStatusChange && onStatusChange(patient.id, formData.status);
         setShowEdit(false);
     };
 
