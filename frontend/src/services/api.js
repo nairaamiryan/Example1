@@ -1,3 +1,6 @@
+import mockData from "./mockBackend.json";
+const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const BASE_URL = `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}`;
 
 class API {
@@ -184,6 +187,21 @@ class API {
         });
         if (!response.ok) return { success: false, error: "Failed to delete finance" };
         return { success: true };
+    }
+
+    async getChartData() {
+        await delay();
+        return { success: true, data: mockData.statistics };
+    }
+
+    async getAboutInfo() {
+        await delay();
+        return { success: true, data: mockData.aboutInfo };
+    }
+
+    async getNotifications() {
+        await delay();
+        return { success: true, data: mockData.notifications };
     }
 }
 
