@@ -80,12 +80,42 @@ const Reports = () => {
         }
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         const report = reports.find(r => r.id === id);
         if (report?.locked) return;
-        setReports((prev) => prev.filter((r) => r.id !== id));
+        const response = await api.deleteReport(id);
+        if (response.success) {
+            setReports((prev) => prev.filter((r) => r.id !== id));
+            showToast("Հաշվետվությունը ջնջվեց", "error");
+        }
         setConfirmDeleteId(null);
-        showToast("Հաշվետվությունը ջնջվեց", "error");
+    };
+
+    const handleEdit = async (id, updatedData) => {
+        const response = await api.updateReport(id, updatedData);
+        if (response.success) {
+            setReports(prev => prev.map(r =>
+                r.id === id ? { ...r, ...updatedData } : r
+            ));
+            showToast("Փոփոխությունները պահպանվեցին");
+        }
+    };
+
+    const handleDuplicate = async (id) => {
+        const original = reports.find(r => r.id === id);
+        if (!original) return;
+        const res = await api.addReport({
+            title: `${original.title} (պատճեն)`,
+            description: original.description,
+            date: new Date().toISOString().split("T")[0],
+        });
+        if (res.success) {
+            setReports(prev => [...prev, {
+                ...res.data,
+                pinned: false, archived: false, locked: false, read: false, accessLog: [],
+            }]);
+            showToast("Հաշվետվությունը կրկնօրինակվեց");
+        }
     };
 
     const handlePin = (id) => {
@@ -95,40 +125,19 @@ const Reports = () => {
     };
 
     const handleArchive = (id) => {
+        const report = reports.find(r => r.id === id);
         setReports(prev => prev.map(r =>
             r.id === id ? { ...r, archived: !r.archived } : r
         ));
-        const report = reports.find(r => r.id === id);
         showToast(report?.archived ? "Հանվեց արխիվից" : "Տեղափոխվեց արխիվ");
     };
 
     const handleLock = (id) => {
+        const report = reports.find(r => r.id === id);
         setReports(prev => prev.map(r =>
             r.id === id ? { ...r, locked: !r.locked } : r
         ));
-        const report = reports.find(r => r.id === id);
         showToast(report?.locked ? "Ապակողպվեց" : "Կողպված է");
-    };
-
-    const handleDuplicate = (id) => {
-        const original = reports.find(r => r.id === id);
-        if (!original) return;
-        const duplicate = {
-            ...original,
-            id: Date.now(),
-            title: `${original.title} (պատճեն)`,
-            date: new Date().toISOString(),
-            pinned: false, archived: false, locked: false, read: false, accessLog: [],
-        };
-        setReports(prev => [...prev, duplicate]);
-        showToast("Հաշվետվությունը կրկնօրինակվեց");
-    };
-
-    const handleEdit = (id, updatedData) => {
-        setReports(prev => prev.map(r =>
-            r.id === id ? { ...r, ...updatedData } : r
-        ));
-        showToast("Փոփոխությունները պահպանվեցին");
     };
 
     const handleMarkRead = (id) => {
@@ -176,7 +185,6 @@ const Reports = () => {
             <Navbar />
             <div style={styles.container}>
 
-                {/* TOAST */}
                 {toast && (
                     <div style={{
                         ...styles.toast,
@@ -196,7 +204,6 @@ const Reports = () => {
                     </button>
                 </div>
 
-                {/* STATS ROW */}
                 <div style={styles.statsRow}>
                     <StatCard value={reports.filter(r => !r.archived).length} label="Ակտիվ" color="#2563eb" />
                     <StatCard value={unreadCount} label="Չընթերցված" color="#f59e0b" />
@@ -229,7 +236,6 @@ const Reports = () => {
                     )}
                 </div>
 
-                {/* ADD MODAL */}
                 {showModal && (
                     <div style={styles.modalOverlay}>
                         <div style={styles.modalContent}>
@@ -267,7 +273,6 @@ const Reports = () => {
                     </div>
                 )}
 
-                {/* DELETE CONFIRM MODAL */}
                 {confirmDeleteId && (
                     <div style={styles.modalOverlay} onClick={() => setConfirmDeleteId(null)}>
                         <div style={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
