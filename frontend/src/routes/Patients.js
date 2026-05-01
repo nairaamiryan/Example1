@@ -45,16 +45,22 @@ const Patients = () => {
         setDeleteModal({ open: false, id: null, name: "" });
     };
 
-    const handleEdit = (id, updatedData) => {
-        setPatients((prev) =>
-            prev.map((p) => (p.id === id ? { ...p, ...updatedData } : p))
-        );
+    const handleEdit = async (id, updatedData) => {
+        const response = await api.updatePatient(id, updatedData);
+        if (response.success) {
+            setPatients((prev) =>
+                prev.map((p) => (p.id === id ? { ...p, ...updatedData } : p))
+            );
+        }
     };
 
-    const handleStatusChange = (id, newStatus) => {
-        setPatients((prev) =>
-            prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p))
-        );
+    const handleStatusChange = async (id, newStatus) => {
+        const response = await api.updatePatient(id, { status: newStatus });
+        if (response.success) {
+            setPatients((prev) =>
+                prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p))
+            );
+        }
     };
 
     const STATUS_MAP = {
