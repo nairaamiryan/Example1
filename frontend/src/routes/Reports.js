@@ -55,13 +55,13 @@ const Reports = () => {
         const response = await api.getReports();
         if (response.success) {
             setReports(response.data.map(r => ({
-             ...r,
-          pinned: r.pinned ?? false,
-          archived: r.archived ?? false,
-          locked: r.locked ?? false,
-          read: r.read ?? false,
-          accessLog: [],
-        })));
+                ...r,
+                pinned: r.pinned ?? false,
+                archived: r.archived ?? false,
+                locked: r.locked ?? false,
+                read: r.read ?? false,
+                accessLog: [],
+            })));
         }
         setLoading(false);
     };
@@ -118,29 +118,34 @@ const Reports = () => {
         }
     };
 
-    const handlePin = (id) => {
+    const handlePin = async (id) => {
+        const report = reports.find(r => r.id === id);
+        await api.updateReport(id, { pinned: !report.pinned });
         setReports(prev => prev.map(r =>
             r.id === id ? { ...r, pinned: !r.pinned } : r
         ));
     };
 
-    const handleArchive = (id) => {
+    const handleArchive = async (id) => {
         const report = reports.find(r => r.id === id);
+        await api.updateReport(id, { archived: !report.archived });
         setReports(prev => prev.map(r =>
             r.id === id ? { ...r, archived: !r.archived } : r
         ));
         showToast(report?.archived ? "Հանվեց արխիվից" : "Տեղափոխվեց արխիվ");
     };
 
-    const handleLock = (id) => {
+    const handleLock = async (id) => {
         const report = reports.find(r => r.id === id);
+        await api.updateReport(id, { locked: !report.locked });
         setReports(prev => prev.map(r =>
             r.id === id ? { ...r, locked: !r.locked } : r
         ));
         showToast(report?.locked ? "Ապակողպվեց" : "Կողպված է");
     };
 
-    const handleMarkRead = (id) => {
+    const handleMarkRead = async (id) => {
+        await api.updateReport(id, { read: true });
         setReports(prev => prev.map(r =>
             r.id === id ? {
                 ...r,
