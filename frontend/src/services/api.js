@@ -193,6 +193,17 @@ class API {
         return { success: true, data };
     }
 
+    async updateNotification(id, data) {
+        const response = await fetch(`${BASE_URL}/api/notifications/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) return { success: false, error: "Failed to update notification" };
+        const result = await response.json();
+        return { success: true, data: result };
+    }
+
     async deleteNotification(id) {
         const response = await fetch(`${BASE_URL}/api/notifications/${id}`, { method: "DELETE" });
         if (!response.ok) return { success: false, error: "Failed to delete notification" };
@@ -203,7 +214,6 @@ class API {
         await delay();
         return { success: true, data: mockData.aboutInfo };
     }
-
 }
 
 export default new API();
