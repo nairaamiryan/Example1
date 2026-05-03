@@ -43,7 +43,9 @@ const Notification = () => {
         setLoading(false);
     };
 
-    const markAllRead = () => {
+    const markAllRead = async () => {
+        const unread = notifications.filter(n => !n.read);
+        await Promise.all(unread.map(n => api.updateNotification(n.id, { read: true })));
         setNotifications(prev => {
             const updated = prev.map(item => ({ ...item, read: true }));
             dispatchUpdate(updated);
@@ -63,7 +65,8 @@ const Notification = () => {
         setConfirmDeleteId(null);
     };
 
-    const handleRead = (id) => {
+    const handleRead = async (id) => {
+        await api.updateNotification(id, { read: true });
         setNotifications(prev => {
             const updated = prev.map(item =>
                 item.id === id ? { ...item, read: true } : item
