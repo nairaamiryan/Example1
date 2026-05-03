@@ -55,13 +55,13 @@ const Reports = () => {
         const response = await api.getReports();
         if (response.success) {
             setReports(response.data.map(r => ({
-                ...r,
-                pinned: false,
-                archived: false,
-                locked: false,
-                read: false,
-                accessLog: [],
-            })));
+             ...r,
+          pinned: r.pinned ?? false,
+          archived: r.archived ?? false,
+          locked: r.locked ?? false,
+          read: r.read ?? false,
+          accessLog: [],
+        })));
         }
         setLoading(false);
     };
