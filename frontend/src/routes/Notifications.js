@@ -4,51 +4,12 @@ import api from "../services/api";
 import { LOADING, NOTIFICATIONS } from "../constants";
 import NotificationCard from "../components/NotificationCard";
 
-const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 const ONLY_LETTERS = /^[a-zA-Zաբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ\u0531-\u0587\s]*$/i;
-
-const FICTIVE_NOTIFICATIONS = [
-    {
-        id: 9001,
-        title: "Հիվանդի հետազոտություն",
-        message: "Արամ Սարգսյանի արյան թեստի արդյունքները պատրաստ են",
-        type: "patient",
-        date: new Date().toISOString(),
-        read: false,
-    },
-    {
-        id: 9002,
-        title: "Ժամադրության հիշեցում",
-        message: "Լուսինե Պետրոսյանի ժամադրությունը վաղը ժամը 10:00-ին է",
-        type: "appointment",
-        date: new Date().toISOString(),
-        read: false,
-    },
-    {
-        id: 9003,
-        title: "Դեղատոմսի թարմացում",
-        message: "Գայանե Հակոբյանի դեղատոմսի ժամկետը լրանում է 3 օրից",
-        type: "prescription",
-        date: new Date().toISOString(),
-        read: false,
-    },
-];
 
 const dispatchUpdate = (notifications) => {
     const unread = notifications.filter(n => !n.read).length;
     localStorage.setItem("unreadCount", unread);
     window.dispatchEvent(new Event("notificationsUpdated"));
-};
-
-const autoRefreshOld = (notifications) => {
-    const now = Date.now();
-    return notifications.map(n => {
-        const age = now - new Date(n.date || n.time).getTime();
-        if (age > THIRTY_DAYS_MS) {
-            return { ...n, date: new Date().toISOString(), read: false };
-        }
-        return n;
-    });
 };
 
 const Notification = () => {
@@ -57,7 +18,6 @@ const Notification = () => {
     const [filter, setFilter] = useState("all");
     const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
-    // Email modal
     const [showEmailModal, setShowEmailModal] = useState(false);
     const [emailForm, setEmailForm] = useState({
         firstName: "", lastName: "", email: "", subject: "", body: ""
@@ -76,13 +36,10 @@ const Notification = () => {
 
     const loadNotifications = async () => {
         const response = await api.getNotifications();
-        let data = [];
         if (response.success) {
-            data = response.data.map(item => ({ ...item, read: false }));
+            const data = response.data.map(item => ({ ...item, read: item.read || false }));
+            setNotifications(data);
         }
-        const merged = [...FICTIVE_NOTIFICATIONS, ...data];
-        const refreshed = autoRefreshOld(merged);
-        setNotifications(refreshed);
         setLoading(false);
     };
 
@@ -94,12 +51,15 @@ const Notification = () => {
         });
     };
 
-    const handleDelete = (id) => {
-        setNotifications(prev => {
-            const updated = prev.filter(item => item.id !== id);
-            dispatchUpdate(updated);
-            return updated;
-        });
+    const handleDelete = async (id) => {
+        const response = await api.deleteNotification(id);
+        if (response.success) {
+            setNotifications(prev => {
+                const updated = prev.filter(item => item.id !== id);
+                dispatchUpdate(updated);
+                return updated;
+            });
+        }
         setConfirmDeleteId(null);
     };
 
@@ -199,7 +159,6 @@ const Notification = () => {
                     ))}
                 </div>
 
-                {/* DELETE CONFIRM MODAL */}
                 {confirmDeleteId && (
                     <div style={styles.modalOverlay} onClick={() => setConfirmDeleteId(null)}>
                         <div style={styles.modal} onClick={e => e.stopPropagation()}>
@@ -213,7 +172,6 @@ const Notification = () => {
                     </div>
                 )}
 
-                {/* EMAIL MODAL */}
                 {showEmailModal && (
                     <div style={styles.modalOverlay} onClick={() => setShowEmailModal(false)}>
                         <div style={styles.modal} onClick={e => e.stopPropagation()}>
