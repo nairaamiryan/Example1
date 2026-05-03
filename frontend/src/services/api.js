@@ -204,10 +204,6 @@ class API {
         return { success: true, data: mockData.aboutInfo };
     }
 
-    async getChartData() {
-        await delay();
-        return { success: true, data: mockData.statistics };
-    }
 }
 
 export default new API();
