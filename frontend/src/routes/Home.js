@@ -269,12 +269,12 @@ const Home = () => {
                             </ResponsiveContainer>
                         </div>
 
-                        <div style={styles.chartCard}>
-                            <div style={styles.tableHeader}>
-                                <h4 style={styles.chartTitle}>
-                                    Ժամադրություններ / Հիվանդներ
-                                </h4>
-                            </div>
+                        <div style={{ ...styles.chartCard, gridColumn: "1 / -1" }}>
+                           <div style={styles.tableHeader}>
+                            <h4 style={styles.chartTitle}>
+                                       Ժամադրություններ / Հիվանդներ
+                                  </h4>
+                        </div>
                             <div style={styles.filtersRow}>
                                 <div style={styles.filterGroup}>
                                     <span style={styles.filterLabel}>
