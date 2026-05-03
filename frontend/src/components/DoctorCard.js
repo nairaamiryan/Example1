@@ -11,8 +11,24 @@ const DoctorCard = ({ doctor, onDelete, onClick, onEdit }) => {
         age: doctor.age,
         email: doctor.email,
     });
+    const [ageError, setAgeError] = useState("");
+
+    const handleAgeChange = (e) => {
+        const val = parseInt(e.target.value);
+        if (isNaN(val) || val < 1) {
+            setAgeError("Տարիքը չի կարող բացասական լինել");
+            setEditData({ ...editData, age: 1 });
+        } else if (val > 64) {
+            setAgeError("Տարիքը չի կարող գերազանցել 64-ը");
+            setEditData({ ...editData, age: 64 });
+        } else {
+            setAgeError("");
+            setEditData({ ...editData, age: val });
+        }
+    };
 
     const handleEditSubmit = async () => {
+        if (ageError) return;
         await onEdit(doctor.id, editData);
         setShowEditModal(false);
     };
@@ -80,13 +96,18 @@ const DoctorCard = ({ doctor, onDelete, onClick, onEdit }) => {
                             value={editData.specialty}
                             onChange={(e) => setEditData({ ...editData, specialty: e.target.value })}
                         />
-                        <input
-                            style={styles.input}
-                            placeholder="Տարիք"
-                            type="number"
-                            value={editData.age}
-                            onChange={(e) => setEditData({ ...editData, age: e.target.value })}
-                        />
+                        <div>
+                            <input
+                                style={{ ...styles.input, borderColor: ageError ? "#ef4444" : "#e5e7eb" }}
+                                placeholder="Տարիք (1-64)"
+                                type="number"
+                                min={1}
+                                max={64}
+                                value={editData.age}
+                                onChange={handleAgeChange}
+                            />
+                            {ageError && <p style={styles.errorText}>⚠ {ageError}</p>}
+                        </div>
                         <input
                             style={styles.input}
                             placeholder="Email"
@@ -97,7 +118,11 @@ const DoctorCard = ({ doctor, onDelete, onClick, onEdit }) => {
                             <button style={styles.cancelButton} onClick={() => setShowEditModal(false)}>
                                 Չեղարկել
                             </button>
-                            <button style={styles.saveButton} onClick={handleEditSubmit}>
+                            <button
+                                style={ageError ? styles.saveButtonDisabled : styles.saveButton}
+                                onClick={handleEditSubmit}
+                                disabled={!!ageError}
+                            >
                                 Պահպանել
                             </button>
                         </div>
@@ -110,124 +135,57 @@ const DoctorCard = ({ doctor, onDelete, onClick, onEdit }) => {
 
 const styles = {
     doctorCard: {
-        background: "white",
-        padding: "25px",
-        borderRadius: "12px",
-        textAlign: "center",
-        transition: "transform 0.2s, box-shadow 0.2s",
+        background: "white", padding: "25px", borderRadius: "12px",
+        textAlign: "center", transition: "transform 0.2s, box-shadow 0.2s",
         position: "relative",
     },
     deleteBtn: {
-        position: "absolute",
-        top: "10px",
-        right: "10px",
-        background: "transparent",
-        border: "none",
-        fontSize: "14px",
-        cursor: "pointer",
-        color: "#9ca3af",
-        padding: "2px 6px",
-        borderRadius: "6px",
+        position: "absolute", top: "10px", right: "10px",
+        background: "transparent", border: "none", fontSize: "14px",
+        cursor: "pointer", color: "#9ca3af", padding: "2px 6px", borderRadius: "6px",
     },
     editBtn: {
-        position: "absolute",
-        top: "10px",
-        right: "35px",
-        background: "transparent",
-        border: "none",
-        fontSize: "16px",
-        cursor: "pointer",
-        color: "#9ca3af",
-        padding: "2px 6px",
-        borderRadius: "6px",
+        position: "absolute", top: "10px", right: "35px",
+        background: "transparent", border: "none", fontSize: "16px",
+        cursor: "pointer", color: "#9ca3af", padding: "2px 6px", borderRadius: "6px",
     },
     doctorAvatar: {
-        width: "60px",
-        height: "60px",
-        borderRadius: "50%",
+        width: "60px", height: "60px", borderRadius: "50%",
         background: "linear-gradient(135deg, #66a8ea 0%, #1ba073 100%)",
-        color: "white",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "24px",
-        fontWeight: "600",
+        color: "white", display: "flex", alignItems: "center",
+        justifyContent: "center", fontSize: "24px", fontWeight: "600",
         margin: "0 auto 15px",
     },
-    doctorName: {
-        fontSize: "16px",
-        fontWeight: "600",
-        color: "#1a2e4a",
-        marginBottom: "5px",
-    },
-    doctorSpecialty: {
-        fontSize: "14px",
-        color: "#6b7280",
-        marginBottom: "8px",
-    },
-    doctorPatients: {
-        fontSize: "12px",
-        color: "#9ca3af",
-    },
+    doctorName: { fontSize: "16px", fontWeight: "600", color: "#1a2e4a", marginBottom: "5px" },
+    doctorSpecialty: { fontSize: "14px", color: "#6b7280", marginBottom: "8px" },
+    doctorPatients: { fontSize: "12px", color: "#9ca3af" },
     overlay: {
-        position: "fixed",
-        inset: 0,
-        backgroundColor: "rgba(0,0,0,0.45)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1000,
+        position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.45)",
+        display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000,
     },
     modal: {
-        background: "white",
-        borderRadius: "16px",
-        padding: "32px 28px",
-        maxWidth: "400px",
-        width: "90%",
-        boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "12px",
+        background: "white", borderRadius: "16px", padding: "32px 28px",
+        maxWidth: "400px", width: "90%", boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+        display: "flex", flexDirection: "column", gap: "12px",
     },
-    modalTitle: {
-        fontSize: "20px",
-        fontWeight: "700",
-        color: "#1a2e4a",
-        marginBottom: "8px",
-    },
+    modalTitle: { fontSize: "20px", fontWeight: "700", color: "#1a2e4a", marginBottom: "8px" },
     input: {
-        padding: "10px 14px",
-        borderRadius: "8px",
-        border: "1px solid #e5e7eb",
-        fontSize: "14px",
-        width: "100%",
-        boxSizing: "border-box",
+        padding: "10px 14px", borderRadius: "8px", border: "1px solid #e5e7eb",
+        fontSize: "14px", width: "100%", boxSizing: "border-box",
     },
-    modalButtons: {
-        display: "flex",
-        gap: "12px",
-        justifyContent: "flex-end",
-        marginTop: "8px",
-    },
+    errorText: { margin: "4px 0 0 2px", fontSize: "12px", color: "#ef4444" },
+    modalButtons: { display: "flex", gap: "12px", justifyContent: "flex-end", marginTop: "8px" },
     cancelButton: {
-        padding: "10px 20px",
-        borderRadius: "8px",
-        border: "1px solid #e5e7eb",
-        background: "white",
-        color: "#374151",
-        fontSize: "14px",
-        fontWeight: "500",
-        cursor: "pointer",
+        padding: "10px 20px", borderRadius: "8px", border: "1px solid #e5e7eb",
+        background: "white", color: "#374151", fontSize: "14px", fontWeight: "500", cursor: "pointer",
     },
     saveButton: {
-        padding: "10px 20px",
-        borderRadius: "8px",
-        border: "none",
-        background: "#2563eb",
-        color: "white",
-        fontSize: "14px",
-        fontWeight: "600",
-        cursor: "pointer",
+        padding: "10px 20px", borderRadius: "8px", border: "none",
+        background: "#2563eb", color: "white", fontSize: "14px", fontWeight: "600", cursor: "pointer",
+    },
+    saveButtonDisabled: {
+        padding: "10px 20px", borderRadius: "8px", border: "none",
+        background: "#d1d5db", color: "white", fontSize: "14px", fontWeight: "600", cursor: "not-allowed",
     },
 };
 
