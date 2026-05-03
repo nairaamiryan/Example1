@@ -12,6 +12,17 @@ const getNotifications = async (req, res) => {
     }
 };
 
+const updateNotification = async (req, res) => {
+    try {
+        const notification = await Notification.findByPk(req.params.id);
+        if (!notification) return res.status(404).json({ message: "Not found" });
+        await notification.update(req.body);
+        res.json(notification);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 const deleteNotification = async (req, res) => {
     try {
         const notification = await Notification.findByPk(req.params.id);
@@ -23,4 +34,4 @@ const deleteNotification = async (req, res) => {
     }
 };
 
-module.exports = { getNotifications, deleteNotification };
+module.exports = { getNotifications, updateNotification, deleteNotification };
