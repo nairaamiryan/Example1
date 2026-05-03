@@ -34,9 +34,7 @@ class API {
     }
 
     async deletePatient(id) {
-        const response = await fetch(`${BASE_URL}/api/patients/${id}`, {
-            method: "DELETE",
-        });
+        const response = await fetch(`${BASE_URL}/api/patients/${id}`, { method: "DELETE" });
         if (!response.ok) return { success: false, error: "Failed to delete patient" };
         return { success: true };
     }
@@ -71,9 +69,7 @@ class API {
     }
 
     async deleteDoctor(id) {
-        const response = await fetch(`${BASE_URL}/api/doctors/${id}`, {
-            method: "DELETE",
-        });
+        const response = await fetch(`${BASE_URL}/api/doctors/${id}`, { method: "DELETE" });
         if (!response.ok) return { success: false, error: "Failed to delete doctor" };
         return { success: true };
     }
@@ -108,9 +104,7 @@ class API {
     }
 
     async deleteReport(id) {
-        const response = await fetch(`${BASE_URL}/api/reports/${id}`, {
-            method: "DELETE",
-        });
+        const response = await fetch(`${BASE_URL}/api/reports/${id}`, { method: "DELETE" });
         if (!response.ok) return { success: false, error: "Failed to delete report" };
         return { success: true };
     }
@@ -145,9 +139,7 @@ class API {
     }
 
     async deleteNote(id) {
-        const response = await fetch(`${BASE_URL}/api/notes/${id}`, {
-            method: "DELETE",
-        });
+        const response = await fetch(`${BASE_URL}/api/notes/${id}`, { method: "DELETE" });
         if (!response.ok) return { success: false, error: "Failed to delete note" };
         return { success: true };
     }
@@ -182,16 +174,29 @@ class API {
     }
 
     async deleteFinance(id) {
-        const response = await fetch(`${BASE_URL}/api/finances/${id}`, {
-            method: "DELETE",
-        });
+        const response = await fetch(`${BASE_URL}/api/finances/${id}`, { method: "DELETE" });
         if (!response.ok) return { success: false, error: "Failed to delete finance" };
         return { success: true };
     }
 
-    async getChartData() {
-        await delay();
-        return { success: true, data: mockData.statistics };
+    async getStatistics() {
+        const response = await fetch(`${BASE_URL}/api/home`);
+        if (!response.ok) return { success: false, error: "Failed to fetch statistics" };
+        const data = await response.json();
+        return { success: true, data };
+    }
+
+    async getNotifications() {
+        const response = await fetch(`${BASE_URL}/api/notifications`);
+        if (!response.ok) return { success: false, error: "Failed to fetch notifications" };
+        const data = await response.json();
+        return { success: true, data };
+    }
+
+    async deleteNotification(id) {
+        const response = await fetch(`${BASE_URL}/api/notifications/${id}`, { method: "DELETE" });
+        if (!response.ok) return { success: false, error: "Failed to delete notification" };
+        return { success: true };
     }
 
     async getAboutInfo() {
@@ -199,9 +204,9 @@ class API {
         return { success: true, data: mockData.aboutInfo };
     }
 
-    async getNotifications() {
+    async getChartData() {
         await delay();
-        return { success: true, data: mockData.notifications };
+        return { success: true, data: mockData.statistics };
     }
 }
 
