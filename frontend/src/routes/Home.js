@@ -8,6 +8,14 @@ import {
 import { STATISTICS, LOADING } from "../constants";
 import api from "../services/api";
 
+const TYPE_LABELS = {
+    appointment: "Ժամադրություն",
+    prescription: "Դեղատոմս",
+    doctor: "Բժիշկ",
+    patient: "Պացիենտ",
+    system: "Համակարգ",
+};
+
 const Home = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -42,9 +50,7 @@ const Home = () => {
     const recentNotifications = data?.recentNotifications || [];
 
     const doctorsData = topDoctors.map((d) => ({ name: d.name, count: d.patients }));
-
     const specialtyData = Object.entries(bySpecialty).map(([name, value]) => ({ name, value }));
-
     const statusData = [
         { name: "Ակտիվ", value: byStatus.active || 0 },
         { name: "Կայուն", value: byStatus.stable || 0 },
@@ -112,7 +118,6 @@ const Home = () => {
                     <h3 style={styles.sectionTitle}>📈 Գրաֆիկներ</h3>
                     <div style={styles.chartsGrid}>
 
-                        {/* Pie - by specialty */}
                         <div style={styles.chartCard}>
                             <div style={styles.tableHeader}>
                                 <h4 style={styles.chartTitle}>Բժիշկներ ըստ մասնագիտության</h4>
@@ -139,7 +144,6 @@ const Home = () => {
                             </ResponsiveContainer>
                         </div>
 
-                        {/* Pie - by status */}
                         <div style={styles.chartCard}>
                             <div style={styles.tableHeader}>
                                 <h4 style={styles.chartTitle}>Հիվանդներ ըստ կարգավիճակի</h4>
@@ -166,7 +170,6 @@ const Home = () => {
                             </ResponsiveContainer>
                         </div>
 
-                        {/* Bar - top doctors */}
                         <div style={{ ...styles.chartCard, gridColumn: "1 / -1" }}>
                             <div style={styles.tableHeader}>
                                 <h4 style={styles.chartTitle}>Ամենաբանուկ բժիշկները</h4>
@@ -204,7 +207,7 @@ const Home = () => {
                                     <tr key={n.id}>
                                         <td style={styles.td}>{n.title}</td>
                                         <td style={styles.td}>{n.message}</td>
-                                        <td style={styles.td}>{n.type}</td>
+                                        <td style={styles.td}>{TYPE_LABELS[n.type] || n.type}</td>
                                         <td style={styles.td}>{new Date(n.date).toLocaleDateString("hy-AM")}</td>
                                     </tr>
                                 ))
