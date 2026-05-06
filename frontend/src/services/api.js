@@ -1,6 +1,3 @@
-import mockData from "./mockBackend.json";
-const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const BASE_URL = `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}`;
 
 class API {
@@ -211,9 +208,11 @@ class API {
     }
 
     async getAboutInfo() {
-        await delay();
-        return { success: true, data: mockData.aboutInfo };
-    }
+    const response = await fetch(`${BASE_URL}/api/about`);
+    if (!response.ok) return { success: false, error: "Failed to fetch about info" };
+    const data = await response.json();
+    return { success: true, data };
+}
 }
 
 export default new API();
