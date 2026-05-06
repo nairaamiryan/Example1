@@ -7,6 +7,7 @@ const noteRoutes = require("./routes/noteRoutes");
 const financeRoutes = require("./routes/financeRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const homeRoutes = require("./routes/homeRoutes");
+const aboutRoutes = require("./routes/aboutRoutes");
 
 const app = express();
 
@@ -20,5 +21,6 @@ app.use("/api/notes", noteRoutes);
 app.use("/api/finances", financeRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/home", homeRoutes);
+app.use("/api/about", aboutRoutes);
 
 module.exports = app;
