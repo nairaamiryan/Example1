@@ -33,8 +33,10 @@ module.exports = {
         const patients = [];
         let counter = 1000;
         const startDate = new Date("2024-05-01");
+        const endDate = new Date();
+        const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-        for (let day = 0; day < 365; day++) {
+        for (let day = 0; day <= totalDays; day++) {
             const date = new Date(startDate);
             date.setDate(startDate.getDate() + day);
             const count = 10 + Math.floor(Math.random() * 6); // 10-15 հիվանդ/օր
