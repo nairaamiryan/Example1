@@ -1,5 +1,7 @@
 "use strict";
 
+require("dotenv").config();
+
 const fs = require("fs");
 const path = require("path");
 const { Client } = require("pg");
@@ -38,7 +40,6 @@ module.exports = {
             EXECUTE FUNCTION update_statistics();
 
         `);
-
         await client.query(`
             CREATE TRIGGER doctors_after_delete
             AFTER DELETE ON doctors
@@ -51,7 +52,6 @@ module.exports = {
             FOR EACH ROW
             EXECUTE FUNCTION update_statistics();
         `);
-
         await client.query(`
             CREATE TRIGGER notifications_after_delete
             AFTER DELETE ON notifications
