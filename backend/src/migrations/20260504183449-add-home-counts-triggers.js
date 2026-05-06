@@ -2,10 +2,11 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
+    useTransaction: false,
     async up(queryInterface, Sequelize) {
         await queryInterface.sequelize.query(`
           CREATE OR REPLACE FUNCTION update_statistics()
-            RETURNS TRIGGER AS $func$
+            RETURNS TRIGGER AS $$
             BEGIN
                 UPDATE homes
                 SET value =
@@ -62,7 +63,7 @@ module.exports = {
             WHERE key = 'notifications';
                 RETURN NULL;
             END;
-          $func$ LANGUAGE plpgsql;
+          $$ LANGUAGE plpgsql;
         `);
         await queryInterface.sequelize.query(`
             CREATE TRIGGER patients_after_insert
