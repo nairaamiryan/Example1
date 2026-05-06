@@ -5,7 +5,7 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.sequelize.query(`
           CREATE OR REPLACE FUNCTION update_statistics()
-            RETURNS TRIGGER AS $$
+            RETURNS TRIGGER AS $func$
             BEGIN
                 UPDATE homes
                 SET value =
@@ -62,7 +62,7 @@ module.exports = {
             WHERE key = 'notifications';
                 RETURN NULL;
             END;
-          $$ LANGUAGE plpgsql;
+          $func$ LANGUAGE plpgsql;
         `);
         await queryInterface.sequelize.query(`
             CREATE TRIGGER patients_after_insert
