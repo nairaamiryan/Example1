@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const db = require("../models/index");
 const Patient = db.Patient;
+const { sequelize } = db;
 
 const getPatients = async (req, res) => {
     try {
@@ -8,22 +9,31 @@ const getPatients = async (req, res) => {
 
         const where = {};
         if (search && search.trim() !== "") {
-            where[Op.or] = [
-                { name:      { [Op.iRegexp]: search } },
-                { surname:   { [Op.iRegexp]: search } },
-                { diagnosis: { [Op.iRegexp]: search } },
-                { email:     { [Op.iRegexp]: search } },
-            ];
+            const trimmedSearch = search.trim().toLowerCase();
+            const parts = trimmedSearch.split(/\s+/);
+            if (parts.length >= 2) {
+                where[Op.or] = [
+                    {
+                        [Op.and]: [
+                            { name_lower: { [Op.like]: `%${parts[0]}%` } },
+                            { surname_lower: { [Op.like]: `%${parts[1]}%` } },
+                        ]
+                    },
+                    {
+                        [Op.and]: [
+                            { name_lower: { [Op.like]: `%${parts[1]}%` } },
+                            { surname_lower: { [Op.like]: `%${parts[0]}%` } },
+                        ]
+                    },
+                ];
+            } else {
+                where[Op.or] = [
+                    { name_lower: { [Op.like]: `%${trimmedSearch}%` } },
+                    { surname_lower: { [Op.like]: `%${trimmedSearch}%` } },
+                ];
+            }
         }
-
-        // When searching — no pagination, return all matches
-        if (search && search.trim() !== "") {
-            const patients = await Patient.findAll({ where, order: [["id", "ASC"]] });
-            return res.json({ patients, total: patients.length });
-        }
-
-        // Normal paginated fetch
-        const parsedLimit  = Math.max(1, parseInt(limit)  || 10);
+        const parsedLimit = Math.max(1, parseInt(limit) || 10);
         const parsedOffset = Math.max(0, parseInt(offset) || 0);
 
         const { count, rows } = await Patient.findAndCountAll({
@@ -43,7 +53,24 @@ const getPatients = async (req, res) => {
 const createPatient = async (req, res) => {
     try {
         const { name, surname, age, diagnosis, status, email } = req.body;
-        const patient = await Patient.create({ name, surname, age, diagnosis, status, email });
+        const patient = await Patient.create({
+            name,
+            surname,
+            age,
+            diagnosis,
+            status,
+            email,
+        });
+        await db.sequelize.query(
+            `UPDATE "patients" SET name_lower = :nameLower, surname_lower = :surnameLower WHERE id = :id`,
+            {
+                replacements: {
+                    nameLower: name?.toLowerCase() || "",
+                    surnameLower: surname?.toLowerCase() || "",
+                    id: patient.id,
+                },
+            }
+        );
         res.status(201).json(patient);
     } catch (error) {
         res.status(500).json({ message: "Server error" });
@@ -53,8 +80,22 @@ const createPatient = async (req, res) => {
 const updatePatient = async (req, res) => {
     try {
         const patient = await Patient.findByPk(req.params.id);
-        if (!patient) return res.status(404).json({ message: "Patient not found" });
+        if (!patient)
+            return res.status(404).json({ message: "Patient not found" });
+
         await patient.update(req.body);
+        if (req.body.name || req.body.surname) {
+            await db.sequelize.query(
+                `UPDATE "patients" SET name_lower = :nameLower, surname_lower = :surnameLower WHERE id = :id`,
+                {
+                    replacements: {
+                        nameLower: (req.body.name ?? patient.name)?.toLowerCase() || "",
+                        surnameLower: (req.body.surname ?? patient.surname)?.toLowerCase() || "",
+                        id: req.params.id,
+                    },
+                }
+            );
+        }
         res.json(patient);
     } catch (error) {
         res.status(500).json({ message: "Server error" });
@@ -64,7 +105,8 @@ const updatePatient = async (req, res) => {
 const deletePatient = async (req, res) => {
     try {
         const patient = await Patient.findByPk(req.params.id);
-        if (!patient) return res.status(404).json({ message: "Patient not found" });
+        if (!patient)
+            return res.status(404).json({ message: "Patient not found" });
         await patient.destroy();
         res.json({ message: "Patient deleted" });
     } catch (error) {

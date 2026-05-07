@@ -38,6 +38,7 @@ const Patients = () => {
     const [total, setTotal]             = useState(0);
     const [loading, setLoading]         = useState(true);
     const [search, setSearch]           = useState("");
+    const [searching, setSearching] = useState(false);
     const [statusFilter, setStatusFilter] = useState("Բոլորը");
     const [showForm, setShowForm]       = useState(false);
     const [deleteModal, setDeleteModal] = useState({ open: false, id: null, name: "" });
@@ -49,17 +50,21 @@ const Patients = () => {
     const limitBtnRef = useRef(null);
 
     const debouncedSearch = useDebounce(search, 500);
-    const isSearching     = debouncedSearch.trim() !== "";
+    const isSearching = debouncedSearch.trim() !== "";
 
-    const totalPages = isSearching ? 1 : Math.max(1, Math.ceil(total / limit));
-    const offset     = isSearching ? 0 : (currentPage - 1) * limit;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    const offset = (currentPage - 1) * limit;
 
     // ── Load ──────────────────────────────────────────────────
     const loadPatients = useCallback(async () => {
-        setLoading(true);
+        if (patients.length === 0) {
+            setLoading(true);
+        } else {
+            setSearching(true);
+        }
         const response = await api.getPatients({
-            limit:  isSearching ? undefined : limit,
-            offset: isSearching ? undefined : offset,
+            limit,
+            offset,
             search: debouncedSearch || undefined,
         });
         if (response.success) {
@@ -67,7 +72,8 @@ const Patients = () => {
             setTotal(response.data.total);
         }
         setLoading(false);
-    }, [limit, offset, debouncedSearch, isSearching]);
+        setSearching(false);
+    }, [limit, offset, debouncedSearch]);
 
     useEffect(() => {
         loadPatients();
@@ -227,7 +233,9 @@ const Patients = () => {
 
                 {/* ── Patient list ── */}
                 <div style={styles.patientsList}>
-                    {displayedPatients.length === 0 ? (
+                    {searching ? (
+                        <p style={styles.empty}>Որոնում...</p>
+                    ) : displayedPatients.length === 0 ? (
                         <p style={styles.empty}>Հիվանդ չի գտնվել</p>
                     ) : (
                         displayedPatients.map((patient) => (
@@ -243,7 +251,7 @@ const Patients = () => {
                 </div>
 
                 {/* ── Pagination bar (hidden while searching) ── */}
-                {!isSearching && (
+                {total > 0 && (    
                     <div style={styles.paginationBar}>
 
                         {/* LEFT — limit picker */}
