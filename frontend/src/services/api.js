@@ -1,10 +1,18 @@
 const BASE_URL = `${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_BASE_PORT}`;
 
 class API {
-    async getPatients() {
-        const response = await fetch(`${BASE_URL}/api/patients`);
+    // ✅ Updated: supports limit, offset, search
+    async getPatients({ limit, offset, search } = {}) {
+        const params = new URLSearchParams();
+        if (limit  !== undefined) params.append("limit",  limit);
+        if (offset !== undefined) params.append("offset", offset);
+        if (search && search.trim() !== "") params.append("search", search.trim());
+
+        const query = params.toString() ? `?${params.toString()}` : "";
+        const response = await fetch(`${BASE_URL}/api/patients${query}`);
         if (!response.ok) return { success: false, error: "Failed to fetch patients" };
         const data = await response.json();
+        // backend returns { patients: [...], total: N }
         return { success: true, data };
     }
 
@@ -208,11 +216,11 @@ class API {
     }
 
     async getAboutInfo() {
-    const response = await fetch(`${BASE_URL}/api/about`);
-    if (!response.ok) return { success: false, error: "Failed to fetch about info" };
-    const data = await response.json();
-    return { success: true, data };
-}
+        const response = await fetch(`${BASE_URL}/api/about`);
+        if (!response.ok) return { success: false, error: "Failed to fetch about info" };
+        const data = await response.json();
+        return { success: true, data };
+    }
 }
 
 export default new API();
