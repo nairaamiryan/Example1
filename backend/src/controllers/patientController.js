@@ -65,8 +65,8 @@ const createPatient = async (req, res) => {
             `UPDATE "patients" SET name_lower = :nameLower, surname_lower = :surnameLower WHERE id = :id`,
             {
                 replacements: {
-                    nameLower: name?.toLowerCase() || "",
-                    surnameLower: surname?.toLowerCase() || "",
+                    nameLower: name ? name.toLowerCase() : "",
+                    surnameLower: surname ? surname.toLowerCase() : "",
                     id: patient.id,
                 },
             }
@@ -85,12 +85,14 @@ const updatePatient = async (req, res) => {
 
         await patient.update(req.body);
         if (req.body.name || req.body.surname) {
+            const newName = req.body.name !== undefined ? req.body.name : patient.name;
+            const newSurname = req.body.surname !== undefined ? req.body.surname : patient.surname;
             await db.sequelize.query(
                 `UPDATE "patients" SET name_lower = :nameLower, surname_lower = :surnameLower WHERE id = :id`,
                 {
                     replacements: {
-                        nameLower: (req.body.name ?? patient.name)?.toLowerCase() || "",
-                        surnameLower: (req.body.surname ?? patient.surname)?.toLowerCase() || "",
+                        nameLower: newName ? newName.toLowerCase() : "",
+                        surnameLower: newSurname ? newSurname.toLowerCase() : "",
                         id: req.params.id,
                     },
                 }
