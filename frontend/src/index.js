@@ -7,7 +7,11 @@ ReactDOM.render(
     <Auth0Provider
         domain={process.env.REACT_APP_AUTH0_DOMAIN}
         clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
-        redirectUri={window.location.origin}
+        authorizationParams={{
+            redirect_uri: window.location.origin
+        }}
+        cacheLocation="localstorage"
+        useRefreshTokens={true}
     >
         <App />
     </Auth0Provider>,
