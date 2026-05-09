@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { NAVBAR } from "./constants";
+import { NAVBAR } from "../constants";
 import api from "../services/api";
 
 const FICTIVE_UNREAD_COUNT = 3;
