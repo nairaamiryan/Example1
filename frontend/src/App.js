@@ -1,152 +1,92 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { NAVBAR } from "../constants";
-import api from "../services/api";
+import Home from "./routes/Home";
+import About from "./routes/About";
+import Patients from "./routes/Patients";
+import Reports from "./routes/Reports";
+import Notifications from "./routes/Notifications";
+import Finances from "./routes/Finances";
+import Notes from "./routes/Notes";
+import "./App.css";
 
-const FICTIVE_UNREAD_COUNT = 3;
+function App() {
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
-const Navbar = () => {
-    const { user, logout } = useAuth0();
-    const [unreadCount, setUnreadCount] = useState(0);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
+    if (isLoading) {
+        return (
+            <div style={loadingStyles.container}>
+                <div style={loadingStyles.spinner} />
+                <p style={loadingStyles.text}>Բեռնվում է...</p>
+            </div>
+        );
+    }
 
-    // Dropdown-ը փակել outside click-ից
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-                setDropdownOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    const refreshCount = () => {
-        const count = parseInt(localStorage.getItem("unreadCount") || "0");
-        setUnreadCount(count);
-    };
-
-    useEffect(() => {
-        const loadInitial = async () => {
-            const stored = localStorage.getItem("unreadCount");
-            if (stored !== null) {
-                setUnreadCount(parseInt(stored));
-                return;
-            }
-            const response = await api.getNotifications();
-            if (response.success) {
-                const total = response.data.length + FICTIVE_UNREAD_COUNT;
-                localStorage.setItem("unreadCount", total);
-                setUnreadCount(total);
-            }
-        };
-        loadInitial();
-        window.addEventListener("notificationsUpdated", refreshCount);
-        return () => window.removeEventListener("notificationsUpdated", refreshCount);
-    }, []);
+    if (!isAuthenticated) {
+        return (
+            <div style={loginStyles.container}>
+                <div style={loginStyles.card}>
+                    <h1 style={loginStyles.title}>Բժշկական համակարգ</h1>
+                    <p style={loginStyles.subtitle}>Մուտք գործելու համար հաստատեք ինքնությունը</p>
+                    <button
+                        style={loginStyles.button}
+                        onClick={() => loginWithRedirect()}
+                    >
+                        Մուտք գործել
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <nav style={styles.nav}>
-            <div style={styles.logo}>{NAVBAR.TITLE}</div>
-
-            <div style={styles.links}>
-                <Link to="/" style={styles.link}>{NAVBAR.HOME}</Link>
-                <Link to="/patients" style={styles.link}>{NAVBAR.PATIENTS}</Link>
-                <Link to="/reports" style={styles.link}>{NAVBAR.REPORTS}</Link>
-                <Link to="/notes" style={styles.link}>Նշումներ</Link>
-                <Link to="/finances" style={styles.link}>Ֆինանսներ</Link>
-                <Link to="/notifications" style={styles.link}>
-                    <div style={styles.notifWrapper}>
-                        {NAVBAR.NOTIFICATIONS}
-                        {unreadCount > 0 && (
-                            <span style={styles.badge}>{unreadCount}</span>
-                        )}
-                    </div>
-                </Link>
-                <Link to="/about" style={styles.link}>{NAVBAR.ABOUT}</Link>
+        <Router>
+            <div className="app">
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/notifications" element={<Notifications />} />
+                    <Route path="/patients" element={<Patients />} />
+                    <Route path="/reports" element={<Reports />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/finances" element={<Finances />} />
+                    <Route path="/notes" element={<Notes />} />
+                </Routes>
             </div>
-
-            {/* User avatar + dropdown */}
-            <div style={styles.userSection} ref={dropdownRef}>
-                <button
-                    style={styles.avatarBtn}
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
-                    <img
-                        src={user.picture}
-                        alt={user.name}
-                        style={styles.avatar}
-                    />
-                    <span style={styles.userName}>{user.name}</span>
-                    <span style={styles.chevron}>{dropdownOpen ? "▲" : "▼"}</span>
-                </button>
-
-                {dropdownOpen && (
-                    <div style={styles.dropdown}>
-                        <div style={styles.dropdownHeader}>
-                            <img src={user.picture} alt={user.name} style={styles.dropdownAvatar} />
-                            <div>
-                                <div style={styles.dropdownName}>{user.name}</div>
-                                <div style={styles.dropdownEmail}>{user.email}</div>
-                            </div>
-                        </div>
-                        <hr style={styles.divider} />
-                        <button
-                            style={styles.logoutBtn}
-                            onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
-                        >
-                            🚪 Ելք
-                        </button>
-                    </div>
-                )}
-            </div>
-        </nav>
+        </Router>
     );
+}
+
+const loadingStyles = {
+    container: {
+        display: "flex", flexDirection: "column", alignItems: "center",
+        justifyContent: "center", height: "100vh", background: "#f0f4f8",
+    },
+    spinner: {
+        width: "40px", height: "40px", border: "4px solid #e2e8f0",
+        borderTop: "4px solid #1a2e4a", borderRadius: "50%",
+        animation: "spin 0.8s linear infinite",
+    },
+    text: { marginTop: "16px", color: "#64748b", fontSize: "15px" },
 };
 
-const styles = {
-    nav: {
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: "15px 30px", background: "#1a2e4a", color: "white",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-    },
-    logo: { fontSize: "20px", fontWeight: "bold" },
-    links: { display: "flex", gap: "25px" },
-    link: { color: "white", textDecoration: "none", fontSize: "14px", transition: "opacity 0.2s" },
-    notifWrapper: { position: "relative", display: "inline-flex", alignItems: "center", gap: "6px" },
-    badge: {
-        background: "#ef4444", color: "white", fontSize: "11px", fontWeight: "600",
-        borderRadius: "50%", width: "18px", height: "18px",
+const loginStyles = {
+    container: {
         display: "flex", alignItems: "center", justifyContent: "center",
+        height: "100vh", background: "#f0f4f8",
     },
-    // User section
-    userSection: { position: "relative" },
-    avatarBtn: {
-        display: "flex", alignItems: "center", gap: "8px",
-        background: "transparent", border: "none", cursor: "pointer", color: "white",
-        padding: "4px 8px", borderRadius: "8px",
+    card: {
+        background: "white", padding: "48px 40px", borderRadius: "16px",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.1)", textAlign: "center",
+        maxWidth: "360px", width: "100%",
     },
-    avatar: { width: "36px", height: "36px", borderRadius: "50%", border: "2px solid rgba(255,255,255,0.4)" },
-    userName: { fontSize: "14px", fontWeight: "500" },
-    chevron: { fontSize: "10px", opacity: "0.7" },
-    // Dropdown
-    dropdown: {
-        position: "absolute", top: "calc(100% + 10px)", right: "0",
-        background: "white", borderRadius: "12px", boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-        minWidth: "220px", zIndex: 1000, overflow: "hidden",
-    },
-    dropdownHeader: { display: "flex", alignItems: "center", gap: "12px", padding: "16px" },
-    dropdownAvatar: { width: "44px", height: "44px", borderRadius: "50%" },
-    dropdownName: { fontSize: "14px", fontWeight: "600", color: "#1a2e4a" },
-    dropdownEmail: { fontSize: "12px", color: "#64748b", marginTop: "2px" },
-    divider: { border: "none", borderTop: "1px solid #f1f5f9", margin: "0" },
-    logoutBtn: {
-        width: "100%", padding: "12px 16px", background: "transparent",
-        border: "none", textAlign: "left", cursor: "pointer",
-        fontSize: "14px", color: "#ef4444", fontWeight: "500",
+    title: { fontSize: "24px", fontWeight: "700", color: "#1a2e4a", marginBottom: "8px" },
+    subtitle: { fontSize: "14px", color: "#64748b", marginBottom: "32px" },
+    button: {
+        background: "#1a2e4a", color: "white", border: "none",
+        padding: "12px 32px", borderRadius: "8px", fontSize: "15px",
+        fontWeight: "600", cursor: "pointer", width: "100%",
+        transition: "background 0.2s",
     },
 };
 
-export default Navbar;
+export default App;
