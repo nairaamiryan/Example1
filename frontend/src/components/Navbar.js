@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { NAVBAR } from "../constants";
+import { NAVBAR } from "./constants";
 import api from "../services/api";
 
 const FICTIVE_UNREAD_COUNT = 3;
