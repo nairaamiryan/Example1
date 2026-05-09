@@ -30,7 +30,11 @@ function App() {
                     <p style={loginStyles.subtitle}>Մուտք գործելու համար հաստատեք ինքնությունը</p>
                     <button
                         style={loginStyles.button}
-                        onClick={() => loginWithRedirect()}
+                        onClick={() => loginWithRedirect({
+                            authorizationParams: {
+                                redirect_uri: window.location.origin
+                            }
+                        })}
                     >
                         Մուտք գործել
                     </button>
