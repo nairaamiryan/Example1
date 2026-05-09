@@ -6,7 +6,7 @@ import App from "./App";
 ReactDOM.render(
     <Auth0Provider
         domain="dev-euxwfhw80ges67ji.au.auth0.com"
-        clientId="ՔՈ_CLIENT_ID_ԱՅՍՏԵՂ"
+        clientId="GU55pj3yUwAZ5GIpcb5I3IAEBloSspV0"
         authorizationParams={{
             redirect_uri: window.location.origin
         }}
