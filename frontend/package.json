@@ -7,11 +7,6 @@
         "start": "parcel index.html",
         "build": "parcel build index.html --no-minify"
     },
-     "alias": {
-        "crypto": false,
-        "buffer": "./node_modules/buffer",
-        "process": "./node_modules/process"
-    },
     "keywords": [],
     "author": "",
     "license": "ISC",
