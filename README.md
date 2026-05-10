@@ -14,6 +14,11 @@
 
 ### Frontend
 - **React** — UI ֆրեյմվորք
+- **HTML** — նշագրման լեզու
+- **CSS** — ոճաշար
+- **JavaScript** — ծրագրավորման լեզու
+- **Webpack** — module bundler
+- **Auth0** — նույնականացման (authentication) ծառայություն
 
 ---
 
@@ -49,7 +54,7 @@ Example1/
 ### Նախապայմաններ
 - Node.js (v14+)
 - PostgreSQL
-- npm կամ yarn
+- npm
 
 ### 1. Կլոնավորում
 
@@ -65,7 +70,7 @@ cd backend/src
 npm install
 ```
 
-### 3. `.env` ֆայլի կարգավորում
+### 3. Backend `.env` ֆայլի կարգավորում
 
 ```env
 DB_HOST=localhost
@@ -93,13 +98,47 @@ npx sequelize-cli db:seed:all
 npm start
 ```
 
-### 7. Frontend-ի տեղադրում և գործարկում
+### 7. Frontend-ի տեղադրում
 
 ```bash
 cd ../../frontend
 npm install
+```
+
+### 8. Frontend `.env` ֆայլի կարգավորում
+
+Frontend թղթապանակում ստեղծել `.env` ֆայլ.
+
+```env
+REACT_APP_API_BASE_URL=http://localhost
+REACT_APP_API_BASE_PORT=5001
+REACT_APP_AUTH0_CLIENT_ID=your_auth0_client_id
+REACT_APP_AUTH0_DOMAIN=your_auth0_domain
+```
+
+### 9. Frontend-ի գործարկում
+
+```bash
 npm start
 ```
+
+Հավելվածը կբացվի `http://localhost:3000` հասցեով։
+
+---
+
+## 🔐 Auth0 նույնականացում
+
+Համակարգն օգտագործում է **Auth0** պատրաստի լուծումը օգտատերերի մուտքի (login) համար։
+
+### Կարգավորում
+1. Ստեղծել հաշիվ [auth0.com](https://auth0.com) կայքում
+2. Ստեղծել նոր **Single Page Application**
+3. Auth0-ի dashboard-ից պատճենել `Domain` և `Client ID` արժեքները
+4. Ավելացնել `.env` ֆայլում.
+   - `REACT_APP_AUTH0_DOMAIN` — Auth0-ի domain
+   - `REACT_APP_AUTH0_CLIENT_ID` — հավելվածի client ID
+5. Auth0-ի dashboard-ում **Allowed Callback URLs**-ում ավելացնել `http://localhost:3000`
+6. **Allowed Logout URLs**-ում ավելացնել `http://localhost:3000`
 
 ---
 
