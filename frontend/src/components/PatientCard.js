@@ -94,6 +94,7 @@ const PatientCard = ({ patient, onDelete, onEdit, onStatusChange }) => {
                             <button style={styles.closeBtn} onClick={() => setShowView(false)}>✕</button>
                         </div>
                         <div style={styles.avatarLarge}>{patient.name[0]}</div>
+                        <div style={styles.detailRow}><b>Անձնագրի համար։</b> {patient.id}</div>
                         <div style={styles.detailRow}><b>Անուն։</b> {patient.name} {patient.surname}</div>
                         <div style={styles.detailRow}><b>Ախտորոշում։</b> {patient.diagnosis}</div>
                         <div style={styles.detailRow}><b>Տարիք։</b> {patient.age}</div>
@@ -182,7 +183,7 @@ const styles = {
     overlay: { position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 },
     modal: { backgroundColor: "#fff", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "400px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "12px" },
     modalHeader: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-    modalTitle: { fontSize: "20px", fontWeight: "600", color: "#1a2e4a" },
+    modalTitle: { fontSize: "20px", fontWeight: "600", color: "#1a2e4a", margin: 0 },
     closeBtn: { background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "#6b7280" },
     detailRow: { fontSize: "15px", color: "#374151", padding: "8px 0", borderBottom: "1px solid #f3f4f6" },
     statusBadge: { padding: "3px 10px", borderRadius: "6px", color: "white", fontSize: "12px", fontWeight: "500" },
