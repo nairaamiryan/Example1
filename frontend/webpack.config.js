@@ -32,7 +32,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: "./index.html",
         }),
-        argv.mode === "production"
+        isProd === "production"
             ? new webpack.EnvironmentPlugin(["API_URL"])
             : new Dotenv(),
         new Dotenv(),
