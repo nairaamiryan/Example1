@@ -30,6 +30,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: "./index.html",
         }),
+        argv.mode === "production"
+            ? new webpack.EnvironmentPlugin(["API_URL"])
+            : new Dotenv(),
         new Dotenv(),
     ],
     devServer: {
