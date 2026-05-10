@@ -8,10 +8,8 @@ body {
 }
 
 .app {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #f4f6f9;
+    min-height: "100vh";
+    background-color: "#f4f6f9";
 }
 @keyframes spin {
     to { transform: rotate(360deg); }
