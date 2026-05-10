@@ -33,7 +33,12 @@ module.exports = {
             template: "./index.html",
         }),
         isProd === "production"
-            ? new webpack.EnvironmentPlugin(["API_URL"])
+            ? new webpack.EnvironmentPlugin([
+                "REACT_APP_API_BASE_URL",
+                "REACT_APP_API_BASE_PORT",
+                "REACT_APP_AUTH0_CLIENT_ID",
+                "REACT_APP_AUTH0_DOMAIN"
+            ])
             : new Dotenv(),
         new Dotenv(),
     ],
