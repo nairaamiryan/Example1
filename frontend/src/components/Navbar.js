@@ -6,7 +6,7 @@ import api from "../services/api";
 
 const FICTIVE_UNREAD_COUNT = 3;
 
-const Navbar = ({ children }) => {
+const Navbar = () => {
     const { logout, user } = useAuth0();
     const [unreadCount, setUnreadCount] = useState(0);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -38,60 +38,64 @@ const Navbar = ({ children }) => {
     }, []);
 
     return (
-        <>
-            <nav style={styles.nav}>
-                <div style={styles.logo}>{NAVBAR.TITLE}</div>
-                <div style={styles.links}>
-                    <Link to="/" style={styles.link}>{NAVBAR.HOME}</Link>
-                    <Link to="/patients" style={styles.link}>{NAVBAR.PATIENTS}</Link>
-                    <Link to="/reports" style={styles.link}>{NAVBAR.REPORTS}</Link>
-                    <Link to="/notes" style={styles.link}>Նշումներ</Link>
-                    <Link to="/finances" style={styles.link}>Ֆինանսներ</Link>
-                    <Link to="/notifications" style={styles.link}>
-                        <div style={styles.notifWrapper}>
-                            {NAVBAR.NOTIFICATIONS}
-                            {unreadCount > 0 && (
-                                <span style={styles.badge}>{unreadCount}</span>
-                            )}
+        <nav style={styles.nav}>
+            <div style={styles.logo}>{NAVBAR.TITLE}</div>
+            <div style={styles.links}>
+                <Link to="/" style={styles.link}>
+                    {NAVBAR.HOME}
+                </Link>
+                <Link to="/patients" style={styles.link}>
+                    {NAVBAR.PATIENTS}
+                </Link>
+                <Link to="/reports" style={styles.link}>
+                    {NAVBAR.REPORTS}
+                </Link>
+                <Link to="/notes" style={styles.link}>
+                    Նշումներ
+                </Link>
+                <Link to="/finances" style={styles.link}>
+                    Ֆինանսներ
+                </Link>
+                <Link to="/notifications" style={styles.link}>
+                    <div style={styles.notifWrapper}>
+                        {NAVBAR.NOTIFICATIONS}
+                        {unreadCount > 0 && (
+                            <span style={styles.badge}>{unreadCount}</span>
+                        )}
+                    </div>
+                </Link>
+                <Link to="/about" style={styles.link}>
+                    {NAVBAR.ABOUT}
+                </Link>
+                {user && (
+                    <div style={styles.avatarWrapper}>
+                        <div
+                            style={styles.avatar}
+                            onClick={() => setMenuOpen((prev) => !prev)}
+                        >
+                            {user.email.charAt(0).toUpperCase()}
                         </div>
-                    </Link>
-                    <Link to="/about" style={styles.link}>{NAVBAR.ABOUT}</Link>
-                    {user && (
-                        <div style={styles.avatarWrapper}>
-                            <div
-                                style={styles.avatar}
-                                onClick={() => setMenuOpen((prev) => !prev)}
-                            >
-                                {user.email.charAt(0).toUpperCase()}
-                            </div>
-                            {menuOpen && (
-                                <div style={styles.dropdown}>
-                                    <div style={styles.dropdownEmail}>
-                                        {user.email}
-                                    </div>
-                                    <button
-                                        style={styles.logoutBtn}
-                                        onClick={() =>
-                                            logout({
-                                                returnTo: window.location.origin,
-                                            })
-                                        }
-                                    >
-                                        Դուրս գալ
-                                    </button>
+                        {menuOpen && (
+                            <div style={styles.dropdown}>
+                                <div style={styles.dropdownEmail}>
+                                    {user.email}
                                 </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-            </nav>
-
-            <main style={styles.main}>{children}</main>
-
-            <footer style={styles.footer}>
-                © 2026 ԱռողջPlatform. Բոլոր իրավունքները պաշտպանված են։
-            </footer>
-        </>
+                                <button
+                                    style={styles.logoutBtn}
+                                    onClick={() =>
+                                        logout({
+                                            returnTo: window.location.origin,
+                                        })
+                                    }
+                                >
+                                    Դուրս գալ
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        </nav>
     );
 };
 
@@ -104,9 +108,9 @@ const styles = {
         background: "#1a2e4a",
         color: "white",
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
+        position: "sticky",   // ← 
+        top: 0,               // ← 
+        zIndex: 100,          // ←
     },
     logo: { fontSize: "20px", fontWeight: "bold" },
     links: { display: "flex", gap: "25px" },
@@ -177,17 +181,6 @@ const styles = {
         cursor: "pointer",
         fontSize: "13px",
         width: "100%",
-    },
-    main: {
-        flex: 1,
-    },
-    footer: {
-        background: "#1a2e4a",
-        color: "white",
-        textAlign: "center",
-        padding: "16px",
-        fontSize: "13px",
-        marginTop: "auto",
     },
 };
 
