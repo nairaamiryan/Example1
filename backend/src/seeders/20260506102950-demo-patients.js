@@ -57,7 +57,7 @@ module.exports = {
     },
     async down(queryInterface) {
         await queryInterface.sequelize.query(
-            `DELETE FROM patients WHERE id LIKE 'AA%'`
+            `DELETE FROM patients WHERE id::text LIKE 'AA%'`
         );
     },
 };
