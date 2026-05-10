@@ -1,13 +1,13 @@
 "use strict";
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.sequelize.query(`ALTER TABLE patients DROP CONSTRAINT patients_pkey CASCADE;`);
-        await queryInterface.sequelize.query(`ALTER TABLE patients DROP COLUMN id;`);
-        await queryInterface.sequelize.query(`ALTER TABLE patients ADD COLUMN id VARCHAR(255) PRIMARY KEY;`);
+        await queryInterface.sequelize.query(
+            `ALTER TABLE patients ALTER COLUMN id TYPE VARCHAR(255);`
+        );
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.sequelize.query(`ALTER TABLE patients DROP CONSTRAINT patients_pkey CASCADE;`);
-        await queryInterface.sequelize.query(`ALTER TABLE patients DROP COLUMN id;`);
-        await queryInterface.sequelize.query(`ALTER TABLE patients ADD COLUMN id SERIAL PRIMARY KEY;`);
+        await queryInterface.sequelize.query(
+            `ALTER TABLE patients ALTER COLUMN id TYPE INTEGER USING id::INTEGER;`
+        );
     },
 };
