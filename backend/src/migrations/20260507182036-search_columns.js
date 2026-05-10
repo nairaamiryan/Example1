@@ -21,8 +21,8 @@ module.exports = {
                 `UPDATE "patients" SET name_lower = :nameLower, surname_lower = :surnameLower WHERE id = :id`,
                 {
                     replacements: {
-                        nameLower: patient.name?.toLowerCase() || "",
-                        surnameLower: patient.surname?.toLowerCase() || "",
+                         nameLower: patient.name ? patient.name.toLowerCase() : "",
+                         surnameLower: patient.surname ? patient.surname.toLowerCase() : "",
                         id: patient.id,
                     },
                 },
