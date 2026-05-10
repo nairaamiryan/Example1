@@ -7,7 +7,7 @@ const DIAGNOSES = [
     "Ասթմա",
     "Սրտի իշեմիկ հիվանդություն",
     "Ինսուլտ",
-    "Արթրիտ",
+    "Արտրիտ",
     "Օստեոպորոզ",
     "Երիկամային անբավարարություն",
     "Լյարդի ցիռոզ",
@@ -28,6 +28,7 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
     if (!isOpen) return null;
 
     const [formData, setFormData] = useState({
+        id: "",
         name: "",
         surname: "",
         age: "",
@@ -46,10 +47,11 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
     const onlyLetters = (value) => /^[\u0531-\u058Fa-zA-Z\s]*$/.test(value);
 
     useEffect(() => {
-        const { name, surname, status, diagnosis, customDiagnosis, age, email } = formData;
+        const { id, name, surname, status, diagnosis, customDiagnosis, age, email } = formData;
         const diagnosisValid = diagnosis === "Այլ" ? customDiagnosis.trim() !== "" : diagnosis !== "";
         setDisabled(
-            !name || !surname || !status || !diagnosisValid || !age  || !email || ageError || nameError || surnameError || emailError
+            !id || !name || !surname || !status || !diagnosisValid || !age || !email || 
+            ageError || nameError || surnameError || emailError
         );
     }, [formData, ageError, nameError, surnameError, emailError]);
 
@@ -95,7 +97,6 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
         } else {
             setEmailError("");
         }
-
         setFormData({ ...formData, email: val });
     };
 
@@ -103,7 +104,7 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
         const finalDiagnosis =
             formData.diagnosis === "Այլ" ? formData.customDiagnosis : formData.diagnosis;
         onSubmit({ ...formData, diagnosis: finalDiagnosis });
-        setFormData({ name: "", surname: "", age: "", diagnosis: "", customDiagnosis: "", status: "" });
+        setFormData({ id: "", name: "", surname: "", age: "", diagnosis: "", customDiagnosis: "", status: "", email: "" });
     };
 
     return (
@@ -113,6 +114,14 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
                     <h2 style={styles.title}>Ավելացնել հիվանդ</h2>
                     <button style={styles.closeButton} onClick={onClose}>✕</button>
                 </div>
+
+                <input
+                    style={styles.input}
+                    type="text"
+                    placeholder="Անձնագրի համար"
+                    value={formData.id}
+                    onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                />
 
                 <input
                     style={styles.input}
@@ -140,6 +149,7 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
                     onChange={handleEmailChange}
                 />
                 {emailError && <span style={styles.error}>{emailError}</span>}
+
                 <input
                     style={styles.input}
                     type="number"
@@ -196,56 +206,16 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
 };
 
 const styles = {
-    modalOverlay: {
-        position: "fixed",
-        top: 0, left: 0,
-        width: "100%", height: "100%",
-        backgroundColor: "rgba(0,0,0,0.5)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        zIndex: 1000,
-    },
-    modalContent: {
-        backgroundColor: "#fff",
-        padding: "24px",
-        borderRadius: "12px",
-        width: "100%",
-        maxWidth: "420px",
-        boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-        display: "flex", flexDirection: "column", gap: "12px",
-    },
-    titleContainer: {
-        display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px",
-    },
-    title: {
-        fontSize: "20px", fontWeight: "600", color: "#1a2e4a",
-    },
-    closeButton: {
-        background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "#6b7280",
-    },
-    input: {
-        width: "90%", padding: "10px 12px", borderRadius: "8px",
-        border: "1px solid #d1d5db", fontSize: "14px", outline: "none",
-    },
-    select: {
-        width: "95%", padding: "10px 12px", borderRadius: "8px",
-        border: "1px solid #d1d5db", fontSize: "14px",
-        backgroundColor: "#fff", outline: "none", cursor: "pointer",
-    },
-    error: {
-        color: "#ef4444", fontSize: "12px", marginTop: "-8px",
-    },
-    addButton: {
-        marginTop: "10px", padding: "10px",
-        backgroundColor: "#2563eb", color: "#fff",
-        border: "none", borderRadius: "8px",
-        cursor: "pointer", fontWeight: "500",
-    },
-    addButtonDisabled: {
-        marginTop: "10px", padding: "10px",
-        backgroundColor: "#ccc", color: "#fff",
-        border: "none", borderRadius: "8px",
-        cursor: "not-allowed", fontWeight: "500",
-    },
+    modalOverlay: { position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 },
+    modalContent: { backgroundColor: "#fff", padding: "24px", borderRadius: "12px", width: "100%", maxWidth: "420px", boxShadow: "0 10px 25px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "12px" },
+    titleContainer: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" },
+    title: { fontSize: "20px", fontWeight: "600", color: "#1a2e4a", margin: 0 },
+    closeButton: { background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "#6b7280" },
+    input: { width: "90%", padding: "10px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", outline: "none" },
+    select: { width: "95%", padding: "10px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", backgroundColor: "#fff", outline: "none", cursor: "pointer" },
+    error: { color: "#ef4444", fontSize: "12px", marginTop: "-8px" },
+    addButton: { marginTop: "10px", padding: "10px", backgroundColor: "#2563eb", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
+    addButtonDisabled: { marginTop: "10px", padding: "10px", backgroundColor: "#ccc", color: "#fff", border: "none", borderRadius: "8px", cursor: "not-allowed", fontWeight: "500" },
 };
 
 export default AddPatientModal;
