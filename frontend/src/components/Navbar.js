@@ -108,6 +108,9 @@ const styles = {
         background: "#1a2e4a",
         color: "white",
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        position: "sticky",   // ← 
+        top: 0,               // ← 
+        zIndex: 100,          // ← 
     },
     logo: { fontSize: "20px", fontWeight: "bold" },
     links: { display: "flex", gap: "25px" },
