@@ -1,5 +1,4 @@
 "use strict";
-
 const NAMES = [
     "Արամ", "Լուսինե", "Գևորգ", "Սոնա", "Տիգրան",
     "Անուշ", "Հրանտ", "Նարինե", "Վարդան", "Մարիամ",
@@ -8,7 +7,6 @@ const NAMES = [
     "Նաիրա", "Ալեն", "Արման", "Սուսան", "Ռուզան",
     "Համալյա", "Նար", "Շուշան", "Թամարա", "Բաղրատ"
 ];
-
 const SURNAMES = [
     "Սարգսյան", "Պետրոսյան", "Ավագյան", "Մելքոնյան", "Կարապետյան",
     "Դավթյան", "Ասատրյան", "Ղազարյան", "Հակոբյան", "Գրիգորյան",
@@ -16,7 +14,6 @@ const SURNAMES = [
     "Հարությունյան", "Մարտիրոսյան", "Ստեփանյան", "Սիմոնյան", "Գալստյան",
     "Մուրադյան", "Մանուկյան", "Զաքարյան", "Աբրահամյան", "Գևորգյան"
 ];
-
 const DIAGNOSES = [
     "Հիպերտոնիա", "Դիաբետ", "Միգրեն", "Արտրիտ", "Ինսուլտ",
     "Ասթմա", "Սրտի իշեմիա", "Թիրոիդ", "Բրոնխիտ", "Պնեւմոնիա",
@@ -25,7 +22,6 @@ const DIAGNOSES = [
     "Դեպրեսիա", "Անհանգստություն", "Հիստերիա", "Շաքարային հիվանդություն",
     "Սրտի անբավարարություն", "Գլխացավ", "Քնի խանգարում"
 ];
-
 const STATUSES = ["active", "stable", "pending"];
 
 module.exports = {
@@ -39,28 +35,29 @@ module.exports = {
         for (let day = 0; day <= totalDays; day++) {
             const date = new Date(startDate);
             date.setDate(startDate.getDate() + day);
-            const count = 10 + Math.floor(Math.random() * 6); // 10-15 հիվանդ/օր
+            const count = 10 + Math.floor(Math.random() * 6);
 
             for (let p = 0; p < count; p++) {
+                const paddedId = String(counter).padStart(8, '0');
                 patients.push({
+                    id: `AA${paddedId}`,
                     name: NAMES[Math.floor(Math.random() * NAMES.length)],
                     surname: SURNAMES[Math.floor(Math.random() * SURNAMES.length)],
                     age: 18 + Math.floor(Math.random() * 65),
                     diagnosis: DIAGNOSES[Math.floor(Math.random() * DIAGNOSES.length)],
                     status: STATUSES[Math.floor(Math.random() * STATUSES.length)],
-                    email: `patient${counter++}@example.com`,
+                    email: `patient${counter}@example.com`,
                     createdAt: date,
                     updatedAt: date,
                 });
+                counter++;
             }
         }
-
         await queryInterface.bulkInsert("patients", patients);
     },
-
     async down(queryInterface) {
         await queryInterface.sequelize.query(
-            `DELETE FROM patients WHERE email LIKE 'patient1%' OR email LIKE 'patient2%' OR email LIKE 'patient3%' OR email LIKE 'patient4%'`
+            `DELETE FROM patients WHERE id LIKE 'AA%'`
         );
     },
 };
