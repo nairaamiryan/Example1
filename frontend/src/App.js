@@ -9,7 +9,6 @@ import Notifications from "./routes/Notifications";
 import Finances from "./routes/Finances";
 import Notes from "./routes/Notes";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Navbar from "./components/Navbar";
 import api from "./services/api";
 import "./App.css";
 
@@ -20,7 +19,7 @@ function App() {
         isLoading,
         loginWithRedirect,
     } = useAuth0();
-
+        
     useEffect(() => {
         if (!isAuthenticated) return;
         const setToken = async () => {
@@ -29,7 +28,7 @@ function App() {
         };
         setToken();
     }, [isAuthenticated, getAccessTokenSilently]);
-
+    
     if (isLoading) {
         return (
             <div style={loadingStyles.container}>
@@ -61,38 +60,36 @@ function App() {
     return (
         <Router>
             <div className="app">
-                <Navbar>
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={<ProtectedRoute component={Home} />}
-                        />
-                        <Route
-                            path="/notifications"
-                            element={<ProtectedRoute component={Notifications} />}
-                        />
-                        <Route
-                            path="/patients"
-                            element={<ProtectedRoute component={Patients} />}
-                        />
-                        <Route
-                            path="/reports"
-                            element={<ProtectedRoute component={Reports} />}
-                        />
-                        <Route
-                            path="/about"
-                            element={<ProtectedRoute component={About} />}
-                        />
-                        <Route
-                            path="/finances"
-                            element={<ProtectedRoute component={Finances} />}
-                        />
-                        <Route
-                            path="/notes"
-                            element={<ProtectedRoute component={Notes} />}
-                        />
-                    </Routes>
-                </Navbar>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<ProtectedRoute component={Home} />}
+                    />
+                    <Route
+                        path="/notifications"
+                        element={<ProtectedRoute component={Notifications} />}
+                    />
+                    <Route
+                        path="/patients"
+                        element={<ProtectedRoute component={Patients} />}
+                    />
+                    <Route
+                        path="/reports"
+                        element={<ProtectedRoute component={Reports} />}
+                    />
+                    <Route
+                        path="/about"
+                        element={<ProtectedRoute component={About} />}
+                    />
+                    <Route
+                        path="/finances"
+                        element={<ProtectedRoute component={Finances} />}
+                    />
+                    <Route
+                        path="/notes"
+                        element={<ProtectedRoute component={Notes} />}
+                    />
+                </Routes>
             </div>
         </Router>
     );
