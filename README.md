@@ -110,8 +110,7 @@ npm install
 Frontend թղթապանակում ստեղծել `.env` ֆայլ.
 
 ```env
-REACT_APP_API_BASE_URL=http://localhost
-REACT_APP_API_BASE_PORT=5001
+REACT_APP_API_BASE_URL=http://localhost:5001
 REACT_APP_AUTH0_CLIENT_ID=your_auth0_client_id
 REACT_APP_AUTH0_DOMAIN=your_auth0_domain
 ```
