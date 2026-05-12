@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import StatCard from "../components/StatCard";
+import Footer from "../components/Footer";
 import {
     LineChart,
     Line,
@@ -401,6 +402,7 @@ const Home = () => {
                     </table>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };
