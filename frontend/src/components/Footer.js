@@ -1,22 +1,23 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const LINKS = [
     {
         title: "Հարթակ",
         items: [
-            { label: "Գլխավոր",     href: "/" },
-            { label: "Հիվանդներ",   href: "/patients" },
-            { label: "Նշումներ",    href: "/notes" },
+            { label: "Գլխավոր",        href: "/" },
+            { label: "Հիվանդներ",      href: "/patients" },
+            { label: "Նշումներ",       href: "/notes" },
             { label: "Հաշվետվություն", href: "/reports" },
         ],
     },
     {
         title: "Աջակցություն",
         items: [
-            { label: "Կոնտակտ",       href: "/contact" },
-            { label: "Օգնություն",     href: "/help" },
-            { label: "Գաղտնիություն",  href: "/privacy" },
-            { label: "Պայմաններ",      href: "/terms" },
+            { label: "Կոնտակտ",      href: "/contact" },
+            { label: "Օգնություն",    href: "/help" },
+            { label: "Գաղտնիություն", href: "/privacy" },
+            { label: "Պայմաններ",     href: "/terms" },
         ],
     },
 ];
@@ -36,7 +37,7 @@ const Footer = () => {
                     </div>
                     <p style={styles.tagline}>
                         Բժշկական կառավարման ժամանակակից լուծում՝<br />
-                        հիվանդների, բժիշկների,նշումների և հաշվետվությունների համար։
+                        հիվանդների, բժիշկների, նշումների և հաշվետվությունների համար։
                     </p>
                 </div>
 
@@ -46,12 +47,15 @@ const Footer = () => {
                         <div key={col.title} style={styles.col}>
                             <div style={styles.colTitle}>{col.title}</div>
                             {col.items.map((item) => (
-                                <a key={item.label} href={item.href} style={styles.link}
+                                <Link
+                                    key={item.label}
+                                    to={item.href}
+                                    style={styles.link}
                                     onMouseEnter={(e) => e.target.style.color = "#2563eb"}
                                     onMouseLeave={(e) => e.target.style.color = "#cbd5e1"}
                                 >
                                     {item.label}
-                                </a>
+                                </Link>
                             ))}
                         </div>
                     ))}
@@ -62,15 +66,23 @@ const Footer = () => {
             <div style={styles.bottom}>
                 <span style={styles.copy}>© {year} ԱռողջPlatform։ Բոլոր իրավունքները պաշտպանված են։</span>
                 <div style={styles.bottomLinks}>
-                    <a href="/privacy" style={styles.bottomLink}
+                    <Link
+                        to="/privacy"
+                        style={styles.bottomLink}
                         onMouseEnter={(e) => e.target.style.color = "#2563eb"}
                         onMouseLeave={(e) => e.target.style.color = "#6b7280"}
-                    >Գաղտնիություն</a>
+                    >
+                        Գաղտնիություն
+                    </Link>
                     <span style={styles.dot}>·</span>
-                    <a href="/terms" style={styles.bottomLink}
+                    <Link
+                        to="/terms"
+                        style={styles.bottomLink}
                         onMouseEnter={(e) => e.target.style.color = "#2563eb"}
                         onMouseLeave={(e) => e.target.style.color = "#6b7280"}
-                    >Պայմաններ</a>
+                    >
+                        Պայմաններ
+                    </Link>
                 </div>
             </div>
         </footer>
@@ -100,13 +112,13 @@ const styles = {
     logoIcon: { fontSize: "22px" },
     logoText: { fontSize: "20px", fontWeight: "700", color: "#ffffff" },
     logoAccent: { color: "#2563eb" },
-    tagline: { fontSize: "13px", color: "#cbd5e1", lineHeight: "1.7", margin: 0 }, // ← #94a3b8 → #cbd5e1
+    tagline: { fontSize: "13px", color: "#cbd5e1", lineHeight: "1.7", margin: 0 },
 
     // Links
     links: { display: "flex", gap: "48px", flexWrap: "wrap" },
     col: { display: "flex", flexDirection: "column", gap: "10px" },
-    colTitle: { fontSize: "13px", fontWeight: "600", color: "#ffffff", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.05em" }, // ← #1a2e4a → #ffffff
-    link: { fontSize: "13px", color: "#cbd5e1", textDecoration: "none" }, // ← #94a3b8 → #cbd5e1
+    colTitle: { fontSize: "13px", fontWeight: "600", color: "#ffffff", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.05em" },
+    link: { fontSize: "13px", color: "#cbd5e1", textDecoration: "none" },
 
     // Bottom
     bottom: {
