@@ -25,6 +25,11 @@ const MONTHS_HY = {
     Sep: "Սպտ", Oct: "Հկտ", Nov: "Նյմ", Dec: "Դկտ",
 };
 
+const DAYS_HY = {
+    Mon: "Երկ", Tue: "Երք", Wed: "Չոր", Thu: "Հնգ",
+    Fri: "Ուրբ", Sat: "Շբթ", Sun: "Կիր",
+    };
+
 const PERIOD_LABELS = {
     today: "Այսօր",
     weekly: "Շաբաթ",
