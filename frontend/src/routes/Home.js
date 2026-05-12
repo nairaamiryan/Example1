@@ -275,7 +275,8 @@ const Home = () => {
                                             />
                                         ))}
                                     </Pie>
-                                    <Tooltip />
+                                    <Tooltip formatter={(value, name) => [value, name]}
+                                     labelFormatter={(label) => MONTHS_HY[label] || DAYS_HY[label] || label} />
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
