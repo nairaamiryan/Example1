@@ -343,7 +343,7 @@ const Home = () => {
                                     <Legend />
                                     <Bar
                                         dataKey="count"
-                                        name="Հիվանդներ"
+                                        name="Զբաղվածության սանդղակ"
                                         fill="#4a90d9"
                                         radius={[6, 6, 0, 0]}
                                     />
