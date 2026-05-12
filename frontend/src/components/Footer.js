@@ -48,7 +48,7 @@ const Footer = () => {
                             {col.items.map((item) => (
                                 <a key={item.label} href={item.href} style={styles.link}
                                     onMouseEnter={(e) => e.target.style.color = "#2563eb"}
-                                    onMouseLeave={(e) => e.target.style.color = "#9ca3af"}
+                                    onMouseLeave={(e) => e.target.style.color = "#cbd5e1"}
                                 >
                                     {item.label}
                                 </a>
@@ -100,13 +100,13 @@ const styles = {
     logoIcon: { fontSize: "22px" },
     logoText: { fontSize: "20px", fontWeight: "700", color: "#ffffff" },
     logoAccent: { color: "#2563eb" },
-    tagline: { fontSize: "13px", color: "#94a3b8", lineHeight: "1.7", margin: 0 },
+    tagline: { fontSize: "13px", color: "#cbd5e1", lineHeight: "1.7", margin: 0 }, // ← #94a3b8 → #cbd5e1
 
     // Links
     links: { display: "flex", gap: "48px", flexWrap: "wrap" },
     col: { display: "flex", flexDirection: "column", gap: "10px" },
-    colTitle: { fontSize: "13px", fontWeight: "600", color: "#1a2e4a", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.05em" },
-    link: { fontSize: "13px", color: "#94a3b8", textDecoration: "none" },
+    colTitle: { fontSize: "13px", fontWeight: "600", color: "#ffffff", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.05em" }, // ← #1a2e4a → #ffffff
+    link: { fontSize: "13px", color: "#cbd5e1", textDecoration: "none" }, // ← #94a3b8 → #cbd5e1
 
     // Bottom
     bottom: {
