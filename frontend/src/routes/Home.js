@@ -275,8 +275,7 @@ const Home = () => {
                                             />
                                         ))}
                                     </Pie>
-                                    <Tooltip formatter={(value, name) => [value, name]}
-                                     labelFormatter={(label) => MONTHS_HY[label] || DAYS_HY[label] || label} />
+                                    <Tooltip />
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
@@ -311,11 +310,13 @@ const Home = () => {
                                 </div>
                             </div>
                             <ResponsiveContainer width="100%" height={250}>
+                                           
                                 <LineChart data={getLineData()}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="month" tickFormatter={(val) => MONTHS_HY[val] || val} />
                                     <YAxis />
-                                    <Tooltip />
+                                    <Tooltip formatter={(value, name) => [value, name]}
+                                     labelFormatter={(label) => MONTHS_HY[label] || DAYS_HY[label] || label} />
                                     <Legend />
                                     <Line
                                         type="monotone"
