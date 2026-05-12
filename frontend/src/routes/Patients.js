@@ -4,6 +4,7 @@ import PatientCard from "../components/PatientCard";
 import api from "../services/api";
 import { LOADING, PATIENTS } from "../constants";
 import AddPatientModal from "../components/AddPatientModal";
+import Footer from "../components/Footer";
 
 const LIMIT_OPTIONS = [5, 10, 20, 50];
 
@@ -325,6 +326,7 @@ const Patients = () => {
                     </div>
                 )}
             </div>
+             <Footer />
         </div>
     );
 };
