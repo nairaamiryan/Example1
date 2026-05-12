@@ -5,9 +5,9 @@ const LINKS = [
         title: "Հարթակ",
         items: [
             { label: "Գլխավոր",     href: "/" },
-            { label: "Հիվանդներ",   href: "/patients" },
-            { label: "Նշումներ",    href: "/notes" },
-            { label: "Հաշվետվություն", href: "/reports" },
+            { label: "Հիվանդներ",   href: "/" },
+            { label: "Նշումներ",    href: "/" },
+            { label: "Հաշվետվություն", href: "/" },
         ],
     },
     {
