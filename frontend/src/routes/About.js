@@ -4,6 +4,7 @@ import DoctorCard from "../components/DoctorCard";
 import api from "../services/api";
 import { LOADING, ABOUT } from "../constants";
 import AddDoctorModal from "../components/AddDoctorModal";
+import Footer from "../components/Footer";
 
 const InfoCard = ({ icon, label, value }) => {
     const [hovered, setHovered] = useState(false);
@@ -194,6 +195,7 @@ const About = () => {
                     ))}
                 </div>
             </div>
+         <Footer />
         </div>
     );
 };
