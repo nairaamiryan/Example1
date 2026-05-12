@@ -103,10 +103,12 @@ const Patients = () => {
         setShowForm(false);
         loadPatients();
     } else {
-        // error-ը փոխանցի modal-ին
-        return res.error;
+        if (res.status === 409) {
+            return "Այս անձնագրի համարով հիվանդն արդեն գրանցված է";
+        }
+        return "Սխալ տեղի ունեցավ։ Խնդրում ենք կրկին փորձել";
     }
-   };
+};
 
     const handleDelete = (id, name) => setDeleteModal({ open: true, id, name });
 
