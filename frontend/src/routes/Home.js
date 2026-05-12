@@ -21,7 +21,7 @@ import { STATISTICS, LOADING } from "../constants";
 import api from "../services/api";
 const MONTHS_HY = {
     Jan: "Հնվ", Feb: "Փտր", Mar: "Մրտ", Apr: "Ապր",
-    May: "Մյս", Jun: "Հնս", Jul: "Հլс", Aug: "Օգս",
+    May: "Մյս", Jun: "Հնս", Jul: "Հլս", Aug: "Օգս",
     Sep: "Սպտ", Oct: "Հկտ", Nov: "Նյմ", Dec: "Դկտ",
 };
 
@@ -312,7 +312,9 @@ const Home = () => {
                             <ResponsiveContainer width="100%" height={250}>
                                 <LineChart data={getLineData()}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="month" tickFormatter={(val) => MONTHS_HY[val] || val} />
+                                    <XAxis dataKey="month" tickFormatter={(val) => MONTHS_HY[val] || val} />        
+                                    <YAxis />
+                                    <XAxis dataKey="day" tickFormatter={(val) => DAYS_HY[val] || val} />
                                     <YAxis />
                                     <Tooltip />
                                     <Legend />
