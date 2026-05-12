@@ -43,6 +43,7 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
     const [ageError, setAgeError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [disabled, setDisabled] = useState(true);
+    const [serverError, setServerError] = useState("");
 
     const onlyLetters = (value) => /^[\u0531-\u058Fa-zA-Z\s]*$/.test(value);
 
@@ -100,12 +101,17 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
         setFormData({ ...formData, email: val });
     };
 
-    const handleSubmit = () => {
-        const finalDiagnosis =
-            formData.diagnosis === "Այլ" ? formData.customDiagnosis : formData.diagnosis;
-        onSubmit({ ...formData, diagnosis: finalDiagnosis });
+   const handleSubmit = async () => {
+    const finalDiagnosis =
+        formData.diagnosis === "Այլ" ? formData.customDiagnosis : formData.diagnosis;
+    const error = await onSubmit({ ...formData, diagnosis: finalDiagnosis });
+    if (error) {
+        setServerError(error);  // ← error-ը ցուցադրի
+    } else {
+        setServerError("");
         setFormData({ id: "", name: "", surname: "", age: "", diagnosis: "", customDiagnosis: "", status: "", email: "" });
-    };
+    }
+};
 
     return (
         <div style={styles.modalOverlay}>
@@ -193,11 +199,17 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
                     <option value="pending">Սպասող</option>
                 </select>
 
-                <button
-                    disabled={disabled}
-                    style={disabled ? styles.addButtonDisabled : styles.addButton}
-                    onClick={handleSubmit}
-                >
+               {serverError && (
+               <div style={styles.serverError}>
+               ⚠️ {serverError}
+                </div>
+               )}
+
+<button
+    disabled={disabled}
+    style={disabled ? styles.addButtonDisabled : styles.addButton}
+    onClick={handleSubmit}
+>
                     Ավելացնել
                 </button>
             </div>
@@ -214,6 +226,14 @@ const styles = {
     input: { width: "90%", padding: "10px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", outline: "none" },
     select: { width: "95%", padding: "10px 12px", borderRadius: "8px", border: "1px solid #d1d5db", fontSize: "14px", backgroundColor: "#fff", outline: "none", cursor: "pointer" },
     error: { color: "#ef4444", fontSize: "12px", marginTop: "-8px" },
+    serverError: {
+    backgroundColor: "#fef2f2",
+    border: "1px solid #fecaca",
+    color: "#dc2626",
+    borderRadius: "8px",
+    padding: "10px 12px",
+    fontSize: "13px",
+},
     addButton: { marginTop: "10px", padding: "10px", backgroundColor: "#2563eb", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "500" },
     addButtonDisabled: { marginTop: "10px", padding: "10px", backgroundColor: "#ccc", color: "#fff", border: "none", borderRadius: "8px", cursor: "not-allowed", fontWeight: "500" },
 };
