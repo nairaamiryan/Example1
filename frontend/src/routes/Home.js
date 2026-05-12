@@ -313,7 +313,7 @@ const Home = () => {
                                            
                                 <LineChart data={getLineData()}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="month" tickFormatter={(val) => MONTHS_HY[val] || val} />
+                                    <XAxis dataKey="month" tickFormatter={(val) => MONTHS_HY[val] || DAYS_HY[val] || val} />
                                     <YAxis />
                                     <Tooltip formatter={(value, name) => [value, name]}
                                      labelFormatter={(label) => MONTHS_HY[label] || DAYS_HY[label] || label} />
