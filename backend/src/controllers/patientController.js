@@ -52,8 +52,9 @@ const getPatients = async (req, res) => {
 
 const createPatient = async (req, res) => {
     try {
-        const { name, surname, age, diagnosis, status, email } = req.body;
+        const { id, name, surname, age, diagnosis, status, email } = req.body;
         const patient = await Patient.create({
+            id,
             name,
             surname,
             age,
