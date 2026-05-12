@@ -201,7 +201,7 @@ const AddPatientModal = ({ isOpen, onClose, onSubmit }) => {
 
                {serverError && (
                <div style={styles.serverError}>
-               ⚠️ {Գործընթացը ձախողվեց}
+               ⚠️ Գործընթացը ձախողվեց {serverError}
                 </div>
                )}
 
