@@ -312,10 +312,16 @@ const Home = () => {
                             <ResponsiveContainer width="100%" height={250}>
                                 <LineChart data={getLineData()}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="month" tickFormatter={(val) => MONTHS_HY[val] || val} />        
-                                    <YAxis />
-                                    <XAxis dataKey="day" tickFormatter={(val) => DAYS_HY[val] || val} />
-                                    <YAxis />
+                                    <XAxis
+  dataKey={filter.period === "weekly" ? "day" : "month"}
+  tickFormatter={(val) =>
+    filter.period === "weekly"
+      ? DAYS_HY[val] || val
+      : MONTHS_HY[val] || val
+  }
+/>
+
+<YAxis />
                                     <Tooltip />
                                     <Legend />
                                     <Line
