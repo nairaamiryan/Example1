@@ -98,12 +98,15 @@ const Patients = () => {
 
     // ── Mutations ──────────────────────────────────────────────
     const addPatient = async (patientData) => {
-        const res = await api.addPatient(patientData);
-        if (res.success) {
-            setShowForm(false);
-            loadPatients();
-        }
-    };
+    const res = await api.addPatient(patientData);
+    if (res.success) {
+        setShowForm(false);
+        loadPatients();
+    } else {
+        // error-ը փոխանցի modal-ին
+        return res.error;
+    }
+   };
 
     const handleDelete = (id, name) => setDeleteModal({ open: true, id, name });
 
