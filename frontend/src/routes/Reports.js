@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import api from "../services/api";
 import Report from "../components/Report";
 import { REPORTS, LOADING } from "../constants";
+import Footer from "../components/Footer";
 
 const StatCard = ({ value, label, color }) => {
     const [hovered, setHovered] = useState(false);
@@ -314,6 +315,7 @@ const Reports = () => {
                     )}
                 </div>
             </div>
+                    <Footer />
         </div>
     );
 };
