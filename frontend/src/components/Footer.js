@@ -79,7 +79,7 @@ const Footer = () => {
 
 const styles = {
     footer: {
-        backgroundColor: "#f9fafb",
+        backgroundColor: "#1a2e4a",
         borderTop: "1px solid #e5e7eb",
         marginTop: "60px",
         fontFamily: "sans-serif",
@@ -98,22 +98,22 @@ const styles = {
     brand: { maxWidth: "280px" },
     logo: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" },
     logoIcon: { fontSize: "22px" },
-    logoText: { fontSize: "20px", fontWeight: "700", color: "#1a2e4a" },
+    logoText: { fontSize: "20px", fontWeight: "700", color: "#ffffff" },
     logoAccent: { color: "#2563eb" },
-    tagline: { fontSize: "13px", color: "#6b7280", lineHeight: "1.7", margin: 0 },
+    tagline: { fontSize: "13px", color: "#94a3b8", lineHeight: "1.7", margin: 0 },
 
     // Links
     links: { display: "flex", gap: "48px", flexWrap: "wrap" },
     col: { display: "flex", flexDirection: "column", gap: "10px" },
     colTitle: { fontSize: "13px", fontWeight: "600", color: "#1a2e4a", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.05em" },
-    link: { fontSize: "13px", color: "#9ca3af", textDecoration: "none", transition: "color 0.15s" },
+    link: { fontSize: "13px", color: "#94a3b8", textDecoration: "none" },
 
     // Bottom
     bottom: {
         maxWidth: "1200px",
         margin: "0 auto",
         padding: "18px 24px",
-        borderTop: "1px solid #e5e7eb",
+        borderTop: "1px solid #2d4a6e",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
