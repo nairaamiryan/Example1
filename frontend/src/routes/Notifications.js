@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import api from "../services/api";
 import { LOADING, NOTIFICATIONS } from "../constants";
 import NotificationCard from "../components/NotificationCard";
+import Footer from "../components/Footer";
 
 const ONLY_LETTERS = /^[a-zA-Zաբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ\u0531-\u0587\s]*$/i;
 
@@ -254,6 +255,7 @@ const Notification = () => {
                     )}
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };
