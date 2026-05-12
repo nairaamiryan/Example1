@@ -5,7 +5,7 @@ const LINKS = [
         title: "Հարթակ",
         items: [
             { label: "Գլխավոր",     href: "/" },
-            { label: "Հիվանդներ",   href: "//" },
+            { label: "Հիվանդներ",   href: "https://example1-xzau.onrender.com/patients" },
             { label: "Նշումներ",    href: "/notes" },
             { label: "Հաշվետվություն", href: "/reports" },
         ],
