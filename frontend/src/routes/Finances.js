@@ -6,6 +6,7 @@ import InvoiceCreate from "../components/InvoiceCreate";
 import PaymentAccept from "../components/PaymentAccept";
 import InsuranceCheck from "../components/InsuranceCheck";
 import ExportReport from "../components/ExportReport";
+import Footer from "../components/Footer";
 
 const Finances = () => {
     const [items, setItems] = useState([]);
@@ -156,6 +157,7 @@ const Finances = () => {
                     )}
                 </div>
             </div>
+             <Footer />
         </div>
     );
 };
