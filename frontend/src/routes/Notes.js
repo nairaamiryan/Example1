@@ -6,6 +6,7 @@ import AddDiagnosis from "../components/AddDiagnosis";
 import Prescription from "../components/Prescription";
 import LabTest from "../components/LabTest";
 import DocumentAttach from "../components/DocumentAttach";
+import Footer from "../components/Footer";
 
 const Notes = () => {
     const [notes, setNotes] = useState([]);
@@ -157,6 +158,7 @@ const Notes = () => {
                     )}
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };
