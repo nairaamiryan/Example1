@@ -21,7 +21,7 @@ class API {
         const response = await fetch(`${BASE_URL}/api/patients${query}`, {
             headers: this.getHeaders(),
         });
-        if (!response.ok) return { success: false, error: "Failed to fetch patients" };
+        if (!response.ok) return { success: false, status: response.status };
         const data = await response.json();
         // backend returns { patients: [...], total: N }
         return { success: true, data };
