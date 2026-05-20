@@ -12,8 +12,8 @@ const getPatients = async (req, res) => {
             const trimmedSearch = search.trim().toLowerCase();
             const parts = trimmedSearch.split(/\s+/);
 
-            const likeName = (val) => sequelize.where(sequelize.fn("LOWER", sequelize.col("name")), { [Op.like]: `%${val}%` });
-            const likeSurname = (val) => sequelize.where(sequelize.fn("LOWER", sequelize.col("surname")), { [Op.like]: `%${val}%` });
+            const likeName = (val) => ({ name_lower: { [Op.like]: `%${val}%` } });
+            const likeSurname = (val) => ({ surname_lower: { [Op.like]: `%${val}%` } });
 
             if (parts.length >= 2) {
                 where[Op.or] = [
