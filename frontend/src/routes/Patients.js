@@ -43,6 +43,7 @@ const Patients = () => {
     const [statusFilter, setStatusFilter] = useState("Բոլորը");
     const [showForm, setShowForm]       = useState(false);
     const [deleteModal, setDeleteModal] = useState({ open: false, id: null, name: "" });
+    const [doctors, setDoctors]         = useState([]);
 
     // pagination
     const [limit, setLimit]             = useState(10);
@@ -79,6 +80,14 @@ const Patients = () => {
     useEffect(() => {
         loadPatients();
     }, [loadPatients]);
+
+    useEffect(() => {
+        const loadDoctors = async () => {
+            const res = await api.getDoctors();
+            if (res.success) setDoctors(res.data);
+        };
+        loadDoctors();
+    }, []);
 
     // Reset to page 1 when search changes
     useEffect(() => {
@@ -124,6 +133,7 @@ const Patients = () => {
             setPatients((prev) =>
                 prev.map((p) => (p.id === id ? { ...p, ...updatedData } : p))
             );
+            loadPatients();
         }
     };
 
@@ -248,6 +258,7 @@ const Patients = () => {
                             <PatientCard
                                 key={patient.id}
                                 patient={patient}
+                                doctors={doctors}
                                 onDelete={handleDelete}
                                 onEdit={handleEdit}
                                 onStatusChange={handleStatusChange}

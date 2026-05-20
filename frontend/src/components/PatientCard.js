@@ -4,7 +4,7 @@ import { PATIENTS, STATUS_COLORS } from "../constants";
 const STATUSES = ["active", "stable", "pending"];
 const STATUS_LABELS = { active: "Ակտիվ", stable: "Կայուն", pending: "Սպասող" };
 
-const PatientCard = ({ patient, onDelete, onEdit, onStatusChange }) => {
+const PatientCard = ({ patient, doctors = [], onDelete, onEdit, onStatusChange }) => {
     const [hovered, setHovered] = useState(false);
     const [showView, setShowView] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
@@ -17,6 +17,7 @@ const PatientCard = ({ patient, onDelete, onEdit, onStatusChange }) => {
         diagnosis: patient.diagnosis,
         age: patient.age,
         status: patient.status,
+        doctorId: patient.doctorId || "",
     });
 
     const onlyLetters = (value) => /^[\u0531-\u058Fa-zA-Z\s]*$/.test(value);
@@ -99,6 +100,10 @@ const PatientCard = ({ patient, onDelete, onEdit, onStatusChange }) => {
                         <div style={styles.detailRow}><b>Ախտորոշում։</b> {patient.diagnosis}</div>
                         <div style={styles.detailRow}><b>Տարիք։</b> {patient.age}</div>
                         <div style={styles.detailRow}>
+                            <b>Բուժող բժիշկ։</b>{" "}
+                            {patient.doctor ? `${patient.doctor.name} ${patient.doctor.surname} (${patient.doctor.specialty})` : "Նշանակված չէ"}
+                        </div>
+                        <div style={styles.detailRow}>
                             <b>Կարգավիճակ։</b>{" "}
                             <span style={{ ...styles.statusBadge, background: STATUS_COLORS(patient.status) }}>
                                 {STATUS_LABELS[patient.status] || patient.status}
@@ -159,6 +164,19 @@ const PatientCard = ({ patient, onDelete, onEdit, onStatusChange }) => {
                             <option value="active">Ակտիվ</option>
                             <option value="stable">Կայուն</option>
                             <option value="pending">Սպասող</option>
+                        </select>
+
+                        <select
+                            style={styles.input}
+                            value={formData.doctorId}
+                            onChange={(e) => setFormData({ ...formData, doctorId: parseInt(e.target.value) || "" })}
+                        >
+                            <option value="" disabled>Ընտրեք բուժող բժիշկ</option>
+                            {doctors.map((doc) => (
+                                <option key={doc.id} value={doc.id}>
+                                    {doc.name} {doc.surname} ({doc.specialty})
+                                </option>
+                            ))}
                         </select>
 
                         <button style={styles.saveButton} onClick={handleEditSubmit}>Պահպանել</button>

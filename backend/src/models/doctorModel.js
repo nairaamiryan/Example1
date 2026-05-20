@@ -38,5 +38,10 @@ module.exports = (sequelize, DataTypes) => {
             timestamps: true,
         },
     );
+
+    Doctor.associate = (models) => {
+        Doctor.hasMany(models.Patient, { foreignKey: "doctorId", as: "patientsList" });
+    };
+
     return Doctor;
 };

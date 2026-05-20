@@ -14,8 +14,19 @@ module.exports = (sequelize, DataTypes) => {
             diagnosis: { type: DataTypes.STRING, allowNull: false },
             status: { type: DataTypes.ENUM("active", "stable", "pending"), allowNull: false },
             email: { type: DataTypes.STRING, allowNull: false, unique: true },
+            doctorId: { type: DataTypes.INTEGER, allowNull: true },
         },
         { tableName: "patients", timestamps: true }
     );
+
+    Patient.associate = (models) => {
+        Patient.belongsTo(models.Doctor, { 
+            foreignKey: "doctorId", 
+            as: "doctor",
+            onDelete: "SET NULL",
+            onUpdate: "CASCADE"
+        });
+    };
+
     return Patient;
 };

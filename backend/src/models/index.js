@@ -27,4 +27,10 @@ for (const file of files) {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+Object.keys(db).forEach(modelName => {
+    if (db[modelName].associate) {
+        db[modelName].associate(db);
+    }
+});
+
 module.exports = db;

@@ -12,6 +12,7 @@ module.exports = {
             { name: "Արտակ", surname: "Հովհաննիսյան", age: 45, email: "artak.hovhannisyan@example.com", specialty: "Վիրաբույժ", patients: 38, createdAt: new Date(), updatedAt: new Date() },
             { name: "Անի", surname: "Պետրոսյան", age: 34, email: "ani.petrosyan@example.com", specialty: "Մաշկաբան", patients: 19, createdAt: new Date(), updatedAt: new Date() },
             { name: "Հայկ", surname: "Բաղդասարյան", age: 48, email: "hayk.baghdasaryan@example.com", specialty: "Ուրոլոգ", patients: 22, createdAt: new Date(), updatedAt: new Date() },
+            { name: "Արմեն", surname: "Սարգսյան", age: 50, email: "armen.sargsyan@example.com", specialty: "Թերապևտ", patients: 15, createdAt: new Date(), updatedAt: new Date() },
         ]);
     },
     async down(queryInterface, Sequelize) {
